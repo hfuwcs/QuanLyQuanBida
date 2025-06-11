@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuanLyQuanBida.DTO
 {
-    public class Class1
+    public class LoaiDichVuDTO
     {
+        public int MaLoaiDV { get; set; }
+        public string TenLoaiDV { get; set; }
     }
 }
