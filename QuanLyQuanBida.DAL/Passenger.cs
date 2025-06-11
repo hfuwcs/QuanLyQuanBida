@@ -7,27 +7,25 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace QuanLyQuanBida
+namespace QuanLyQuanBida.DAL
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class DichVu
+    public partial class Passenger
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DichVu()
+        public Passenger()
         {
-            this.ChiTietHoaDon = new HashSet<ChiTietHoaDon>();
+            this.OrderTicket = new HashSet<OrderTicket>();
         }
     
-        public int MaDichVu { get; set; }
-        public string TenDichVu { get; set; }
-        public Nullable<int> MaLoaiDV { get; set; }
-        public string DonViTinh { get; set; }
-        public decimal Gia { get; set; }
+        public int PassengerID { get; set; }
+        public string FullName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ChiTietHoaDon> ChiTietHoaDon { get; set; }
-        public virtual LoaiDichVu LoaiDichVu { get; set; }
+        public virtual ICollection<OrderTicket> OrderTicket { get; set; }
     }
 }

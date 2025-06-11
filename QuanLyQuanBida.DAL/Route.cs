@@ -7,23 +7,26 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace QuanLyQuanBida
+namespace QuanLyQuanBida.DAL
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class VaiTro
+    public partial class Route
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public VaiTro()
+        public Route()
         {
-            this.NhanVien = new HashSet<NhanVien>();
+            this.Trip = new HashSet<Trip>();
         }
     
-        public int MaVaiTro { get; set; }
-        public string TenVaiTro { get; set; }
+        public int RouteID { get; set; }
+        public string RouteName { get; set; }
+        public string StartLocation { get; set; }
+        public string EndLocation { get; set; }
+        public Nullable<int> Distance { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NhanVien> NhanVien { get; set; }
+        public virtual ICollection<Trip> Trip { get; set; }
     }
 }

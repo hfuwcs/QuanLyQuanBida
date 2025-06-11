@@ -7,23 +7,29 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace QuanLyQuanBida
+namespace QuanLyQuanBida.DAL
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class LoaiDichVu
+    public partial class UserAccount
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LoaiDichVu()
+        public UserAccount()
         {
-            this.DichVu = new HashSet<DichVu>();
+            this.OrderTicket = new HashSet<OrderTicket>();
+            this.UserRoles = new HashSet<UserRoles>();
         }
     
-        public int MaLoaiDV { get; set; }
-        public string TenLoaiDV { get; set; }
+        public int UserID { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string CCCD { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DichVu> DichVu { get; set; }
+        public virtual ICollection<OrderTicket> OrderTicket { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserRoles> UserRoles { get; set; }
     }
 }

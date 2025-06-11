@@ -7,27 +7,25 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace QuanLyQuanBida
+namespace QuanLyQuanBida.DAL
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class KhachHang
+    public partial class Driver
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public KhachHang()
+        public Driver()
         {
-            this.HoaDon = new HashSet<HoaDon>();
+            this.Trip = new HashSet<Trip>();
         }
     
-        public int MaKhachHang { get; set; }
-        public string HoTen { get; set; }
-        public string SoDienThoai { get; set; }
-        public int DiemTichLuy { get; set; }
-        public string HangThanhVien { get; set; }
-        public Nullable<System.DateTime> NgayTao { get; set; }
+        public int DriverID { get; set; }
+        public string FullName { get; set; }
+        public string LicenseNumber { get; set; }
+        public string PhoneNumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<HoaDon> HoaDon { get; set; }
+        public virtual ICollection<Trip> Trip { get; set; }
     }
 }

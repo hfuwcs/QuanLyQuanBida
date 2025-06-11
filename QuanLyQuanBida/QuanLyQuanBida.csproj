@@ -63,30 +63,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BanBida.cs">
-      <DependentUpon>BidaDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BidaDb.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BidaDb.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BidaDb.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BidaDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BidaDb.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BidaDb.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="ChiTietHoaDon.cs">
-      <DependentUpon>BidaDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DichVu.cs">
-      <DependentUpon>BidaDb.tt</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmBatDauChoi.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,21 +74,6 @@
     </Compile>
     <Compile Include="Forms\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HoaDon.cs">
-      <DependentUpon>BidaDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="KhachHang.cs">
-      <DependentUpon>BidaDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="LoaiBan.cs">
-      <DependentUpon>BidaDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="LoaiDichVu.cs">
-      <DependentUpon>BidaDb.tt</DependentUpon>
-    </Compile>
-    <Compile Include="NhanVien.cs">
-      <DependentUpon>BidaDb.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -139,9 +100,6 @@
     </Compile>
     <Compile Include="UserControls\ucSoDoBan.Designer.cs">
       <DependentUpon>ucSoDoBan.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VaiTro.cs">
-      <DependentUpon>BidaDb.tt</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Forms\frmBatDauChoi.resx">
       <DependentUpon>frmBatDauChoi.cs</DependentUpon>
@@ -170,13 +128,6 @@
     <EmbeddedResource Include="UserControls\ucSoDoBan.resx">
       <DependentUpon>ucSoDoBan.cs</DependentUpon>
     </EmbeddedResource>
-    <EntityDeploy Include="BidaDb.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BidaDb.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="BidaDb.edmx.diagram">
-      <DependentUpon>BidaDb.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -190,18 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="BidaDb.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BidaDb.edmx</DependentUpon>
-      <LastGenOutput>BidaDb.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="BidaDb.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BidaDb.edmx</DependentUpon>
-      <LastGenOutput>BidaDb.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -7,24 +7,23 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace QuanLyQuanBida
+namespace QuanLyQuanBida.DAL
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class LoaiBan
+    public partial class Roles
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LoaiBan()
+        public Roles()
         {
-            this.BanBida = new HashSet<BanBida>();
+            this.UserRoles = new HashSet<UserRoles>();
         }
     
-        public int MaLoaiBan { get; set; }
-        public string TenLoaiBan { get; set; }
-        public decimal GiaTheoGio { get; set; }
+        public int RolesID { get; set; }
+        public string RoleName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BanBida> BanBida { get; set; }
+        public virtual ICollection<UserRoles> UserRoles { get; set; }
     }
 }

@@ -7,29 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace QuanLyQuanBida
+namespace QuanLyQuanBida.DAL
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class NhanVien
+    public partial class Bus
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public NhanVien()
+        public Bus()
         {
-            this.HoaDon = new HashSet<HoaDon>();
+            this.Seat = new HashSet<Seat>();
+            this.Trip = new HashSet<Trip>();
         }
     
-        public int MaNhanVien { get; set; }
-        public string HoTen { get; set; }
-        public string SoDienThoai { get; set; }
-        public string TenDangNhap { get; set; }
-        public string MatKhau { get; set; }
-        public Nullable<int> MaVaiTro { get; set; }
-        public bool TrangThai { get; set; }
+        public int BusID { get; set; }
+        public string BusNumber { get; set; }
+        public Nullable<int> TotalSeat { get; set; }
+        public string BusType { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<HoaDon> HoaDon { get; set; }
-        public virtual VaiTro VaiTro { get; set; }
+        public virtual ICollection<Seat> Seat { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Trip> Trip { get; set; }
     }
 }
