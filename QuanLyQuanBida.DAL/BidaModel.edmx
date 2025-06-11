@@ -4,702 +4,486 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DB_DoAnBanVeXeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Bus">
+      <Schema Namespace="DB_QuanLyQuanBidaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BanBida">
           <Key>
-            <PropertyRef Name="BusID" />
+            <PropertyRef Name="MaBan" />
           </Key>
-          <Property Name="BusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="BusNumber" Type="varchar" MaxLength="50" />
-          <Property Name="TotalSeat" Type="int" />
-          <Property Name="BusType" Type="nvarchar" MaxLength="50" />
+          <Property Name="MaBan" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenBan" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MaLoaiBan" Type="int" />
+          <Property Name="TrangThai" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="DetailsTicket">
+        <EntityType Name="ChiTietHoaDon">
           <Key>
-            <PropertyRef Name="DetailsTicketID" />
+            <PropertyRef Name="MaCTHD" />
           </Key>
-          <Property Name="DetailsTicketID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="OrderTicketID" Type="int" />
-          <Property Name="TripID" Type="int" />
-          <Property Name="SeatID" Type="int" />
-          <Property Name="IsBooked" Type="bit" />
-          <Property Name="Price" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="MaCTHD" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MaHoaDon" Type="int" Nullable="false" />
+          <Property Name="MaDichVu" Type="int" Nullable="false" />
+          <Property Name="SoLuong" Type="int" Nullable="false" />
+          <Property Name="DonGia" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ThanhTien" Type="decimal" Precision="29" Scale="2" StoreGeneratedPattern="Computed" />
         </EntityType>
-        <EntityType Name="Driver">
+        <EntityType Name="DichVu">
           <Key>
-            <PropertyRef Name="DriverID" />
+            <PropertyRef Name="MaDichVu" />
           </Key>
-          <Property Name="DriverID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FullName" Type="nvarchar" MaxLength="255" />
-          <Property Name="LicenseNumber" Type="varchar" MaxLength="50" />
-          <Property Name="PhoneNumber" Type="varchar" MaxLength="20" />
+          <Property Name="MaDichVu" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenDichVu" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MaLoaiDV" Type="int" />
+          <Property Name="DonViTinh" Type="nvarchar" MaxLength="50" />
+          <Property Name="Gia" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
-        <EntityType Name="OrderTicket">
+        <EntityType Name="HoaDon">
           <Key>
-            <PropertyRef Name="OrderTicketID" />
+            <PropertyRef Name="MaHoaDon" />
           </Key>
-          <Property Name="OrderTicketID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="PassengerID" Type="int" />
-          <Property Name="Total" Type="decimal" Precision="18" Scale="2" />
-          <Property Name="OrderDate" Type="datetime" />
-          <Property Name="UserID" Type="int" />
+          <Property Name="MaHoaDon" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MaBan" Type="int" Nullable="false" />
+          <Property Name="MaKhachHang" Type="int" />
+          <Property Name="MaNhanVienTao" Type="int" />
+          <Property Name="ThoiGianBatDau" Type="datetime" Nullable="false" />
+          <Property Name="ThoiGianKetThuc" Type="datetime" />
+          <Property Name="TienGio" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TienDichVu" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="GiamGia" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TongTien" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TrangThai" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="Passenger">
+        <EntityType Name="KhachHang">
           <Key>
-            <PropertyRef Name="PassengerID" />
+            <PropertyRef Name="MaKhachHang" />
           </Key>
-          <Property Name="PassengerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FullName" Type="nvarchar" MaxLength="255" />
-          <Property Name="PhoneNumber" Type="varchar" MaxLength="20" />
-          <Property Name="Email" Type="varchar" MaxLength="255" />
+          <Property Name="MaKhachHang" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HoTen" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SoDienThoai" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="DiemTichLuy" Type="int" Nullable="false" />
+          <Property Name="HangThanhVien" Type="nvarchar" MaxLength="50" />
+          <Property Name="NgayTao" Type="datetime" />
         </EntityType>
-        <EntityType Name="Payment">
+        <EntityType Name="LoaiBan">
           <Key>
-            <PropertyRef Name="PaymentID" />
+            <PropertyRef Name="MaLoaiBan" />
           </Key>
-          <Property Name="PaymentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="OrderTicketID" Type="int" />
-          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" />
-          <Property Name="PaymentMethod" Type="nvarchar" MaxLength="50" />
-          <Property Name="PaymentDate" Type="datetime" />
-          <Property Name="PaymentStatus" Type="nvarchar" MaxLength="50" />
+          <Property Name="MaLoaiBan" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenLoaiBan" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="GiaTheoGio" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
-        <EntityType Name="Roles">
+        <EntityType Name="LoaiDichVu">
           <Key>
-            <PropertyRef Name="RolesID" />
+            <PropertyRef Name="MaLoaiDV" />
           </Key>
-          <Property Name="RolesID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RoleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MaLoaiDV" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenLoaiDV" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
-        <EntityType Name="Route">
+        <EntityType Name="NhanVien">
           <Key>
-            <PropertyRef Name="RouteID" />
+            <PropertyRef Name="MaNhanVien" />
           </Key>
-          <Property Name="RouteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RouteName" Type="nvarchar" MaxLength="255" />
-          <Property Name="StartLocation" Type="nvarchar" MaxLength="255" />
-          <Property Name="EndLocation" Type="nvarchar" MaxLength="255" />
-          <Property Name="Distance" Type="int" />
+          <Property Name="MaNhanVien" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HoTen" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SoDienThoai" Type="varchar" MaxLength="15" />
+          <Property Name="TenDangNhap" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="MatKhau" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="MaVaiTro" Type="int" />
+          <Property Name="TrangThai" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="Seat">
+        <EntityType Name="VaiTro">
           <Key>
-            <PropertyRef Name="SeatID" />
+            <PropertyRef Name="MaVaiTro" />
           </Key>
-          <Property Name="SeatID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="BusID" Type="int" />
-          <Property Name="SeatNumber" Type="varchar" MaxLength="10" />
+          <Property Name="MaVaiTro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenVaiTro" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
-        <EntityType Name="Trip">
-          <Key>
-            <PropertyRef Name="TripID" />
-          </Key>
-          <Property Name="TripID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RouteID" Type="int" />
-          <Property Name="BusID" Type="int" />
-          <Property Name="DriverID" Type="int" />
-          <Property Name="DepartureLocation" Type="nvarchar" MaxLength="255" />
-          <Property Name="ArrivalLocation" Type="nvarchar" MaxLength="255" />
-          <Property Name="DepartureTime" Type="datetime" />
-          <Property Name="ArrivalTime" Type="datetime" />
-        </EntityType>
-        <EntityType Name="UserAccount">
-          <Key>
-            <PropertyRef Name="UserID" />
-          </Key>
-          <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FullName" Type="nvarchar" MaxLength="100" />
-          <Property Name="Email" Type="varchar" MaxLength="100" />
-          <Property Name="Password" Type="varchar" MaxLength="100" />
-          <Property Name="CCCD" Type="nchar" MaxLength="20" />
-        </EntityType>
-        <EntityType Name="UserRoles">
-          <Key>
-            <PropertyRef Name="UserRolesID" />
-          </Key>
-          <Property Name="UserRolesID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserID" Type="int" />
-          <Property Name="RoleID" Type="int" />
-        </EntityType>
-        <Association Name="FK__DetailsTi__Order__534D60F1">
-          <End Role="OrderTicket" Type="Self.OrderTicket" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="DetailsTicket" Type="Self.DetailsTicket" Multiplicity="*" />
+        <Association Name="FK__BanBida__MaLoaiB__49C3F6B7">
+          <End Role="LoaiBan" Type="Self.LoaiBan" Multiplicity="0..1" />
+          <End Role="BanBida" Type="Self.BanBida" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="OrderTicket">
-              <PropertyRef Name="OrderTicketID" />
+            <Principal Role="LoaiBan">
+              <PropertyRef Name="MaLoaiBan" />
             </Principal>
-            <Dependent Role="DetailsTicket">
-              <PropertyRef Name="OrderTicketID" />
+            <Dependent Role="BanBida">
+              <PropertyRef Name="MaLoaiBan" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DetailsTi__SeatI__5535A963">
-          <End Role="Seat" Type="Self.Seat" Multiplicity="0..1" />
-          <End Role="DetailsTicket" Type="Self.DetailsTicket" Multiplicity="*" />
+        <Association Name="FK__ChiTietHo__MaDic__5CD6CB2B">
+          <End Role="DichVu" Type="Self.DichVu" Multiplicity="1" />
+          <End Role="ChiTietHoaDon" Type="Self.ChiTietHoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Seat">
-              <PropertyRef Name="SeatID" />
+            <Principal Role="DichVu">
+              <PropertyRef Name="MaDichVu" />
             </Principal>
-            <Dependent Role="DetailsTicket">
-              <PropertyRef Name="SeatID" />
+            <Dependent Role="ChiTietHoaDon">
+              <PropertyRef Name="MaDichVu" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DetailsTi__TripI__5441852A">
-          <End Role="Trip" Type="Self.Trip" Multiplicity="0..1" />
-          <End Role="DetailsTicket" Type="Self.DetailsTicket" Multiplicity="*" />
+        <Association Name="FK__ChiTietHo__MaHoa__5BE2A6F2">
+          <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="1" />
+          <End Role="ChiTietHoaDon" Type="Self.ChiTietHoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Trip">
-              <PropertyRef Name="TripID" />
+            <Principal Role="HoaDon">
+              <PropertyRef Name="MaHoaDon" />
             </Principal>
-            <Dependent Role="DetailsTicket">
-              <PropertyRef Name="TripID" />
+            <Dependent Role="ChiTietHoaDon">
+              <PropertyRef Name="MaHoaDon" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderTick__UserI__5070F446">
-          <End Role="Passenger" Type="Self.Passenger" Multiplicity="0..1" />
-          <End Role="OrderTicket" Type="Self.OrderTicket" Multiplicity="*" />
+        <Association Name="FK__DichVu__MaLoaiDV__5070F446">
+          <End Role="LoaiDichVu" Type="Self.LoaiDichVu" Multiplicity="0..1" />
+          <End Role="DichVu" Type="Self.DichVu" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Passenger">
-              <PropertyRef Name="PassengerID" />
+            <Principal Role="LoaiDichVu">
+              <PropertyRef Name="MaLoaiDV" />
             </Principal>
-            <Dependent Role="OrderTicket">
-              <PropertyRef Name="PassengerID" />
+            <Dependent Role="DichVu">
+              <PropertyRef Name="MaLoaiDV" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Payment__OrderTi__5812160E">
-          <End Role="OrderTicket" Type="Self.OrderTicket" Multiplicity="0..1" />
-          <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+        <Association Name="FK__HoaDon__MaBan__5629CD9C">
+          <End Role="BanBida" Type="Self.BanBida" Multiplicity="1" />
+          <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="OrderTicket">
-              <PropertyRef Name="OrderTicketID" />
+            <Principal Role="BanBida">
+              <PropertyRef Name="MaBan" />
             </Principal>
-            <Dependent Role="Payment">
-              <PropertyRef Name="OrderTicketID" />
+            <Dependent Role="HoaDon">
+              <PropertyRef Name="MaBan" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Seat__BusID__44FF419A">
-          <End Role="Bus" Type="Self.Bus" Multiplicity="0..1" />
-          <End Role="Seat" Type="Self.Seat" Multiplicity="*" />
+        <Association Name="FK__HoaDon__MaKhachH__571DF1D5">
+          <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="0..1" />
+          <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Bus">
-              <PropertyRef Name="BusID" />
+            <Principal Role="KhachHang">
+              <PropertyRef Name="MaKhachHang" />
             </Principal>
-            <Dependent Role="Seat">
-              <PropertyRef Name="BusID" />
+            <Dependent Role="HoaDon">
+              <PropertyRef Name="MaKhachHang" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Trip__BusID__4CA06362">
-          <End Role="Bus" Type="Self.Bus" Multiplicity="0..1" />
-          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+        <Association Name="FK__HoaDon__MaNhanVi__5812160E">
+          <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="0..1" />
+          <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Bus">
-              <PropertyRef Name="BusID" />
+            <Principal Role="NhanVien">
+              <PropertyRef Name="MaNhanVien" />
             </Principal>
-            <Dependent Role="Trip">
-              <PropertyRef Name="BusID" />
+            <Dependent Role="HoaDon">
+              <PropertyRef Name="MaNhanVienTao" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Trip__DriverID__4D94879B">
-          <End Role="Driver" Type="Self.Driver" Multiplicity="0..1" />
-          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+        <Association Name="FK__NhanVien__MaVaiT__3D5E1FD2">
+          <End Role="VaiTro" Type="Self.VaiTro" Multiplicity="0..1" />
+          <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Driver">
-              <PropertyRef Name="DriverID" />
+            <Principal Role="VaiTro">
+              <PropertyRef Name="MaVaiTro" />
             </Principal>
-            <Dependent Role="Trip">
-              <PropertyRef Name="DriverID" />
+            <Dependent Role="NhanVien">
+              <PropertyRef Name="MaVaiTro" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Trip__RouteID__4BAC3F29">
-          <End Role="Route" Type="Self.Route" Multiplicity="0..1" />
-          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Route">
-              <PropertyRef Name="RouteID" />
-            </Principal>
-            <Dependent Role="Trip">
-              <PropertyRef Name="RouteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__UserRoles__RoleI__3E52440B">
-          <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
-          <End Role="UserRoles" Type="Self.UserRoles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Roles">
-              <PropertyRef Name="RolesID" />
-            </Principal>
-            <Dependent Role="UserRoles">
-              <PropertyRef Name="RoleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__UserRoles__UserI__3D5E1FD2">
-          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
-          <End Role="UserRoles" Type="Self.UserRoles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserAccount">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="UserRoles">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OD_USERID">
-          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
-          <End Role="OrderTicket" Type="Self.OrderTicket" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserAccount">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="OrderTicket">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="DB_DoAnBanVeXeModelStoreContainer">
-          <EntitySet Name="Bus" EntityType="Self.Bus" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DetailsTicket" EntityType="Self.DetailsTicket" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Driver" EntityType="Self.Driver" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="OrderTicket" EntityType="Self.OrderTicket" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Passenger" EntityType="Self.Passenger" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Payment" EntityType="Self.Payment" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Route" EntityType="Self.Route" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Seat" EntityType="Self.Seat" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Trip" EntityType="Self.Trip" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserAccount" EntityType="Self.UserAccount" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__DetailsTi__Order__534D60F1" Association="Self.FK__DetailsTi__Order__534D60F1">
-            <End Role="OrderTicket" EntitySet="OrderTicket" />
-            <End Role="DetailsTicket" EntitySet="DetailsTicket" />
+        <EntityContainer Name="DB_QuanLyQuanBidaModelStoreContainer">
+          <EntitySet Name="BanBida" EntityType="Self.BanBida" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChiTietHoaDon" EntityType="Self.ChiTietHoaDon" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DichVu" EntityType="Self.DichVu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HoaDon" EntityType="Self.HoaDon" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KhachHang" EntityType="Self.KhachHang" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoaiBan" EntityType="Self.LoaiBan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoaiDichVu" EntityType="Self.LoaiDichVu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NhanVien" EntityType="Self.NhanVien" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VaiTro" EntityType="Self.VaiTro" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__BanBida__MaLoaiB__49C3F6B7" Association="Self.FK__BanBida__MaLoaiB__49C3F6B7">
+            <End Role="LoaiBan" EntitySet="LoaiBan" />
+            <End Role="BanBida" EntitySet="BanBida" />
           </AssociationSet>
-          <AssociationSet Name="FK__DetailsTi__SeatI__5535A963" Association="Self.FK__DetailsTi__SeatI__5535A963">
-            <End Role="Seat" EntitySet="Seat" />
-            <End Role="DetailsTicket" EntitySet="DetailsTicket" />
+          <AssociationSet Name="FK__ChiTietHo__MaDic__5CD6CB2B" Association="Self.FK__ChiTietHo__MaDic__5CD6CB2B">
+            <End Role="DichVu" EntitySet="DichVu" />
+            <End Role="ChiTietHoaDon" EntitySet="ChiTietHoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__DetailsTi__TripI__5441852A" Association="Self.FK__DetailsTi__TripI__5441852A">
-            <End Role="Trip" EntitySet="Trip" />
-            <End Role="DetailsTicket" EntitySet="DetailsTicket" />
+          <AssociationSet Name="FK__ChiTietHo__MaHoa__5BE2A6F2" Association="Self.FK__ChiTietHo__MaHoa__5BE2A6F2">
+            <End Role="HoaDon" EntitySet="HoaDon" />
+            <End Role="ChiTietHoaDon" EntitySet="ChiTietHoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderTick__UserI__5070F446" Association="Self.FK__OrderTick__UserI__5070F446">
-            <End Role="Passenger" EntitySet="Passenger" />
-            <End Role="OrderTicket" EntitySet="OrderTicket" />
+          <AssociationSet Name="FK__DichVu__MaLoaiDV__5070F446" Association="Self.FK__DichVu__MaLoaiDV__5070F446">
+            <End Role="LoaiDichVu" EntitySet="LoaiDichVu" />
+            <End Role="DichVu" EntitySet="DichVu" />
           </AssociationSet>
-          <AssociationSet Name="FK__Payment__OrderTi__5812160E" Association="Self.FK__Payment__OrderTi__5812160E">
-            <End Role="OrderTicket" EntitySet="OrderTicket" />
-            <End Role="Payment" EntitySet="Payment" />
+          <AssociationSet Name="FK__HoaDon__MaBan__5629CD9C" Association="Self.FK__HoaDon__MaBan__5629CD9C">
+            <End Role="BanBida" EntitySet="BanBida" />
+            <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__Seat__BusID__44FF419A" Association="Self.FK__Seat__BusID__44FF419A">
-            <End Role="Bus" EntitySet="Bus" />
-            <End Role="Seat" EntitySet="Seat" />
+          <AssociationSet Name="FK__HoaDon__MaKhachH__571DF1D5" Association="Self.FK__HoaDon__MaKhachH__571DF1D5">
+            <End Role="KhachHang" EntitySet="KhachHang" />
+            <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__Trip__BusID__4CA06362" Association="Self.FK__Trip__BusID__4CA06362">
-            <End Role="Bus" EntitySet="Bus" />
-            <End Role="Trip" EntitySet="Trip" />
+          <AssociationSet Name="FK__HoaDon__MaNhanVi__5812160E" Association="Self.FK__HoaDon__MaNhanVi__5812160E">
+            <End Role="NhanVien" EntitySet="NhanVien" />
+            <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__Trip__DriverID__4D94879B" Association="Self.FK__Trip__DriverID__4D94879B">
-            <End Role="Driver" EntitySet="Driver" />
-            <End Role="Trip" EntitySet="Trip" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Trip__RouteID__4BAC3F29" Association="Self.FK__Trip__RouteID__4BAC3F29">
-            <End Role="Route" EntitySet="Route" />
-            <End Role="Trip" EntitySet="Trip" />
-          </AssociationSet>
-          <AssociationSet Name="FK__UserRoles__RoleI__3E52440B" Association="Self.FK__UserRoles__RoleI__3E52440B">
-            <End Role="Roles" EntitySet="Roles" />
-            <End Role="UserRoles" EntitySet="UserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK__UserRoles__UserI__3D5E1FD2" Association="Self.FK__UserRoles__UserI__3D5E1FD2">
-            <End Role="UserAccount" EntitySet="UserAccount" />
-            <End Role="UserRoles" EntitySet="UserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OD_USERID" Association="Self.FK_OD_USERID">
-            <End Role="UserAccount" EntitySet="UserAccount" />
-            <End Role="OrderTicket" EntitySet="OrderTicket" />
+          <AssociationSet Name="FK__NhanVien__MaVaiT__3D5E1FD2" Association="Self.FK__NhanVien__MaVaiT__3D5E1FD2">
+            <End Role="VaiTro" EntitySet="VaiTro" />
+            <End Role="NhanVien" EntitySet="NhanVien" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="DB_DoAnBanVeXeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Bus">
+      <Schema Namespace="DB_QuanLyQuanBidaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BanBida">
           <Key>
-            <PropertyRef Name="BusID" />
+            <PropertyRef Name="MaBan" />
           </Key>
-          <Property Name="BusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BusNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="TotalSeat" Type="Int32" />
-          <Property Name="BusType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Seat" Relationship="Self.FK__Seat__BusID__44FF419A" FromRole="Bus" ToRole="Seat" />
-          <NavigationProperty Name="Trip" Relationship="Self.FK__Trip__BusID__4CA06362" FromRole="Bus" ToRole="Trip" />
+          <Property Name="MaBan" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TenBan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MaLoaiBan" Type="Int32" />
+          <Property Name="TrangThai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="LoaiBan" Relationship="Self.FK__BanBida__MaLoaiB__49C3F6B7" FromRole="BanBida" ToRole="LoaiBan" />
+          <NavigationProperty Name="HoaDon" Relationship="Self.FK__HoaDon__MaBan__5629CD9C" FromRole="BanBida" ToRole="HoaDon" />
         </EntityType>
-        <EntityType Name="DetailsTicket">
+        <EntityType Name="ChiTietHoaDon">
           <Key>
-            <PropertyRef Name="DetailsTicketID" />
+            <PropertyRef Name="MaCTHD" />
           </Key>
-          <Property Name="DetailsTicketID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderTicketID" Type="Int32" />
-          <Property Name="TripID" Type="Int32" />
-          <Property Name="SeatID" Type="Int32" />
-          <Property Name="IsBooked" Type="Boolean" />
-          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
-          <NavigationProperty Name="OrderTicket" Relationship="Self.FK__DetailsTi__Order__534D60F1" FromRole="DetailsTicket" ToRole="OrderTicket" />
-          <NavigationProperty Name="Seat" Relationship="Self.FK__DetailsTi__SeatI__5535A963" FromRole="DetailsTicket" ToRole="Seat" />
-          <NavigationProperty Name="Trip" Relationship="Self.FK__DetailsTi__TripI__5441852A" FromRole="DetailsTicket" ToRole="Trip" />
+          <Property Name="MaCTHD" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MaHoaDon" Type="Int32" Nullable="false" />
+          <Property Name="MaDichVu" Type="Int32" Nullable="false" />
+          <Property Name="SoLuong" Type="Int32" Nullable="false" />
+          <Property Name="DonGia" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ThanhTien" Type="Decimal" Precision="29" Scale="2" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="DichVu" Relationship="Self.FK__ChiTietHo__MaDic__5CD6CB2B" FromRole="ChiTietHoaDon" ToRole="DichVu" />
+          <NavigationProperty Name="HoaDon" Relationship="Self.FK__ChiTietHo__MaHoa__5BE2A6F2" FromRole="ChiTietHoaDon" ToRole="HoaDon" />
         </EntityType>
-        <EntityType Name="Driver">
+        <EntityType Name="DichVu">
           <Key>
-            <PropertyRef Name="DriverID" />
+            <PropertyRef Name="MaDichVu" />
           </Key>
-          <Property Name="DriverID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FullName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="LicenseNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Trip" Relationship="Self.FK__Trip__DriverID__4D94879B" FromRole="Driver" ToRole="Trip" />
+          <Property Name="MaDichVu" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TenDichVu" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MaLoaiDV" Type="Int32" />
+          <Property Name="DonViTinh" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Gia" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <NavigationProperty Name="ChiTietHoaDon" Relationship="Self.FK__ChiTietHo__MaDic__5CD6CB2B" FromRole="DichVu" ToRole="ChiTietHoaDon" />
+          <NavigationProperty Name="LoaiDichVu" Relationship="Self.FK__DichVu__MaLoaiDV__5070F446" FromRole="DichVu" ToRole="LoaiDichVu" />
         </EntityType>
-        <EntityType Name="OrderTicket">
+        <EntityType Name="HoaDon">
           <Key>
-            <PropertyRef Name="OrderTicketID" />
+            <PropertyRef Name="MaHoaDon" />
           </Key>
-          <Property Name="OrderTicketID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PassengerID" Type="Int32" />
-          <Property Name="Total" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="OrderDate" Type="DateTime" Precision="3" />
-          <Property Name="UserID" Type="Int32" />
-          <NavigationProperty Name="DetailsTicket" Relationship="Self.FK__DetailsTi__Order__534D60F1" FromRole="OrderTicket" ToRole="DetailsTicket" />
-          <NavigationProperty Name="Passenger" Relationship="Self.FK__OrderTick__UserI__5070F446" FromRole="OrderTicket" ToRole="Passenger" />
-          <NavigationProperty Name="Payment" Relationship="Self.FK__Payment__OrderTi__5812160E" FromRole="OrderTicket" ToRole="Payment" />
-          <NavigationProperty Name="UserAccount" Relationship="Self.FK_OD_USERID" FromRole="OrderTicket" ToRole="UserAccount" />
+          <Property Name="MaHoaDon" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MaBan" Type="Int32" Nullable="false" />
+          <Property Name="MaKhachHang" Type="Int32" />
+          <Property Name="MaNhanVienTao" Type="Int32" />
+          <Property Name="ThoiGianBatDau" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ThoiGianKetThuc" Type="DateTime" Precision="3" />
+          <Property Name="TienGio" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TienDichVu" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="GiamGia" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TongTien" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TrangThai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="BanBida" Relationship="Self.FK__HoaDon__MaBan__5629CD9C" FromRole="HoaDon" ToRole="BanBida" />
+          <NavigationProperty Name="ChiTietHoaDon" Relationship="Self.FK__ChiTietHo__MaHoa__5BE2A6F2" FromRole="HoaDon" ToRole="ChiTietHoaDon" />
+          <NavigationProperty Name="KhachHang" Relationship="Self.FK__HoaDon__MaKhachH__571DF1D5" FromRole="HoaDon" ToRole="KhachHang" />
+          <NavigationProperty Name="NhanVien" Relationship="Self.FK__HoaDon__MaNhanVi__5812160E" FromRole="HoaDon" ToRole="NhanVien" />
         </EntityType>
-        <EntityType Name="Passenger">
+        <EntityType Name="KhachHang">
           <Key>
-            <PropertyRef Name="PassengerID" />
+            <PropertyRef Name="MaKhachHang" />
           </Key>
-          <Property Name="PassengerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FullName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="OrderTicket" Relationship="Self.FK__OrderTick__UserI__5070F446" FromRole="Passenger" ToRole="OrderTicket" />
+          <Property Name="MaKhachHang" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HoTen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SoDienThoai" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DiemTichLuy" Type="Int32" Nullable="false" />
+          <Property Name="HangThanhVien" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NgayTao" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="HoaDon" Relationship="Self.FK__HoaDon__MaKhachH__571DF1D5" FromRole="KhachHang" ToRole="HoaDon" />
         </EntityType>
-        <EntityType Name="Payment">
+        <EntityType Name="LoaiBan">
           <Key>
-            <PropertyRef Name="PaymentID" />
+            <PropertyRef Name="MaLoaiBan" />
           </Key>
-          <Property Name="PaymentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderTicketID" Type="Int32" />
-          <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PaymentDate" Type="DateTime" Precision="3" />
-          <Property Name="PaymentStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="OrderTicket" Relationship="Self.FK__Payment__OrderTi__5812160E" FromRole="Payment" ToRole="OrderTicket" />
+          <Property Name="MaLoaiBan" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TenLoaiBan" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GiaTheoGio" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <NavigationProperty Name="BanBida" Relationship="Self.FK__BanBida__MaLoaiB__49C3F6B7" FromRole="LoaiBan" ToRole="BanBida" />
         </EntityType>
-        <EntityType Name="Roles">
+        <EntityType Name="LoaiDichVu">
           <Key>
-            <PropertyRef Name="RolesID" />
+            <PropertyRef Name="MaLoaiDV" />
           </Key>
-          <Property Name="RolesID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="UserRoles" Relationship="Self.FK__UserRoles__RoleI__3E52440B" FromRole="Roles" ToRole="UserRoles" />
+          <Property Name="MaLoaiDV" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TenLoaiDV" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="DichVu" Relationship="Self.FK__DichVu__MaLoaiDV__5070F446" FromRole="LoaiDichVu" ToRole="DichVu" />
         </EntityType>
-        <EntityType Name="Route">
+        <EntityType Name="NhanVien">
           <Key>
-            <PropertyRef Name="RouteID" />
+            <PropertyRef Name="MaNhanVien" />
           </Key>
-          <Property Name="RouteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RouteName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="StartLocation" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="EndLocation" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Distance" Type="Int32" />
-          <NavigationProperty Name="Trip" Relationship="Self.FK__Trip__RouteID__4BAC3F29" FromRole="Route" ToRole="Trip" />
+          <Property Name="MaNhanVien" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HoTen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SoDienThoai" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TenDangNhap" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MatKhau" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MaVaiTro" Type="Int32" />
+          <Property Name="TrangThai" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="HoaDon" Relationship="Self.FK__HoaDon__MaNhanVi__5812160E" FromRole="NhanVien" ToRole="HoaDon" />
+          <NavigationProperty Name="VaiTro" Relationship="Self.FK__NhanVien__MaVaiT__3D5E1FD2" FromRole="NhanVien" ToRole="VaiTro" />
         </EntityType>
-        <EntityType Name="Seat">
+        <EntityType Name="VaiTro">
           <Key>
-            <PropertyRef Name="SeatID" />
+            <PropertyRef Name="MaVaiTro" />
           </Key>
-          <Property Name="SeatID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BusID" Type="Int32" />
-          <Property Name="SeatNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Bus" Relationship="Self.FK__Seat__BusID__44FF419A" FromRole="Seat" ToRole="Bus" />
-          <NavigationProperty Name="DetailsTicket" Relationship="Self.FK__DetailsTi__SeatI__5535A963" FromRole="Seat" ToRole="DetailsTicket" />
+          <Property Name="MaVaiTro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TenVaiTro" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="NhanVien" Relationship="Self.FK__NhanVien__MaVaiT__3D5E1FD2" FromRole="VaiTro" ToRole="NhanVien" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="Trip">
-          <Key>
-            <PropertyRef Name="TripID" />
-          </Key>
-          <Property Name="TripID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RouteID" Type="Int32" />
-          <Property Name="BusID" Type="Int32" />
-          <Property Name="DriverID" Type="Int32" />
-          <Property Name="DepartureLocation" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="ArrivalLocation" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="DepartureTime" Type="DateTime" Precision="3" />
-          <Property Name="ArrivalTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Bus" Relationship="Self.FK__Trip__BusID__4CA06362" FromRole="Trip" ToRole="Bus" />
-          <NavigationProperty Name="DetailsTicket" Relationship="Self.FK__DetailsTi__TripI__5441852A" FromRole="Trip" ToRole="DetailsTicket" />
-          <NavigationProperty Name="Driver" Relationship="Self.FK__Trip__DriverID__4D94879B" FromRole="Trip" ToRole="Driver" />
-          <NavigationProperty Name="Route" Relationship="Self.FK__Trip__RouteID__4BAC3F29" FromRole="Trip" ToRole="Route" />
-        </EntityType>
-        <EntityType Name="UserAccount">
-          <Key>
-            <PropertyRef Name="UserID" />
-          </Key>
-          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CCCD" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="OrderTicket" Relationship="Self.FK_OD_USERID" FromRole="UserAccount" ToRole="OrderTicket" />
-          <NavigationProperty Name="UserRoles" Relationship="Self.FK__UserRoles__UserI__3D5E1FD2" FromRole="UserAccount" ToRole="UserRoles" />
-        </EntityType>
-        <EntityType Name="UserRoles">
-          <Key>
-            <PropertyRef Name="UserRolesID" />
-          </Key>
-          <Property Name="UserRolesID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int32" />
-          <Property Name="RoleID" Type="Int32" />
-          <NavigationProperty Name="Roles" Relationship="Self.FK__UserRoles__RoleI__3E52440B" FromRole="UserRoles" ToRole="Roles" />
-          <NavigationProperty Name="UserAccount" Relationship="Self.FK__UserRoles__UserI__3D5E1FD2" FromRole="UserRoles" ToRole="UserAccount" />
-        </EntityType>
-        <Association Name="FK__Seat__BusID__44FF419A">
-          <End Role="Bus" Type="Self.Bus" Multiplicity="0..1" />
-          <End Role="Seat" Type="Self.Seat" Multiplicity="*" />
+        <Association Name="FK__BanBida__MaLoaiB__49C3F6B7">
+          <End Role="LoaiBan" Type="Self.LoaiBan" Multiplicity="0..1" />
+          <End Role="BanBida" Type="Self.BanBida" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Bus">
-              <PropertyRef Name="BusID" />
+            <Principal Role="LoaiBan">
+              <PropertyRef Name="MaLoaiBan" />
             </Principal>
-            <Dependent Role="Seat">
-              <PropertyRef Name="BusID" />
+            <Dependent Role="BanBida">
+              <PropertyRef Name="MaLoaiBan" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Trip__BusID__4CA06362">
-          <End Role="Bus" Type="Self.Bus" Multiplicity="0..1" />
-          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+        <Association Name="FK__HoaDon__MaBan__5629CD9C">
+          <End Role="BanBida" Type="Self.BanBida" Multiplicity="1" />
+          <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Bus">
-              <PropertyRef Name="BusID" />
+            <Principal Role="BanBida">
+              <PropertyRef Name="MaBan" />
             </Principal>
-            <Dependent Role="Trip">
-              <PropertyRef Name="BusID" />
+            <Dependent Role="HoaDon">
+              <PropertyRef Name="MaBan" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DetailsTi__Order__534D60F1">
-          <End Role="OrderTicket" Type="Self.OrderTicket" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="DetailsTicket" Type="Self.DetailsTicket" Multiplicity="*" />
+        <Association Name="FK__ChiTietHo__MaDic__5CD6CB2B">
+          <End Role="DichVu" Type="Self.DichVu" Multiplicity="1" />
+          <End Role="ChiTietHoaDon" Type="Self.ChiTietHoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="OrderTicket">
-              <PropertyRef Name="OrderTicketID" />
+            <Principal Role="DichVu">
+              <PropertyRef Name="MaDichVu" />
             </Principal>
-            <Dependent Role="DetailsTicket">
-              <PropertyRef Name="OrderTicketID" />
+            <Dependent Role="ChiTietHoaDon">
+              <PropertyRef Name="MaDichVu" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DetailsTi__SeatI__5535A963">
-          <End Role="Seat" Type="Self.Seat" Multiplicity="0..1" />
-          <End Role="DetailsTicket" Type="Self.DetailsTicket" Multiplicity="*" />
+        <Association Name="FK__ChiTietHo__MaHoa__5BE2A6F2">
+          <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="1" />
+          <End Role="ChiTietHoaDon" Type="Self.ChiTietHoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Seat">
-              <PropertyRef Name="SeatID" />
+            <Principal Role="HoaDon">
+              <PropertyRef Name="MaHoaDon" />
             </Principal>
-            <Dependent Role="DetailsTicket">
-              <PropertyRef Name="SeatID" />
+            <Dependent Role="ChiTietHoaDon">
+              <PropertyRef Name="MaHoaDon" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DetailsTi__TripI__5441852A">
-          <End Role="Trip" Type="Self.Trip" Multiplicity="0..1" />
-          <End Role="DetailsTicket" Type="Self.DetailsTicket" Multiplicity="*" />
+        <Association Name="FK__DichVu__MaLoaiDV__5070F446">
+          <End Role="LoaiDichVu" Type="Self.LoaiDichVu" Multiplicity="0..1" />
+          <End Role="DichVu" Type="Self.DichVu" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Trip">
-              <PropertyRef Name="TripID" />
+            <Principal Role="LoaiDichVu">
+              <PropertyRef Name="MaLoaiDV" />
             </Principal>
-            <Dependent Role="DetailsTicket">
-              <PropertyRef Name="TripID" />
+            <Dependent Role="DichVu">
+              <PropertyRef Name="MaLoaiDV" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Trip__DriverID__4D94879B">
-          <End Role="Driver" Type="Self.Driver" Multiplicity="0..1" />
-          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+        <Association Name="FK__HoaDon__MaKhachH__571DF1D5">
+          <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="0..1" />
+          <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Driver">
-              <PropertyRef Name="DriverID" />
+            <Principal Role="KhachHang">
+              <PropertyRef Name="MaKhachHang" />
             </Principal>
-            <Dependent Role="Trip">
-              <PropertyRef Name="DriverID" />
+            <Dependent Role="HoaDon">
+              <PropertyRef Name="MaKhachHang" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderTick__UserI__5070F446">
-          <End Role="Passenger" Type="Self.Passenger" Multiplicity="0..1" />
-          <End Role="OrderTicket" Type="Self.OrderTicket" Multiplicity="*" />
+        <Association Name="FK__HoaDon__MaNhanVi__5812160E">
+          <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="0..1" />
+          <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Passenger">
-              <PropertyRef Name="PassengerID" />
+            <Principal Role="NhanVien">
+              <PropertyRef Name="MaNhanVien" />
             </Principal>
-            <Dependent Role="OrderTicket">
-              <PropertyRef Name="PassengerID" />
+            <Dependent Role="HoaDon">
+              <PropertyRef Name="MaNhanVienTao" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Payment__OrderTi__5812160E">
-          <End Role="OrderTicket" Type="Self.OrderTicket" Multiplicity="0..1" />
-          <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+        <Association Name="FK__NhanVien__MaVaiT__3D5E1FD2">
+          <End Role="VaiTro" Type="Self.VaiTro" Multiplicity="0..1" />
+          <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="OrderTicket">
-              <PropertyRef Name="OrderTicketID" />
+            <Principal Role="VaiTro">
+              <PropertyRef Name="MaVaiTro" />
             </Principal>
-            <Dependent Role="Payment">
-              <PropertyRef Name="OrderTicketID" />
+            <Dependent Role="NhanVien">
+              <PropertyRef Name="MaVaiTro" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OD_USERID">
-          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
-          <End Role="OrderTicket" Type="Self.OrderTicket" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserAccount">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="OrderTicket">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__UserRoles__RoleI__3E52440B">
-          <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
-          <End Role="UserRoles" Type="Self.UserRoles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Roles">
-              <PropertyRef Name="RolesID" />
-            </Principal>
-            <Dependent Role="UserRoles">
-              <PropertyRef Name="RoleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Trip__RouteID__4BAC3F29">
-          <End Role="Route" Type="Self.Route" Multiplicity="0..1" />
-          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Route">
-              <PropertyRef Name="RouteID" />
-            </Principal>
-            <Dependent Role="Trip">
-              <PropertyRef Name="RouteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__UserRoles__UserI__3D5E1FD2">
-          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
-          <End Role="UserRoles" Type="Self.UserRoles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserAccount">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="UserRoles">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="DB_DoAnBanVeXeEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Bus" EntityType="Self.Bus" />
-          <EntitySet Name="DetailsTicket" EntityType="Self.DetailsTicket" />
-          <EntitySet Name="Driver" EntityType="Self.Driver" />
-          <EntitySet Name="OrderTicket" EntityType="Self.OrderTicket" />
-          <EntitySet Name="Passenger" EntityType="Self.Passenger" />
-          <EntitySet Name="Payment" EntityType="Self.Payment" />
-          <EntitySet Name="Roles" EntityType="Self.Roles" />
-          <EntitySet Name="Route" EntityType="Self.Route" />
-          <EntitySet Name="Seat" EntityType="Self.Seat" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
-          <EntitySet Name="Trip" EntityType="Self.Trip" />
-          <EntitySet Name="UserAccount" EntityType="Self.UserAccount" />
-          <EntitySet Name="UserRoles" EntityType="Self.UserRoles" />
-          <AssociationSet Name="FK__Seat__BusID__44FF419A" Association="Self.FK__Seat__BusID__44FF419A">
-            <End Role="Bus" EntitySet="Bus" />
-            <End Role="Seat" EntitySet="Seat" />
+        <EntityContainer Name="DB_QuanLyQuanBidaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BanBida" EntityType="Self.BanBida" />
+          <EntitySet Name="ChiTietHoaDon" EntityType="Self.ChiTietHoaDon" />
+          <EntitySet Name="DichVu" EntityType="Self.DichVu" />
+          <EntitySet Name="HoaDon" EntityType="Self.HoaDon" />
+          <EntitySet Name="KhachHang" EntityType="Self.KhachHang" />
+          <EntitySet Name="LoaiBan" EntityType="Self.LoaiBan" />
+          <EntitySet Name="LoaiDichVu" EntityType="Self.LoaiDichVu" />
+          <EntitySet Name="NhanVien" EntityType="Self.NhanVien" />
+          <EntitySet Name="VaiTro" EntityType="Self.VaiTro" />
+          <AssociationSet Name="FK__BanBida__MaLoaiB__49C3F6B7" Association="Self.FK__BanBida__MaLoaiB__49C3F6B7">
+            <End Role="LoaiBan" EntitySet="LoaiBan" />
+            <End Role="BanBida" EntitySet="BanBida" />
           </AssociationSet>
-          <AssociationSet Name="FK__Trip__BusID__4CA06362" Association="Self.FK__Trip__BusID__4CA06362">
-            <End Role="Bus" EntitySet="Bus" />
-            <End Role="Trip" EntitySet="Trip" />
+          <AssociationSet Name="FK__HoaDon__MaBan__5629CD9C" Association="Self.FK__HoaDon__MaBan__5629CD9C">
+            <End Role="BanBida" EntitySet="BanBida" />
+            <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__DetailsTi__Order__534D60F1" Association="Self.FK__DetailsTi__Order__534D60F1">
-            <End Role="OrderTicket" EntitySet="OrderTicket" />
-            <End Role="DetailsTicket" EntitySet="DetailsTicket" />
+          <AssociationSet Name="FK__ChiTietHo__MaDic__5CD6CB2B" Association="Self.FK__ChiTietHo__MaDic__5CD6CB2B">
+            <End Role="DichVu" EntitySet="DichVu" />
+            <End Role="ChiTietHoaDon" EntitySet="ChiTietHoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__DetailsTi__SeatI__5535A963" Association="Self.FK__DetailsTi__SeatI__5535A963">
-            <End Role="Seat" EntitySet="Seat" />
-            <End Role="DetailsTicket" EntitySet="DetailsTicket" />
+          <AssociationSet Name="FK__ChiTietHo__MaHoa__5BE2A6F2" Association="Self.FK__ChiTietHo__MaHoa__5BE2A6F2">
+            <End Role="HoaDon" EntitySet="HoaDon" />
+            <End Role="ChiTietHoaDon" EntitySet="ChiTietHoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__DetailsTi__TripI__5441852A" Association="Self.FK__DetailsTi__TripI__5441852A">
-            <End Role="Trip" EntitySet="Trip" />
-            <End Role="DetailsTicket" EntitySet="DetailsTicket" />
+          <AssociationSet Name="FK__DichVu__MaLoaiDV__5070F446" Association="Self.FK__DichVu__MaLoaiDV__5070F446">
+            <End Role="LoaiDichVu" EntitySet="LoaiDichVu" />
+            <End Role="DichVu" EntitySet="DichVu" />
           </AssociationSet>
-          <AssociationSet Name="FK__Trip__DriverID__4D94879B" Association="Self.FK__Trip__DriverID__4D94879B">
-            <End Role="Driver" EntitySet="Driver" />
-            <End Role="Trip" EntitySet="Trip" />
+          <AssociationSet Name="FK__HoaDon__MaKhachH__571DF1D5" Association="Self.FK__HoaDon__MaKhachH__571DF1D5">
+            <End Role="KhachHang" EntitySet="KhachHang" />
+            <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderTick__UserI__5070F446" Association="Self.FK__OrderTick__UserI__5070F446">
-            <End Role="Passenger" EntitySet="Passenger" />
-            <End Role="OrderTicket" EntitySet="OrderTicket" />
+          <AssociationSet Name="FK__HoaDon__MaNhanVi__5812160E" Association="Self.FK__HoaDon__MaNhanVi__5812160E">
+            <End Role="NhanVien" EntitySet="NhanVien" />
+            <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__Payment__OrderTi__5812160E" Association="Self.FK__Payment__OrderTi__5812160E">
-            <End Role="OrderTicket" EntitySet="OrderTicket" />
-            <End Role="Payment" EntitySet="Payment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OD_USERID" Association="Self.FK_OD_USERID">
-            <End Role="UserAccount" EntitySet="UserAccount" />
-            <End Role="OrderTicket" EntitySet="OrderTicket" />
-          </AssociationSet>
-          <AssociationSet Name="FK__UserRoles__RoleI__3E52440B" Association="Self.FK__UserRoles__RoleI__3E52440B">
-            <End Role="Roles" EntitySet="Roles" />
-            <End Role="UserRoles" EntitySet="UserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Trip__RouteID__4BAC3F29" Association="Self.FK__Trip__RouteID__4BAC3F29">
-            <End Role="Route" EntitySet="Route" />
-            <End Role="Trip" EntitySet="Trip" />
-          </AssociationSet>
-          <AssociationSet Name="FK__UserRoles__UserI__3D5E1FD2" Association="Self.FK__UserRoles__UserI__3D5E1FD2">
-            <End Role="UserAccount" EntitySet="UserAccount" />
-            <End Role="UserRoles" EntitySet="UserRoles" />
+          <AssociationSet Name="FK__NhanVien__MaVaiT__3D5E1FD2" Association="Self.FK__NhanVien__MaVaiT__3D5E1FD2">
+            <End Role="VaiTro" EntitySet="VaiTro" />
+            <End Role="NhanVien" EntitySet="NhanVien" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -707,142 +491,104 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="DB_DoAnBanVeXeModelStoreContainer" CdmEntityContainer="DB_DoAnBanVeXeEntities">
-          <EntitySetMapping Name="Bus">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.Bus">
-              <MappingFragment StoreEntitySet="Bus">
-                <ScalarProperty Name="BusID" ColumnName="BusID" />
-                <ScalarProperty Name="BusNumber" ColumnName="BusNumber" />
-                <ScalarProperty Name="TotalSeat" ColumnName="TotalSeat" />
-                <ScalarProperty Name="BusType" ColumnName="BusType" />
+        <EntityContainerMapping StorageEntityContainer="DB_QuanLyQuanBidaModelStoreContainer" CdmEntityContainer="DB_QuanLyQuanBidaEntities">
+          <EntitySetMapping Name="BanBida">
+            <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.BanBida">
+              <MappingFragment StoreEntitySet="BanBida">
+                <ScalarProperty Name="MaBan" ColumnName="MaBan" />
+                <ScalarProperty Name="TenBan" ColumnName="TenBan" />
+                <ScalarProperty Name="MaLoaiBan" ColumnName="MaLoaiBan" />
+                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DetailsTicket">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.DetailsTicket">
-              <MappingFragment StoreEntitySet="DetailsTicket">
-                <ScalarProperty Name="DetailsTicketID" ColumnName="DetailsTicketID" />
-                <ScalarProperty Name="OrderTicketID" ColumnName="OrderTicketID" />
-                <ScalarProperty Name="TripID" ColumnName="TripID" />
-                <ScalarProperty Name="SeatID" ColumnName="SeatID" />
-                <ScalarProperty Name="IsBooked" ColumnName="IsBooked" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
+          <EntitySetMapping Name="ChiTietHoaDon">
+            <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.ChiTietHoaDon">
+              <MappingFragment StoreEntitySet="ChiTietHoaDon">
+                <ScalarProperty Name="MaCTHD" ColumnName="MaCTHD" />
+                <ScalarProperty Name="MaHoaDon" ColumnName="MaHoaDon" />
+                <ScalarProperty Name="MaDichVu" ColumnName="MaDichVu" />
+                <ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
+                <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+                <ScalarProperty Name="ThanhTien" ColumnName="ThanhTien" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Driver">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.Driver">
-              <MappingFragment StoreEntitySet="Driver">
-                <ScalarProperty Name="DriverID" ColumnName="DriverID" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="LicenseNumber" ColumnName="LicenseNumber" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <EntitySetMapping Name="DichVu">
+            <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.DichVu">
+              <MappingFragment StoreEntitySet="DichVu">
+                <ScalarProperty Name="MaDichVu" ColumnName="MaDichVu" />
+                <ScalarProperty Name="TenDichVu" ColumnName="TenDichVu" />
+                <ScalarProperty Name="MaLoaiDV" ColumnName="MaLoaiDV" />
+                <ScalarProperty Name="DonViTinh" ColumnName="DonViTinh" />
+                <ScalarProperty Name="Gia" ColumnName="Gia" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OrderTicket">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.OrderTicket">
-              <MappingFragment StoreEntitySet="OrderTicket">
-                <ScalarProperty Name="OrderTicketID" ColumnName="OrderTicketID" />
-                <ScalarProperty Name="PassengerID" ColumnName="PassengerID" />
-                <ScalarProperty Name="Total" ColumnName="Total" />
-                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <EntitySetMapping Name="HoaDon">
+            <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.HoaDon">
+              <MappingFragment StoreEntitySet="HoaDon">
+                <ScalarProperty Name="MaHoaDon" ColumnName="MaHoaDon" />
+                <ScalarProperty Name="MaBan" ColumnName="MaBan" />
+                <ScalarProperty Name="MaKhachHang" ColumnName="MaKhachHang" />
+                <ScalarProperty Name="MaNhanVienTao" ColumnName="MaNhanVienTao" />
+                <ScalarProperty Name="ThoiGianBatDau" ColumnName="ThoiGianBatDau" />
+                <ScalarProperty Name="ThoiGianKetThuc" ColumnName="ThoiGianKetThuc" />
+                <ScalarProperty Name="TienGio" ColumnName="TienGio" />
+                <ScalarProperty Name="TienDichVu" ColumnName="TienDichVu" />
+                <ScalarProperty Name="GiamGia" ColumnName="GiamGia" />
+                <ScalarProperty Name="TongTien" ColumnName="TongTien" />
+                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Passenger">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.Passenger">
-              <MappingFragment StoreEntitySet="Passenger">
-                <ScalarProperty Name="PassengerID" ColumnName="PassengerID" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
+          <EntitySetMapping Name="KhachHang">
+            <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.KhachHang">
+              <MappingFragment StoreEntitySet="KhachHang">
+                <ScalarProperty Name="MaKhachHang" ColumnName="MaKhachHang" />
+                <ScalarProperty Name="HoTen" ColumnName="HoTen" />
+                <ScalarProperty Name="SoDienThoai" ColumnName="SoDienThoai" />
+                <ScalarProperty Name="DiemTichLuy" ColumnName="DiemTichLuy" />
+                <ScalarProperty Name="HangThanhVien" ColumnName="HangThanhVien" />
+                <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Payment">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.Payment">
-              <MappingFragment StoreEntitySet="Payment">
-                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
-                <ScalarProperty Name="OrderTicketID" ColumnName="OrderTicketID" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
-                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
-                <ScalarProperty Name="PaymentStatus" ColumnName="PaymentStatus" />
+          <EntitySetMapping Name="LoaiBan">
+            <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.LoaiBan">
+              <MappingFragment StoreEntitySet="LoaiBan">
+                <ScalarProperty Name="MaLoaiBan" ColumnName="MaLoaiBan" />
+                <ScalarProperty Name="TenLoaiBan" ColumnName="TenLoaiBan" />
+                <ScalarProperty Name="GiaTheoGio" ColumnName="GiaTheoGio" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.Roles">
-              <MappingFragment StoreEntitySet="Roles">
-                <ScalarProperty Name="RolesID" ColumnName="RolesID" />
-                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+          <EntitySetMapping Name="LoaiDichVu">
+            <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.LoaiDichVu">
+              <MappingFragment StoreEntitySet="LoaiDichVu">
+                <ScalarProperty Name="MaLoaiDV" ColumnName="MaLoaiDV" />
+                <ScalarProperty Name="TenLoaiDV" ColumnName="TenLoaiDV" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Route">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.Route">
-              <MappingFragment StoreEntitySet="Route">
-                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
-                <ScalarProperty Name="RouteName" ColumnName="RouteName" />
-                <ScalarProperty Name="StartLocation" ColumnName="StartLocation" />
-                <ScalarProperty Name="EndLocation" ColumnName="EndLocation" />
-                <ScalarProperty Name="Distance" ColumnName="Distance" />
+          <EntitySetMapping Name="NhanVien">
+            <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.NhanVien">
+              <MappingFragment StoreEntitySet="NhanVien">
+                <ScalarProperty Name="MaNhanVien" ColumnName="MaNhanVien" />
+                <ScalarProperty Name="HoTen" ColumnName="HoTen" />
+                <ScalarProperty Name="SoDienThoai" ColumnName="SoDienThoai" />
+                <ScalarProperty Name="TenDangNhap" ColumnName="TenDangNhap" />
+                <ScalarProperty Name="MatKhau" ColumnName="MatKhau" />
+                <ScalarProperty Name="MaVaiTro" ColumnName="MaVaiTro" />
+                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Seat">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.Seat">
-              <MappingFragment StoreEntitySet="Seat">
-                <ScalarProperty Name="SeatID" ColumnName="SeatID" />
-                <ScalarProperty Name="BusID" ColumnName="BusID" />
-                <ScalarProperty Name="SeatNumber" ColumnName="SeatNumber" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Trip">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.Trip">
-              <MappingFragment StoreEntitySet="Trip">
-                <ScalarProperty Name="TripID" ColumnName="TripID" />
-                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
-                <ScalarProperty Name="BusID" ColumnName="BusID" />
-                <ScalarProperty Name="DriverID" ColumnName="DriverID" />
-                <ScalarProperty Name="DepartureLocation" ColumnName="DepartureLocation" />
-                <ScalarProperty Name="ArrivalLocation" ColumnName="ArrivalLocation" />
-                <ScalarProperty Name="DepartureTime" ColumnName="DepartureTime" />
-                <ScalarProperty Name="ArrivalTime" ColumnName="ArrivalTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserAccount">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.UserAccount">
-              <MappingFragment StoreEntitySet="UserAccount">
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="CCCD" ColumnName="CCCD" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserRoles">
-            <EntityTypeMapping TypeName="DB_DoAnBanVeXeModel.UserRoles">
-              <MappingFragment StoreEntitySet="UserRoles">
-                <ScalarProperty Name="UserRolesID" ColumnName="UserRolesID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <EntitySetMapping Name="VaiTro">
+            <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.VaiTro">
+              <MappingFragment StoreEntitySet="VaiTro">
+                <ScalarProperty Name="MaVaiTro" ColumnName="MaVaiTro" />
+                <ScalarProperty Name="TenVaiTro" ColumnName="TenVaiTro" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

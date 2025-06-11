@@ -12,20 +12,22 @@ namespace QuanLyQuanBida.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class Seat
+    public partial class KhachHang
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Seat()
+        public KhachHang()
         {
-            this.DetailsTicket = new HashSet<DetailsTicket>();
+            this.HoaDon = new HashSet<HoaDon>();
         }
     
-        public int SeatID { get; set; }
-        public Nullable<int> BusID { get; set; }
-        public string SeatNumber { get; set; }
+        public int MaKhachHang { get; set; }
+        public string HoTen { get; set; }
+        public string SoDienThoai { get; set; }
+        public int DiemTichLuy { get; set; }
+        public string HangThanhVien { get; set; }
+        public Nullable<System.DateTime> NgayTao { get; set; }
     
-        public virtual Bus Bus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DetailsTicket> DetailsTicket { get; set; }
+        public virtual ICollection<HoaDon> HoaDon { get; set; }
     }
 }

@@ -53,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BanBida.cs">
+      <DependentUpon>BidaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="BidaModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -68,45 +71,30 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BidaModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Bus.cs">
+    <Compile Include="ChiTietHoaDon.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs" />
-    <Compile Include="DetailsTicket.cs">
+    <Compile Include="DichVu.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Driver.cs">
+    <Compile Include="HoaDon.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="OrderTicket.cs">
+    <Compile Include="KhachHang.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Passenger.cs">
+    <Compile Include="LoaiBan.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Payment.cs">
+    <Compile Include="LoaiDichVu.cs">
+      <DependentUpon>BidaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="NhanVien.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Roles.cs">
-      <DependentUpon>BidaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Route.cs">
-      <DependentUpon>BidaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Seat.cs">
-      <DependentUpon>BidaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sysdiagrams.cs">
-      <DependentUpon>BidaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Trip.cs">
-      <DependentUpon>BidaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UserAccount.cs">
-      <DependentUpon>BidaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UserRoles.cs">
+    <Compile Include="VaiTro.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -128,6 +116,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="BidaModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>BidaModel.edmx</DependentUpon>
@@ -138,9 +129,6 @@
       <DependentUpon>BidaModel.edmx</DependentUpon>
       <LastGenOutput>BidaModel.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

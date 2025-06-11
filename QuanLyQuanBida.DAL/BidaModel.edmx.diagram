@@ -4,32 +4,24 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c48b78895a7d4ba4861827b37ed4864f" Name="Diagram1">
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.Bus" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.DetailsTicket" Width="1.5" PointX="5.25" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.Driver" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.OrderTicket" Width="1.5" PointX="3" PointY="13" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.Passenger" Width="1.5" PointX="0.75" PointY="11.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.Payment" Width="1.5" PointX="5.25" PointY="13.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.Roles" Width="1.5" PointX="0.75" PointY="18" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.Route" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.Seat" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.sysdiagrams" Width="1.5" PointX="2.75" PointY="8.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.Trip" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.UserAccount" Width="1.5" PointX="0.75" PointY="14.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="DB_DoAnBanVeXeModel.UserRoles" Width="1.5" PointX="3" PointY="16.75" IsExpanded="true" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__Seat__BusID__44FF419A" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__Trip__BusID__4CA06362" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__DetailsTi__Order__534D60F1" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__DetailsTi__SeatI__5535A963" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__DetailsTi__TripI__5441852A" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__Trip__DriverID__4D94879B" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__OrderTick__UserI__5070F446" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__Payment__OrderTi__5812160E" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK_OD_USERID" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__UserRoles__RoleI__3E52440B" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__Trip__RouteID__4BAC3F29" ManuallyRouted="false" />
-        <AssociationConnector Association="DB_DoAnBanVeXeModel.FK__UserRoles__UserI__3D5E1FD2" ManuallyRouted="false" />
+      <Diagram DiagramId="77cbf66d67e54af8a6c86ed6ee1a2c4c" Name="Diagram1">
+        <EntityTypeShape EntityType="DB_QuanLyQuanBidaModel.BanBida" Width="1.5" PointX="3" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_QuanLyQuanBidaModel.ChiTietHoaDon" Width="1.5" PointX="7.5" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_QuanLyQuanBidaModel.DichVu" Width="1.5" PointX="5.25" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_QuanLyQuanBidaModel.HoaDon" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_QuanLyQuanBidaModel.KhachHang" Width="1.5" PointX="3" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_QuanLyQuanBidaModel.LoaiBan" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_QuanLyQuanBidaModel.LoaiDichVu" Width="1.5" PointX="3" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_QuanLyQuanBidaModel.NhanVien" Width="1.5" PointX="3" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_QuanLyQuanBidaModel.VaiTro" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <AssociationConnector Association="DB_QuanLyQuanBidaModel.FK__BanBida__MaLoaiB__49C3F6B7" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_QuanLyQuanBidaModel.FK__HoaDon__MaBan__5629CD9C" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_QuanLyQuanBidaModel.FK__ChiTietHo__MaDic__5CD6CB2B" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_QuanLyQuanBidaModel.FK__ChiTietHo__MaHoa__5BE2A6F2" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_QuanLyQuanBidaModel.FK__DichVu__MaLoaiDV__5070F446" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_QuanLyQuanBidaModel.FK__HoaDon__MaKhachH__571DF1D5" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_QuanLyQuanBidaModel.FK__HoaDon__MaNhanVi__5812160E" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_QuanLyQuanBidaModel.FK__NhanVien__MaVaiT__3D5E1FD2" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

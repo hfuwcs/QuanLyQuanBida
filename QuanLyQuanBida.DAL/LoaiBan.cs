@@ -12,21 +12,19 @@ namespace QuanLyQuanBida.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class Route
+    public partial class LoaiBan
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Route()
+        public LoaiBan()
         {
-            this.Trip = new HashSet<Trip>();
+            this.BanBida = new HashSet<BanBida>();
         }
     
-        public int RouteID { get; set; }
-        public string RouteName { get; set; }
-        public string StartLocation { get; set; }
-        public string EndLocation { get; set; }
-        public Nullable<int> Distance { get; set; }
+        public int MaLoaiBan { get; set; }
+        public string TenLoaiBan { get; set; }
+        public decimal GiaTheoGio { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Trip> Trip { get; set; }
+        public virtual ICollection<BanBida> BanBida { get; set; }
     }
 }

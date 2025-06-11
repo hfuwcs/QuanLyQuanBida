@@ -12,20 +12,24 @@ namespace QuanLyQuanBida.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class Passenger
+    public partial class NhanVien
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Passenger()
+        public NhanVien()
         {
-            this.OrderTicket = new HashSet<OrderTicket>();
+            this.HoaDon = new HashSet<HoaDon>();
         }
     
-        public int PassengerID { get; set; }
-        public string FullName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
+        public int MaNhanVien { get; set; }
+        public string HoTen { get; set; }
+        public string SoDienThoai { get; set; }
+        public string TenDangNhap { get; set; }
+        public string MatKhau { get; set; }
+        public Nullable<int> MaVaiTro { get; set; }
+        public bool TrangThai { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderTicket> OrderTicket { get; set; }
+        public virtual ICollection<HoaDon> HoaDon { get; set; }
+        public virtual VaiTro VaiTro { get; set; }
     }
 }

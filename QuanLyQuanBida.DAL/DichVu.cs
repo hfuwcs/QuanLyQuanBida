@@ -12,18 +12,22 @@ namespace QuanLyQuanBida.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class Roles
+    public partial class DichVu
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Roles()
+        public DichVu()
         {
-            this.UserRoles = new HashSet<UserRoles>();
+            this.ChiTietHoaDon = new HashSet<ChiTietHoaDon>();
         }
     
-        public int RolesID { get; set; }
-        public string RoleName { get; set; }
+        public int MaDichVu { get; set; }
+        public string TenDichVu { get; set; }
+        public Nullable<int> MaLoaiDV { get; set; }
+        public string DonViTinh { get; set; }
+        public decimal Gia { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserRoles> UserRoles { get; set; }
+        public virtual ICollection<ChiTietHoaDon> ChiTietHoaDon { get; set; }
+        public virtual LoaiDichVu LoaiDichVu { get; set; }
     }
 }

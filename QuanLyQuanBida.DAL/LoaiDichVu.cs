@@ -12,24 +12,18 @@ namespace QuanLyQuanBida.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class UserAccount
+    public partial class LoaiDichVu
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public UserAccount()
+        public LoaiDichVu()
         {
-            this.OrderTicket = new HashSet<OrderTicket>();
-            this.UserRoles = new HashSet<UserRoles>();
+            this.DichVu = new HashSet<DichVu>();
         }
     
-        public int UserID { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string CCCD { get; set; }
+        public int MaLoaiDV { get; set; }
+        public string TenLoaiDV { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderTicket> OrderTicket { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserRoles> UserRoles { get; set; }
+        public virtual ICollection<DichVu> DichVu { get; set; }
     }
 }

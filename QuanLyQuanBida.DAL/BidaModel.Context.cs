@@ -13,10 +13,10 @@ namespace QuanLyQuanBida.DAL
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class DB_DoAnBanVeXeEntities : DbContext
+    public partial class DB_QuanLyQuanBidaEntities : DbContext
     {
-        public DB_DoAnBanVeXeEntities()
-            : base("name=DB_DoAnBanVeXeEntities")
+        public DB_QuanLyQuanBidaEntities()
+            : base("name=DB_QuanLyQuanBidaEntities")
         {
         }
     
@@ -25,18 +25,14 @@ namespace QuanLyQuanBida.DAL
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Bus> Bus { get; set; }
-        public virtual DbSet<DetailsTicket> DetailsTicket { get; set; }
-        public virtual DbSet<Driver> Driver { get; set; }
-        public virtual DbSet<OrderTicket> OrderTicket { get; set; }
-        public virtual DbSet<Passenger> Passenger { get; set; }
-        public virtual DbSet<Payment> Payment { get; set; }
-        public virtual DbSet<Roles> Roles { get; set; }
-        public virtual DbSet<Route> Route { get; set; }
-        public virtual DbSet<Seat> Seat { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-        public virtual DbSet<Trip> Trip { get; set; }
-        public virtual DbSet<UserAccount> UserAccount { get; set; }
-        public virtual DbSet<UserRoles> UserRoles { get; set; }
+        public virtual DbSet<BanBida> BanBida { get; set; }
+        public virtual DbSet<ChiTietHoaDon> ChiTietHoaDon { get; set; }
+        public virtual DbSet<DichVu> DichVu { get; set; }
+        public virtual DbSet<HoaDon> HoaDon { get; set; }
+        public virtual DbSet<KhachHang> KhachHang { get; set; }
+        public virtual DbSet<LoaiBan> LoaiBan { get; set; }
+        public virtual DbSet<LoaiDichVu> LoaiDichVu { get; set; }
+        public virtual DbSet<NhanVien> NhanVien { get; set; }
+        public virtual DbSet<VaiTro> VaiTro { get; set; }
     }
 }

@@ -12,27 +12,18 @@ namespace QuanLyQuanBida.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class Trip
+    public partial class VaiTro
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Trip()
+        public VaiTro()
         {
-            this.DetailsTicket = new HashSet<DetailsTicket>();
+            this.NhanVien = new HashSet<NhanVien>();
         }
     
-        public int TripID { get; set; }
-        public Nullable<int> RouteID { get; set; }
-        public Nullable<int> BusID { get; set; }
-        public Nullable<int> DriverID { get; set; }
-        public string DepartureLocation { get; set; }
-        public string ArrivalLocation { get; set; }
-        public Nullable<System.DateTime> DepartureTime { get; set; }
-        public Nullable<System.DateTime> ArrivalTime { get; set; }
+        public int MaVaiTro { get; set; }
+        public string TenVaiTro { get; set; }
     
-        public virtual Bus Bus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DetailsTicket> DetailsTicket { get; set; }
-        public virtual Driver Driver { get; set; }
-        public virtual Route Route { get; set; }
+        public virtual ICollection<NhanVien> NhanVien { get; set; }
     }
 }

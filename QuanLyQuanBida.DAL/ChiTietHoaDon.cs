@@ -12,15 +12,16 @@ namespace QuanLyQuanBida.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class Payment
+    public partial class ChiTietHoaDon
     {
-        public int PaymentID { get; set; }
-        public Nullable<int> OrderTicketID { get; set; }
-        public Nullable<decimal> Amount { get; set; }
-        public string PaymentMethod { get; set; }
-        public Nullable<System.DateTime> PaymentDate { get; set; }
-        public string PaymentStatus { get; set; }
+        public int MaCTHD { get; set; }
+        public int MaHoaDon { get; set; }
+        public int MaDichVu { get; set; }
+        public int SoLuong { get; set; }
+        public decimal DonGia { get; set; }
+        public Nullable<decimal> ThanhTien { get; set; }
     
-        public virtual OrderTicket OrderTicket { get; set; }
+        public virtual DichVu DichVu { get; set; }
+        public virtual HoaDon HoaDon { get; set; }
     }
 }
