@@ -206,5 +206,15 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QuanLyQuanBida.BLL\QuanLyQuanBida.BLL.csproj">
+      <Project>{87dc384c-485f-45dc-a2a5-f5408ba1560d}</Project>
+      <Name>QuanLyQuanBida.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QuanLyQuanBida.DTO\QuanLyQuanBida.DTO.csproj">
+      <Project>{d4f30629-2f6f-45a8-b7d6-1e4e5f4734fe}</Project>
+      <Name>QuanLyQuanBida.DTO</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

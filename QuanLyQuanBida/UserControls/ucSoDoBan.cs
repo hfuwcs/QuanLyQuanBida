@@ -196,11 +196,10 @@ namespace QuanLyQuanBida.UserControls
             }
 
             Button btn = sender as Button;
-            var serviceInfo = (Tuple<string, double>)btn.Tag;
+            var serviceInfo = (Tuple<string, decimal>)btn.Tag;
             string tenSP = serviceInfo.Item1;
-            double donGia = serviceInfo.Item2;
+            decimal donGia = serviceInfo.Item2;
 
-            // Kiểm tra xem sản phẩm đã có trong hóa đơn chưa
             bool existed = false;
             foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
             {
