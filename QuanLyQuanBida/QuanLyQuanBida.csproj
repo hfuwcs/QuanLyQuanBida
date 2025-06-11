@@ -143,6 +143,9 @@
     <Compile Include="VaiTro.cs">
       <DependentUpon>BidaDb.tt</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\frmBatDauChoi.resx">
+      <DependentUpon>frmBatDauChoi.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>

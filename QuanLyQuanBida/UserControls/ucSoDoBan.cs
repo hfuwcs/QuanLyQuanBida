@@ -252,13 +252,10 @@ namespace QuanLyQuanBida.UserControls
         }
         private void btnBatDauChoi_Click(object sender, EventArgs e)
         {
-            // Mở form xác nhận
             using (var form = new frmBatDauChoi(lblTenBan.Text))
             {
-                // Nếu người dùng nhấn nút "Bắt Đầu" (OK)
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    // Lấy thông tin khách hàng từ form
                     int? maKH = form.MaKhachHangChon;
                     string tenKhach = form.TenKhachVangLai;
 
@@ -280,9 +277,7 @@ namespace QuanLyQuanBida.UserControls
 
                     MessageBox.Show($"Bắt đầu chơi cho {lblTenBan.Text}.\nKH ID: {maKH?.ToString() ?? "N/A"}\nTên khách: {tenKhach}");
 
-                    // Tải lại toàn bộ giao diện để cập nhật
                     LoadBanBida();
-                    // Xóa thông tin bàn đang chọn để buộc người dùng chọn lại
                     lblTenBan.Text = "CHỌN BÀN";
                     lblTrangThai.Text = "Trạng thái:";
                     dgvChiTietHoaDon.Rows.Clear();

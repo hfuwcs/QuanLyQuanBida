@@ -12,6 +12,7 @@ namespace QuanLyQuanBida.Forms
 {
     public partial class frmBatDauChoi : Form
     {
+        DB_QuanLyQuanBidaEntities db = new DB_QuanLyQuanBidaEntities();
         public int? MaKhachHangChon { get; private set; }
         public string TenKhachVangLai { get; private set; }
 
@@ -32,34 +33,36 @@ namespace QuanLyQuanBida.Forms
 
         private void LoadKhachHang()
         {
-            // --- PHẦN NGHIỆP VỤ CỦA BẠN ---
-            // Đây là nơi bạn sẽ truy vấn CSDL để lấy danh sách khách hàng
-            // và đổ vào ComboBox cboKhachHang.
-            // Ví dụ:
-            /*
-            using (var db = new DB_QuanLyQuanBidaEntities())
+
+            var danhSachKH= db.KhachHang.Select(kh => new
             {
-                var danhSachKH = db.KhachHangs
-                                   .Select(kh => new { kh.MaKhachHang, HoTenVaSDT = kh.HoTen + " - " + kh.SoDienThoai })
-                                   .ToList();
-
-                cboKhachHang.DataSource = danhSachKH;
-                cboKhachHang.DisplayMember = "HoTenVaSDT"; // Hiển thị tên và sđt
-                cboKhachHang.ValueMember = "MaKhachHang";   // Giá trị thực là Mã KH
-                cboKhachHang.SelectedIndex = -1; // Không chọn ai mặc định
-            }
-            */
-
-            // Dữ liệu mẫu để demo
-            var danhSachKHMau = new[] {
-                new { MaKhachHang = 1, HoTenVaSDT = "Nguyễn Phi Hùng - 0901234567" },
-                new { MaKhachHang = 2, HoTenVaSDT = "Trần Phạm Trọng Nhân - 0987654321" },
-                new { MaKhachHang = 3, HoTenVaSDT = "Lưu Hoàng Phúc - 0123456789" }
-            }.ToList();
-            cboKhachHang.DataSource = danhSachKHMau;
+                MaKhachHang = kh.MaKhachHang,
+                HoTenVaSDT = kh.HoTen + " - " + kh.SoDienThoai
+            }).ToList();
+            cboKhachHang.DataSource = danhSachKH;
             cboKhachHang.DisplayMember = "HoTenVaSDT";
             cboKhachHang.ValueMember = "MaKhachHang";
             cboKhachHang.SelectedIndex = -1;
+        }
+
+        private void btnBatDau_Click(object sender, EventArgs e)
+        {
+            int MaKhachHang = cboKhachHang.SelectedValue != null ? (int)cboKhachHang.SelectedValue : 0;
+            if (MaKhachHang == 0 && string.IsNullOrWhiteSpace(txtKhachVangLai.Text))
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng hoặc nhập tên khách vãng lai.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (MaKhachHang > 0 || !string.IsNullOrWhiteSpace(txtKhachVangLai.Text))
+            {
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng hoặc nhập tên khách vãng lai.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
         }
     }
 }
