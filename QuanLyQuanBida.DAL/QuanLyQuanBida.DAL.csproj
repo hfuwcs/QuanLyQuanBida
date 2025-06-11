@@ -74,7 +74,7 @@
     <Compile Include="ChiTietHoaDon.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Class1.cs" />
+    <Compile Include="BanBidaDAL.cs" />
     <Compile Include="DichVu.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>

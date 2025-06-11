@@ -12,7 +12,7 @@ namespace QuanLyQuanBida.Forms
 {
     public partial class frmBatDauChoi : Form
     {
-        DB_QuanLyQuanBidaEntities db = new DB_QuanLyQuanBidaEntities();
+        //DB_QuanLyQuanBidaEntities db = new DB_QuanLyQuanBidaEntities();
         public int? MaKhachHangChon { get; private set; }
         public string TenKhachVangLai { get; private set; }
 

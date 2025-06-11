@@ -1,4 +1,6 @@
-﻿using QuanLyQuanBida.Forms;
+﻿using QuanLyQuanBida.BLL;
+using QuanLyQuanBida.DTO;
+using QuanLyQuanBida.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +15,8 @@ namespace QuanLyQuanBida.UserControls
 {
     public partial class ucSoDoBan : UserControl
     {
-        DB_QuanLyQuanBidaEntities db = new DB_QuanLyQuanBidaEntities();
+        private BanBidaBLL bll = new BanBidaBLL();
+
         public ucSoDoBan()
         {
             InitializeComponent();
@@ -35,25 +38,21 @@ namespace QuanLyQuanBida.UserControls
         private void LoadBanBida()
         {
             flpBanBida.Controls.Clear();
-            var tables = db.BanBida
-                .Select(b => new { b.TenBan, b.TrangThai })
-                .ToList()
-                .Select(b => Tuple.Create(b.TenBan, b.TrangThai == "Trống" ? "Trống" : (b.TrangThai == "DangChoi" ? "Đang chơi" : "Bảo trì")))
-                .ToList();
+            List<BanBidaDTO> danhSachBan = bll.LayDanhSachBan();
 
-            foreach (var table in tables)
+            foreach (var banDTO in danhSachBan)
             {
                 Button btn = new Button()
                 {
                     Width = 120,
                     Height = 60,
-                    Text = table.Item1,
-                    Tag = table.Item2,
+                    Text = banDTO.TenBan,
+                    Tag = banDTO.TrangThai,
                     Font = new Font("Segoe UI", 10, FontStyle.Bold),
                     Margin = new Padding(10)
                 };
 
-                switch (table.Item2)
+                switch (banDTO.TrangThai)
                 {
                     case "Trống":
                         btn.BackColor = Color.SeaGreen;
@@ -140,7 +139,6 @@ namespace QuanLyQuanBida.UserControls
             dgvChiTietHoaDon.Columns[2].DefaultCellStyle.Format = "N0";
             dgvChiTietHoaDon.Columns[3].DefaultCellStyle.Format = "N0";
         }
-
 
         // Sự kiện khi nhấn vào 1 bàn
         private void Ban_Click(object sender, EventArgs e)
