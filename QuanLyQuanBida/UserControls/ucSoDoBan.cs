@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuanLyQuanBida.Forms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,10 +13,10 @@ namespace QuanLyQuanBida.UserControls
 {
     public partial class ucSoDoBan : UserControl
     {
+        DB_QuanLyQuanBidaEntities db = new DB_QuanLyQuanBidaEntities();
         public ucSoDoBan()
         {
             InitializeComponent();
-            // Tải dữ liệu mẫu khi control được load
             this.Load += UcSoDoBan_Load;
         }
 
@@ -23,7 +24,6 @@ namespace QuanLyQuanBida.UserControls
         {
             LoadBanBida();
             LoadLoaiDichVu();
-            // Mặc định chọn loại dịch vụ đầu tiên
             if (flpLoaiDichVu.Controls.Count > 0)
             {
                 (flpLoaiDichVu.Controls[0] as Button).PerformClick();
@@ -31,17 +31,15 @@ namespace QuanLyQuanBida.UserControls
             SetupDataGridView();
         }
 
-        // Tải danh sách bàn (dữ liệu giả)
+        // Load Bàn
         private void LoadBanBida()
         {
             flpBanBida.Controls.Clear();
-            var tables = new List<Tuple<string, string>>
-            {
-                Tuple.Create("VIP 1", "Đang chơi"), Tuple.Create("VIP 2", "Trống"),
-                Tuple.Create("L-01", "Trống"), Tuple.Create("L-02", "Đang chơi"),
-                Tuple.Create("L-03", "Bảo trì"), Tuple.Create("L-04", "Trống"),
-                Tuple.Create("L-05", "Trống"), Tuple.Create("L-06", "Đang chơi"),
-            };
+            var tables = db.BanBida
+                .Select(b => new { b.TenBan, b.TrangThai })
+                .ToList()
+                .Select(b => Tuple.Create(b.TenBan, b.TrangThai == "Trống" ? "Trống" : (b.TrangThai == "DangChoi" ? "Đang chơi" : "Bảo trì")))
+                .ToList();
 
             foreach (var table in tables)
             {
@@ -50,7 +48,7 @@ namespace QuanLyQuanBida.UserControls
                     Width = 120,
                     Height = 60,
                     Text = table.Item1,
-                    Tag = table.Item2, // Lưu trạng thái vào Tag
+                    Tag = table.Item2,
                     Font = new Font("Segoe UI", 10, FontStyle.Bold),
                     Margin = new Padding(10)
                 };
@@ -75,11 +73,13 @@ namespace QuanLyQuanBida.UserControls
             }
         }
 
-        // Tải danh mục dịch vụ (dữ liệu giả)
         private void LoadLoaiDichVu()
         {
             flpLoaiDichVu.Controls.Clear();
-            string[] categories = { "Đồ uống", "Đồ ăn", "Bia", "Thuốc lá" };
+            string[] categories = db.LoaiDichVu.ToList()
+                .Select(ldv => ldv.TenLoaiDV)
+                .ToArray();
+
             foreach (var cat in categories)
             {
                 Button btn = new Button()
@@ -96,23 +96,16 @@ namespace QuanLyQuanBida.UserControls
             }
         }
 
-        // Tải các sản phẩm/dịch vụ theo loại (dữ liệu giả)
         private void LoadDichVu(string category)
         {
             flpDichVu.Controls.Clear();
-            // Đây là nơi bạn sẽ truy vấn CSDL
-            var services = new List<Tuple<string, double>>();
-            if (category == "Đồ uống")
-            {
-                services.Add(Tuple.Create("Coca Cola", 15000.0));
-                services.Add(Tuple.Create("Sting", 15000.0));
-                services.Add(Tuple.Create("Nước suối", 10000.0));
-            }
-            else if (category == "Đồ ăn")
-            {
-                services.Add(Tuple.Create("Mì xào trứng", 30000.0));
-                services.Add(Tuple.Create("Khô gà", 35000.0));
-            }
+
+            var services = db.DichVu
+                .Where(dv => dv.LoaiDichVu.TenLoaiDV == category)
+                .Select(dv => new { dv.TenDichVu, dv.Gia })
+                .ToList()
+                .Select(dv => Tuple.Create(dv.TenDichVu, dv.Gia))
+                .ToList();
 
             foreach (var service in services)
             {
@@ -121,7 +114,7 @@ namespace QuanLyQuanBida.UserControls
                     Width = 150,
                     Height = 80,
                     Text = $"{service.Item1}\n{service.Item2:N0}đ",
-                    Tag = service, // Lưu thông tin sản phẩm
+                    Tag = service,
                     Font = new Font("Segoe UI", 10),
                     TextAlign = ContentAlignment.MiddleCenter,
                     BackColor = Color.FromArgb(63, 63, 70),
@@ -154,19 +147,28 @@ namespace QuanLyQuanBida.UserControls
         {
             Button btn = sender as Button;
             lblTenBan.Text = btn.Text;
+            string trangThai = btn.Tag.ToString();
             lblTrangThai.Text = "Trạng thái: " + btn.Tag.ToString();
 
-            // Giả lập dữ liệu hóa đơn khi bàn đang chơi
-            dgvChiTietHoaDon.Rows.Clear();
-            if (btn.Tag.ToString() == "Đang chơi")
+            if (trangThai == "Trống")
             {
-                lblGioVao.Text = "Giờ vào: " + DateTime.Now.AddHours(-1).ToString("HH:mm");
-                dgvChiTietHoaDon.Rows.Add("Tiền giờ", "1.0", 60000, 60000);
-                dgvChiTietHoaDon.Rows.Add("Coca Cola", "2", 15000, 30000);
+                btnBatDauChoi.Visible = true;
+                btnThanhToan.Visible = false;
+                btnInHoaDon.Visible = false;
+                dgvChiTietHoaDon.Rows.Clear();
+                lblGioVao.Text = "Giờ vào: N/A";
             }
             else
             {
-                lblGioVao.Text = "Giờ vào: N/A";
+                btnBatDauChoi.Visible = false;
+                btnThanhToan.Visible = (trangThai == "Đang chơi");
+                btnInHoaDon.Visible = (trangThai == "Đang chơi");
+                if (trangThai == "Đang chơi")
+                {
+                    lblGioVao.Text = "Giờ vào: " + DateTime.Now.AddHours(-1).ToString("HH:mm");
+                    dgvChiTietHoaDon.Rows.Add("Tiền giờ", "1.0", 60000, 60000);
+                    dgvChiTietHoaDon.Rows.Add("Coca Cola", "2", 15000, 30000);
+                }
             }
             TinhTongTien();
         }
@@ -245,6 +247,46 @@ namespace QuanLyQuanBida.UserControls
                     lblTrangThai.Text = "Trạng thái: ";
                     lblGioVao.Text = "Giờ vào: N/A";
                     TinhTongTien();
+                }
+            }
+        }
+        private void btnBatDauChoi_Click(object sender, EventArgs e)
+        {
+            // Mở form xác nhận
+            using (var form = new frmBatDauChoi(lblTenBan.Text))
+            {
+                // Nếu người dùng nhấn nút "Bắt Đầu" (OK)
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    // Lấy thông tin khách hàng từ form
+                    int? maKH = form.MaKhachHangChon;
+                    string tenKhach = form.TenKhachVangLai;
+
+                    // --- PHẦN NGHIỆP VỤ CỦA BẠN ---
+                    // 1. Tạo một hóa đơn mới trong CSDL với:
+                    //    - Mã bàn (lấy từ lblTenBan.Text)
+                    //    - Mã khách hàng (maKH) nếu có
+                    //    - Tên khách vãng lai (tenKhach) nếu có
+                    //    - Thời gian bắt đầu là DateTime.Now
+                    //    - Trạng thái hóa đơn là "Chưa thanh toán"
+                    //
+                    // 2. Cập nhật trạng thái của bàn trong CSDL thành "Đang chơi".
+                    //
+                    // 3. Tải lại danh sách bàn để cập nhật màu sắc.
+                    //    LoadBanBida();
+                    //
+                    // 4. Cập nhật giao diện bên phải để hiển thị hóa đơn mới.
+                    //    (Ẩn nút Bắt đầu, hiện nút Thanh toán,...)
+
+                    MessageBox.Show($"Bắt đầu chơi cho {lblTenBan.Text}.\nKH ID: {maKH?.ToString() ?? "N/A"}\nTên khách: {tenKhach}");
+
+                    // Tải lại toàn bộ giao diện để cập nhật
+                    LoadBanBida();
+                    // Xóa thông tin bàn đang chọn để buộc người dùng chọn lại
+                    lblTenBan.Text = "CHỌN BÀN";
+                    lblTrangThai.Text = "Trạng thái:";
+                    dgvChiTietHoaDon.Rows.Clear();
+                    btnBatDauChoi.Visible = false;
                 }
             }
         }
