@@ -10,11 +10,16 @@ namespace QuanLyQuanBida.BLL
 {
     public class BanBidaBLL
     {
-        private BanBidaDAL dal = new BanBidaDAL();
+        private BanBidaDAL bidaDAL = new BanBidaDAL();
+        KhachHangDAL khachHangDAL = new KhachHangDAL();
 
         public List<BanBidaDTO> LayDanhSachBan()
         {
-            return dal.LayDanhSachBan();
+            return bidaDAL.LayDanhSachBan();
+        }
+        public List<KhachHangDTO> LayDanhSachKhachHang()
+        {
+            return khachHangDAL.LayDanhSachKhachHang();
         }
     }
 }
