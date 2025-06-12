@@ -10,14 +10,14 @@ namespace QuanLyQuanBida.DAL
     public class BanBidaDAL
     {
         private DB_QuanLyQuanBidaEntities db = new DB_QuanLyQuanBidaEntities();
-
         public List<BanBidaDTO> LayDanhSachBan()
         {
             var tables = db.BanBida
                 .Select(b => new BanBidaDTO
                 {
                     TenBan = b.TenBan,
-                    TrangThai = b.TrangThai == "Trống" ? "Trống" : (b.TrangThai == "DangChoi" ? "Đang chơi" : "Bảo trì")
+                    TrangThai = b.TrangThai
+                    //== "Trống" ? "Trống" : (b.TrangThai == "DangChoi" ? "Đang chơi" : "Bảo trì")
                 })
                 .ToList();
             return tables;

@@ -21,12 +21,27 @@ namespace QuanLyQuanBida.DAL
                 {
                     //Lấy hết
                     services = db.DichVu
-                        .Select(dv => new
+                        .Join(
+                            db.LoaiDichVu,
+                            ldv => ldv.MaLoaiDV,
+                            dv => dv.MaLoaiDV,
+                            (dv,ldv) => new
+                            {
+                                dv.MaDichVu,
+                                dv.TenDichVu,
+                                dv.MaLoaiDV,
+                                dv.DonViTinh,
+                                dv.Gia,
+                                ldv.TenLoaiDV
+                            }
+                        )
+                        .Select(dv => new 
                         {
                             dv.MaDichVu,
                             dv.TenDichVu,
                             dv.MaLoaiDV,
                             dv.DonViTinh,
+                            dv.TenLoaiDV,
                             dv.Gia
                         })
                         .ToList()
@@ -36,19 +51,49 @@ namespace QuanLyQuanBida.DAL
                             TenDichVu = dv.TenDichVu,
                             MaLoaiDV = dv.MaLoaiDV,
                             DonViTinh = dv.DonViTinh,
+                            LoaiDichVu = dv.TenLoaiDV,
                             Gia = dv.Gia
                         })
                         .ToList();
                 }
                 else
                 {
-                    ////Lấy theo loại dịch vụ
-                    //services = db.DichVu
-                    //    .Where(dv => dv.LoaiDichVu.TenLoaiDV == category)
-                    //    .Select(dv => new { dv.TenDichVu, dv.Gia })
-                    //    .ToList()
-                    //    .Select(dv => Tuple.Create(dv.TenDichVu, dv.Gia))
-                    //    .ToList();
+                    services = db.DichVu
+                        .Join(
+                            db.LoaiDichVu,
+                            ldv => ldv.MaLoaiDV,
+                            dv => dv.MaLoaiDV,
+                            (dv, ldv) => new
+                            {
+                                dv.MaDichVu,
+                                dv.TenDichVu,
+                                dv.MaLoaiDV,
+                                dv.DonViTinh,
+                                dv.Gia,
+                                ldv.TenLoaiDV
+                            }
+                        )
+                        .Where(ldv => ldv.TenLoaiDV == category)
+                        .Select(dv => new
+                        {
+                            dv.MaDichVu,
+                            dv.TenDichVu,
+                            dv.MaLoaiDV,
+                            dv.DonViTinh,
+                            dv.TenLoaiDV,
+                            dv.Gia
+                        })
+                        .ToList()
+                        .Select(dv => new DichVuDTO
+                        {
+                            MaDichVu = dv.MaDichVu,
+                            TenDichVu = dv.TenDichVu,
+                            MaLoaiDV = dv.MaLoaiDV,
+                            DonViTinh = dv.DonViTinh,
+                            LoaiDichVu = dv.TenLoaiDV,
+                            Gia = dv.Gia
+                        })
+                        .ToList();
                 }
             }
             catch (Exception ex)
