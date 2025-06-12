@@ -228,6 +228,10 @@ namespace QuanLyQuanBida.UserControls
 
 
                     //Chỗ này phải truy vấn từ CSDL để lấy chi tiết hóa đơn
+                    //Giá tiền của bàn
+                    //Giờ chơi tính tới hiện tại
+                    //Nhân cả 2 lại
+
                     //int rowIndex = dgvChiTietHoaDon.Rows.Add();
 
                     //DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];

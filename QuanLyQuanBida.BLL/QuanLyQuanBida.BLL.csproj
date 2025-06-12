@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="BanBidaBLL.cs" />
     <Compile Include="DichVuBLL.cs" />
+    <Compile Include="HoaDonBLL.cs" />
     <Compile Include="KhachHangBLL.cs" />
     <Compile Include="LoaiDichVuBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

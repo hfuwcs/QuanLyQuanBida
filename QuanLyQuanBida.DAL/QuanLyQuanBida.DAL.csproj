@@ -82,6 +82,7 @@
     <Compile Include="HoaDon.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="HoaDonDAL.cs" />
     <Compile Include="KhachHang.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
