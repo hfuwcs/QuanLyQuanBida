@@ -96,13 +96,6 @@ namespace QuanLyQuanBida.UserControls
         private void LoadDichVu(string category)
         {
             flpDichVu.Controls.Clear();
-
-            //var services = db.DichVu
-            //    .Where(dv => dv.LoaiDichVu.TenLoaiDV == category)
-            //    .Select(dv => new { dv.TenDichVu, dv.Gia })
-            //    .ToList()
-            //    .Select(dv => Tuple.Create(dv.TenDichVu, dv.Gia))
-            //    .ToList();
             var services = bll.LayDanhSachDichVu(category);
 
             foreach (var service in services)
@@ -127,16 +120,70 @@ namespace QuanLyQuanBida.UserControls
         // Cài đặt cho Bảng chi tiết hóa đơn
         private void SetupDataGridView()
         {
-            dgvChiTietHoaDon.ColumnCount = 4;
-            dgvChiTietHoaDon.Columns[0].Name = "Tên sản phẩm";
-            dgvChiTietHoaDon.Columns[1].Name = "Số lượng";
-            dgvChiTietHoaDon.Columns[2].Name = "Đơn giá";
-            dgvChiTietHoaDon.Columns[3].Name = "Thành tiền";
+            dgvChiTietHoaDon.AutoGenerateColumns = false; 
+            var colTenSP = new DataGridViewTextBoxColumn
+            {
+                Name = "colTenSanPham",
+                HeaderText = "Tên sản phẩm",
+                DataPropertyName = "TenSanPham", 
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
+            dgvChiTietHoaDon.Columns.Add(colTenSP);
 
-            dgvChiTietHoaDon.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvChiTietHoaDon.Columns[1].Width = 80;
-            dgvChiTietHoaDon.Columns[2].DefaultCellStyle.Format = "N0";
-            dgvChiTietHoaDon.Columns[3].DefaultCellStyle.Format = "N0";
+            var colGiam = new DataGridViewButtonColumn
+            {
+                Name = "colGiamSoLuong",
+                HeaderText = "-",
+                Text = "-",
+                UseColumnTextForButtonValue = true, 
+                Width = 40
+            };
+            dgvChiTietHoaDon.Columns.Add(colGiam);
+
+            // 3. Cột Số lượng (TextBoxColumn)
+            var colSoLuong = new DataGridViewTextBoxColumn
+            {
+                Name = "colSoLuong",
+                HeaderText = "SL",
+                DataPropertyName = "SoLuong",
+                ReadOnly = true,
+                Width = 50,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
+            };
+            dgvChiTietHoaDon.Columns.Add(colSoLuong);
+
+            var colTang = new DataGridViewButtonColumn
+            {
+                Name = "colTangSoLuong",
+                HeaderText = "+",
+                Text = "+",
+                UseColumnTextForButtonValue = true,
+                Width = 40
+            };
+            dgvChiTietHoaDon.Columns.Add(colTang);
+
+            var colDonGia = new DataGridViewTextBoxColumn
+            {
+                Name = "colDonGia",
+                HeaderText = "Đơn giá",
+                DataPropertyName = "DonGia",
+                ReadOnly = true,
+                Width = 100
+            };
+            colDonGia.DefaultCellStyle.Format = "N0";
+            dgvChiTietHoaDon.Columns.Add(colDonGia);
+
+            var colThanhTien = new DataGridViewTextBoxColumn
+            {
+                Name = "colThanhTien",
+                HeaderText = "Thành tiền",
+                DataPropertyName = "ThanhTien",
+                ReadOnly = true,
+                Width = 120
+            };
+            colThanhTien.DefaultCellStyle.Format = "N0";
+            dgvChiTietHoaDon.Columns.Add(colThanhTien);
         }
 
         // Sự kiện khi nhấn vào 1 bàn

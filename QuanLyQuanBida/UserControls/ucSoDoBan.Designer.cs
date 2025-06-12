@@ -219,7 +219,7 @@ namespace QuanLyQuanBida.UserControls
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Gainsboro;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -249,7 +249,7 @@ namespace QuanLyQuanBida.UserControls
             // 
             // btnBatDauChoi
             // 
-            this.btnBatDauChoi.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.btnBatDauChoi.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnBatDauChoi.BackColor = System.Drawing.Color.DodgerBlue;
             this.btnBatDauChoi.FlatAppearance.BorderSize = 0;
@@ -313,13 +313,13 @@ namespace QuanLyQuanBida.UserControls
             this.Controls.Add(this.splitContainer1);
             this.Name = "ucSoDoBan";
             this.Size = new System.Drawing.Size(1044, 513);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.pnlChonDichVu.ResumeLayout(false);
             this.pnlHoaDon.ResumeLayout(false);
@@ -330,6 +330,7 @@ namespace QuanLyQuanBida.UserControls
             this.pnlNutBam.ResumeLayout(false);
             this.pnlNutBam.PerformLayout();
             this.ResumeLayout(false);
+
         }
         #endregion
 

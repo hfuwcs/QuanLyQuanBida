@@ -22,5 +22,11 @@ namespace QuanLyQuanBida.DAL
                 .ToList();
             return tables;
         }
+        public DateTime LayGioVaoChoi()
+        {
+            DateTime gioVaoChoi = DateTime.Now;
+
+            return gioVaoChoi;
+        }
     }
 }
