@@ -12,6 +12,8 @@ namespace QuanLyQuanBida.BLL
     {
         private BanBidaDAL bidaDAL = new BanBidaDAL();
         KhachHangDAL khachHangDAL = new KhachHangDAL();
+        LoaiDichVuDAL loaiDichVuDAL = new LoaiDichVuDAL();
+        DichVuDAL dichVuDAL = new DichVuDAL();
 
         public List<BanBidaDTO> LayDanhSachBan()
         {
@@ -20,6 +22,18 @@ namespace QuanLyQuanBida.BLL
         public List<KhachHangDTO> LayDanhSachKhachHang()
         {
             return khachHangDAL.LayDanhSachKhachHang();
+        }
+        public List<string> LayDanhSachLoaiDichVu()
+        {
+            return loaiDichVuDAL.LayDanhSachLoaiDichVu();
+        }
+        public List<DichVuDTO> LayDanhSachDichVu(string tenLoaiDichVu = "All")
+        {
+            return dichVuDAL.LayDanhSachDichVu(tenLoaiDichVu);
+        }
+        public List<string> LayDanhSachLoaiDichVuToComboBox()
+        {
+            return loaiDichVuDAL.LoadLoaiDichVuToComboBox();
         }
     }
 }

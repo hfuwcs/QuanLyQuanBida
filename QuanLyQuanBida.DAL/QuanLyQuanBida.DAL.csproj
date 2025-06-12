@@ -78,18 +78,21 @@
     <Compile Include="DichVu.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DichVuDAL.cs" />
     <Compile Include="HoaDon.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="KhachHang.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="KhachHangDAL.cs" />
     <Compile Include="LoaiBan.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="LoaiDichVu.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="LoaiDichVuDAL.cs" />
     <Compile Include="NhanVien.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>

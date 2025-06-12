@@ -12,6 +12,7 @@ namespace QuanLyQuanBida.DTO
         public string TenDichVu { get; set; }
         public Nullable<int> MaLoaiDV { get; set; }
         public string DonViTinh { get; set; }
+        public string LoaiDichVu { get; set; }
         public decimal Gia { get; set; }
     }
 }

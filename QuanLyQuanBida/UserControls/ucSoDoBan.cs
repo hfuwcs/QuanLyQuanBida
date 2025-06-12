@@ -75,9 +75,7 @@ namespace QuanLyQuanBida.UserControls
         private void LoadLoaiDichVu()
         {
             flpLoaiDichVu.Controls.Clear();
-            string[] categories = db.LoaiDichVu.ToList()
-                .Select(ldv => ldv.TenLoaiDV)
-                .ToArray();
+            string[] categories = bll.LayDanhSachLoaiDichVu().ToArray();
 
             foreach (var cat in categories)
             {
@@ -99,12 +97,13 @@ namespace QuanLyQuanBida.UserControls
         {
             flpDichVu.Controls.Clear();
 
-            var services = db.DichVu
-                .Where(dv => dv.LoaiDichVu.TenLoaiDV == category)
-                .Select(dv => new { dv.TenDichVu, dv.Gia })
-                .ToList()
-                .Select(dv => Tuple.Create(dv.TenDichVu, dv.Gia))
-                .ToList();
+            //var services = db.DichVu
+            //    .Where(dv => dv.LoaiDichVu.TenLoaiDV == category)
+            //    .Select(dv => new { dv.TenDichVu, dv.Gia })
+            //    .ToList()
+            //    .Select(dv => Tuple.Create(dv.TenDichVu, dv.Gia))
+            //    .ToList();
+            var services = bll.LayDanhSachDichVu(category);
 
             foreach (var service in services)
             {
@@ -112,7 +111,7 @@ namespace QuanLyQuanBida.UserControls
                 {
                     Width = 150,
                     Height = 80,
-                    Text = $"{service.Item1}\n{service.Item2:N0}đ",
+                    Text = $"{service.TenDichVu}\n{service.Gia:N0}đ",
                     Tag = service,
                     Font = new Font("Segoe UI", 10),
                     TextAlign = ContentAlignment.MiddleCenter,
@@ -171,11 +170,9 @@ namespace QuanLyQuanBida.UserControls
             TinhTongTien();
         }
 
-        // Sự kiện khi chọn loại dịch vụ
         private void LoaiDichVu_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
-            // Highlight nút được chọn
             foreach (Button b in flpLoaiDichVu.Controls)
             {
                 b.BackColor = Color.DimGray;

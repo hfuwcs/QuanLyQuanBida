@@ -1,4 +1,6 @@
-﻿using System;
+﻿using QuanLyQuanBida.BLL;
+using QuanLyQuanBida.DTO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,16 +12,18 @@ namespace QuanLyQuanBida.UserControls
 {
     public partial class ucQuanLyDichVu : UserControl
     {
-        private class DichVu
-        {
-            public int MaDichVu { get; set; }
-            public string TenDichVu { get; set; }
-            public string LoaiDichVu { get; set; }
-            public string DonViTinh { get; set; }
-            public decimal Gia { get; set; }
-        }
+        private BanBidaBLL bll = new BanBidaBLL();
 
-        private List<DichVu> danhSachDichVu;
+        //private class DichVu
+        //{
+        //    public int MaDichVu { get; set; }
+        //    public string TenDichVu { get; set; }
+        //    public string LoaiDichVu { get; set; }
+        //    public string DonViTinh { get; set; }
+        //    public decimal Gia { get; set; }
+        //}
+
+        private List<DichVuDTO> danhSachDichVu;
 
         public ucQuanLyDichVu()
         {
@@ -29,7 +33,7 @@ namespace QuanLyQuanBida.UserControls
 
         private void UcQuanLyDichVu_Load(object sender, EventArgs e)
         {
-            TaoDuLieuMau();
+            LayDanhSachDichVu();
             dgvDichVu.SelectionChanged -= dgvDichVu_SelectionChanged;
             SetupDataGridView();
             LoadDataToGrid();
@@ -38,18 +42,9 @@ namespace QuanLyQuanBida.UserControls
             ClearFields();
         }
 
-        private void TaoDuLieuMau()
+        private void LayDanhSachDichVu()
         {
-            danhSachDichVu = new List<DichVu>
-            {
-                new DichVu { MaDichVu = 1, TenDichVu = "Coca Cola", LoaiDichVu = "Đồ uống", DonViTinh = "Lon", Gia = 15000 },
-                new DichVu { MaDichVu = 2, TenDichVu = "Nước suối Aquafina", LoaiDichVu = "Đồ uống", DonViTinh = "Chai", Gia = 10000 },
-                new DichVu { MaDichVu = 3, TenDichVu = "Snack Oishi", LoaiDichVu = "Đồ ăn nhẹ", DonViTinh = "Gói", Gia = 12000 },
-                new DichVu { MaDichVu = 4, TenDichVu = "Khô gà lá chanh", LoaiDichVu = "Đồ ăn nhẹ", DonViTinh = "Dĩa", Gia = 35000 },
-                new DichVu { MaDichVu = 5, TenDichVu = "Bia Tiger", LoaiDichVu = "Bia", DonViTinh = "Lon", Gia = 20000 },
-                new DichVu { MaDichVu = 6, TenDichVu = "Bia Heineken", LoaiDichVu = "Bia", DonViTinh = "Lon", Gia = 22000 },
-                new DichVu { MaDichVu = 7, TenDichVu = "Thuốc lá 555", LoaiDichVu = "Thuốc lá", DonViTinh = "Gói", Gia = 30000 }
-            };
+            danhSachDichVu = bll.LayDanhSachDichVu();
         }
 
         private void SetupDataGridView()
@@ -112,7 +107,7 @@ namespace QuanLyQuanBida.UserControls
 
         private void LoadLoaiDichVuToComboBox()
         {
-            var loaiDichVu = danhSachDichVu.Select(dv => dv.LoaiDichVu).Distinct().ToList();
+            var loaiDichVu = bll.LayDanhSachLoaiDichVuToComboBox();
 
             // ComboBox lọc
             cboLocLoaiDV.Items.Clear();
@@ -165,7 +160,7 @@ namespace QuanLyQuanBida.UserControls
             else
             {
                 int newId = danhSachDichVu.Any() ? danhSachDichVu.Max(dv => dv.MaDichVu) + 1 : 1;
-                var dichVuMoi = new DichVu
+                var dichVuMoi = new DichVuDTO
                 {
                     MaDichVu = newId,
                     TenDichVu = txtTenDichVu.Text,
@@ -192,7 +187,7 @@ namespace QuanLyQuanBida.UserControls
                     if (dichVuCanXoa != null)
                     {
                         danhSachDichVu.Remove(dichVuCanXoa);
-                        FilterData(); // Tải lại dữ liệu
+                        FilterData();
                         ClearFields();
                         MessageBox.Show("Xóa dịch vụ thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
