@@ -206,7 +206,7 @@ namespace QuanLyQuanBida.UserControls
                 DataGridViewRow selectedRow = dgvDichVu.SelectedRows[0];
                 txtMaDichVu.Text = selectedRow.Cells["MaDichVu"].Value.ToString();
                 txtTenDichVu.Text = selectedRow.Cells["TenDichVu"].Value.ToString();
-                cboLoaiDichVu.Text = selectedRow.Cells["LoaiDichVu"].Value.ToString();
+                //cboLoaiDichVu.Text = selectedRow.Cells["LoaiDichVu"].Value.ToString();
                 txtDonViTinh.Text = selectedRow.Cells["DonViTinh"].Value.ToString();
                 numGiaBan.Value = Convert.ToDecimal(selectedRow.Cells["Gia"].Value);
             }
