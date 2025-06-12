@@ -23,6 +23,7 @@ namespace QuanLyQuanBida.UserControls
         {
             InitializeComponent();
             this.Load += UcSoDoBan_Load;
+            this.dgvChiTietHoaDon.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvChiTietHoaDon_CellContentClick);
         }
 
         private void UcSoDoBan_Load(object sender, EventArgs e)
@@ -122,12 +123,23 @@ namespace QuanLyQuanBida.UserControls
         // Cài đặt cho Bảng chi tiết hóa đơn
         private void SetupDataGridView()
         {
-            dgvChiTietHoaDon.AutoGenerateColumns = false; 
+            dgvChiTietHoaDon.AutoGenerateColumns = false;
+
+            var colMaDichVu = new DataGridViewTextBoxColumn
+            {
+                Name = "colMaDichVu",
+                DataPropertyName = "MaDichVu",
+                ReadOnly = true,
+                Visible = false,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
+            dgvChiTietHoaDon.Columns.Add(colMaDichVu);
+
             var colTenSP = new DataGridViewTextBoxColumn
             {
                 Name = "colTenSanPham",
                 HeaderText = "Tên sản phẩm",
-                DataPropertyName = "TenSanPham", 
+                DataPropertyName = "TenDichVu", 
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
@@ -169,7 +181,7 @@ namespace QuanLyQuanBida.UserControls
             {
                 Name = "colDonGia",
                 HeaderText = "Đơn giá",
-                DataPropertyName = "DonGia",
+                DataPropertyName = "Gia",
                 ReadOnly = true,
                 Width = 100
             };
@@ -195,6 +207,7 @@ namespace QuanLyQuanBida.UserControls
             lblTenBan.Text = btn.Text;
             string trangThai = btn.Tag.ToString();
             lblTrangThai.Text = "Trạng thái: " + btn.Tag.ToString();
+            var serviceInfo = DichVuBLL.LayDichVuTheoID(Convert.ToInt32(btn.Tag));
 
             if (trangThai == "Trống")
             {
@@ -212,8 +225,19 @@ namespace QuanLyQuanBida.UserControls
                 if (trangThai == "Đang chơi")
                 {
                     lblGioVao.Text = "Giờ vào: " + DateTime.Now.AddHours(-1).ToString("HH:mm");
-                    dgvChiTietHoaDon.Rows.Add("Tiền giờ", "1.0", 60000, 60000);
-                    dgvChiTietHoaDon.Rows.Add("Coca Cola", "2", 15000, 30000);
+
+
+                    //Chỗ này phải truy vấn từ CSDL để lấy chi tiết hóa đơn
+                    //int rowIndex = dgvChiTietHoaDon.Rows.Add();
+
+                    //DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
+
+                    //newRow.Tag = serviceInfo.MaDichVu;
+
+                    //newRow.Cells["colTenSanPham"].Value = tenSP;
+                    //newRow.Cells["colSoLuong"].Value = 1;
+                    //newRow.Cells["colDonGia"].Value = donGia;
+                    //newRow.Cells["colThanhTien"].Value = donGia;
                 }
             }
             TinhTongTien();
@@ -247,9 +271,9 @@ namespace QuanLyQuanBida.UserControls
             bool existed = false;
             foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
             {
-                if (row.Cells["Tên sản phẩm"].Value.ToString() == tenSP)
+                if (row.Cells["colTenSanPham"].Value.ToString() == tenSP)
                 {
-                    int currentQty = Convert.ToInt32(row.Cells["colSoLuong"].Value);
+                    int currentQty = Convert.ToInt32(row.Cells["colSoLuong"].Value); // Số lượng hiện tại
                     row.Cells["colSoLuong"].Value = currentQty + 1;
                     row.Cells["colThanhTien"].Value = (currentQty + 1) * donGia;
                     existed = true;
@@ -259,7 +283,16 @@ namespace QuanLyQuanBida.UserControls
 
             if (!existed)
             {
-                dgvChiTietHoaDon.Rows.Add(tenSP, 1, donGia, donGia);
+                int rowIndex = dgvChiTietHoaDon.Rows.Add();
+                
+                DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
+
+                newRow.Tag = serviceInfo.MaDichVu;
+
+                newRow.Cells["colTenSanPham"].Value = tenSP;
+                newRow.Cells["colSoLuong"].Value = 1;
+                newRow.Cells["colDonGia"].Value = donGia;
+                newRow.Cells["colThanhTien"].Value = donGia;
             }
             TinhTongTien();
         }
@@ -282,8 +315,8 @@ namespace QuanLyQuanBida.UserControls
                                              "Xác nhận thanh toán", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
-                    // Code xử lý thanh toán, cập nhật CSDL ở đây
                     MessageBox.Show("Thanh toán thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
                     // Reset
                     dgvChiTietHoaDon.Rows.Clear();
                     lblTenBan.Text = "CHỌN BÀN";
@@ -326,6 +359,38 @@ namespace QuanLyQuanBida.UserControls
                     dgvChiTietHoaDon.Rows.Clear();
                     btnBatDauChoi.Visible = false;
                 }
+            }
+        }
+        private void dgvChiTietHoaDon_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            string columnName = dgvChiTietHoaDon.Columns[e.ColumnIndex].Name;
+            DataGridViewRow selectedRow = dgvChiTietHoaDon.Rows[e.RowIndex];
+
+            int soLuongHienTai = Convert.ToInt32(selectedRow.Cells["colSoLuong"].Value);
+            decimal donGia = Convert.ToDecimal(selectedRow.Cells["colDonGia"].Value);
+
+            if (columnName == "colGiamSoLuong")
+            {
+                int soLuongMoi = soLuongHienTai - 1;
+                if (soLuongMoi > 0)
+                {
+                    selectedRow.Cells["colSoLuong"].Value = soLuongMoi;
+                    selectedRow.Cells["colThanhTien"].Value = soLuongMoi * donGia;
+                }
+                else
+                {
+                    dgvChiTietHoaDon.Rows.Remove(selectedRow);
+                }
+                TinhTongTien();
+            }
+            else if (columnName == "colTangSoLuong")
+            {
+                int soLuongMoi = soLuongHienTai + 1;
+                selectedRow.Cells["colSoLuong"].Value = soLuongMoi;
+                selectedRow.Cells["colThanhTien"].Value = soLuongMoi * donGia;
+                TinhTongTien();
             }
         }
     }
