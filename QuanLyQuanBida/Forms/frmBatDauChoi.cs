@@ -1,4 +1,5 @@
 ﻿using QuanLyQuanBida.BLL;
+using QuanLyQuanBida.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +14,10 @@ namespace QuanLyQuanBida.Forms
 {
     public partial class frmBatDauChoi : Form
     {
-        private BanBidaBLL bll = new BanBidaBLL();
+        private BanBidaBLL BanBidaBll = new BanBidaBLL();
+        private KhachHangBLL KhachHangBLL = new KhachHangBLL();
+        private DichVuBLL DichVuBLL = new DichVuBLL();
+        private LoaiDichVuBLL LoaiDichVuBLL = new LoaiDichVuBLL();
         public int? MaKhachHangChon { get; private set; }
         public string TenKhachVangLai { get; private set; }
 
@@ -34,13 +38,7 @@ namespace QuanLyQuanBida.Forms
 
         private void LoadKhachHang()
         {
-
-            //var danhSachKH= db.KhachHang.Select(kh => new
-            //{
-            //    MaKhachHang = kh.MaKhachHang,
-            //    HoTenVaSDT = kh.HoTen + " - " + kh.SoDienThoai
-            //}).ToList();
-            var danhSachKH = bll.LayDanhSachKhachHang();
+            List<KhachHangDTO> danhSachKH = KhachHangBLL.LayDanhSachKhachHang();
             cboKhachHang.DataSource = danhSachKH;
             cboKhachHang.DisplayMember = "HoTenVaSDT";
             cboKhachHang.ValueMember = "MaKhachHang";

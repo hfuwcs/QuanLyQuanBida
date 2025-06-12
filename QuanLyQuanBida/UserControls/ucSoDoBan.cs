@@ -15,8 +15,10 @@ namespace QuanLyQuanBida.UserControls
 {
     public partial class ucSoDoBan : UserControl
     {
-        private BanBidaBLL bll = new BanBidaBLL();
-
+        private BanBidaBLL BanBidaBll = new BanBidaBLL();
+        private KhachHangBLL KhachHangBLL = new KhachHangBLL();
+        private DichVuBLL DichVuBLL = new DichVuBLL();
+        private LoaiDichVuBLL LoaiDichVuBLL = new LoaiDichVuBLL();
         public ucSoDoBan()
         {
             InitializeComponent();
@@ -38,7 +40,7 @@ namespace QuanLyQuanBida.UserControls
         private void LoadBanBida()
         {
             flpBanBida.Controls.Clear();
-            List<BanBidaDTO> danhSachBan = bll.LayDanhSachBan();
+            List<BanBidaDTO> danhSachBan = BanBidaBll.LayDanhSachBan();
 
             foreach (var banDTO in danhSachBan)
             {
@@ -75,7 +77,7 @@ namespace QuanLyQuanBida.UserControls
         private void LoadLoaiDichVu()
         {
             flpLoaiDichVu.Controls.Clear();
-            string[] categories = bll.LayDanhSachLoaiDichVu().ToArray();
+            string[] categories = LoaiDichVuBLL.LayDanhSachLoaiDichVu().ToArray();
 
             foreach (var cat in categories)
             {
@@ -96,7 +98,7 @@ namespace QuanLyQuanBida.UserControls
         private void LoadDichVu(string category)
         {
             flpDichVu.Controls.Clear();
-            var services = bll.LayDanhSachDichVu(category);
+            var services = DichVuBLL.LayDanhSachDichVu(category);
 
             foreach (var service in services)
             {
@@ -105,7 +107,7 @@ namespace QuanLyQuanBida.UserControls
                     Width = 150,
                     Height = 80,
                     Text = $"{service.TenDichVu}\n{service.Gia:N0}đ",
-                    Tag = service,
+                    Tag = service.MaDichVu,
                     Font = new Font("Segoe UI", 10),
                     TextAlign = ContentAlignment.MiddleCenter,
                     BackColor = Color.FromArgb(63, 63, 70),
@@ -147,7 +149,7 @@ namespace QuanLyQuanBida.UserControls
                 Name = "colSoLuong",
                 HeaderText = "SL",
                 DataPropertyName = "SoLuong",
-                ReadOnly = true,
+                ReadOnly = false,
                 Width = 50,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             };
@@ -238,18 +240,18 @@ namespace QuanLyQuanBida.UserControls
             }
 
             Button btn = sender as Button;
-            var serviceInfo = (Tuple<string, decimal>)btn.Tag;
-            string tenSP = serviceInfo.Item1;
-            decimal donGia = serviceInfo.Item2;
+            var serviceInfo = DichVuBLL.LayDichVuTheoID(Convert.ToInt32(btn.Tag));
+            string tenSP = serviceInfo.TenDichVu;
+            decimal donGia = serviceInfo.Gia;
 
             bool existed = false;
             foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
             {
                 if (row.Cells["Tên sản phẩm"].Value.ToString() == tenSP)
                 {
-                    int currentQty = Convert.ToInt32(row.Cells["Số lượng"].Value);
-                    row.Cells["Số lượng"].Value = currentQty + 1;
-                    row.Cells["Thành tiền"].Value = (currentQty + 1) * donGia;
+                    int currentQty = Convert.ToInt32(row.Cells["colSoLuong"].Value);
+                    row.Cells["colSoLuong"].Value = currentQty + 1;
+                    row.Cells["colThanhTien"].Value = (currentQty + 1) * donGia;
                     existed = true;
                     break;
                 }
@@ -267,7 +269,7 @@ namespace QuanLyQuanBida.UserControls
             decimal tongTien = 0;
             foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
             {
-                tongTien += Convert.ToDecimal(row.Cells["Thành tiền"].Value);
+                tongTien += Convert.ToDecimal(row.Cells["colThanhTien"].Value);
             }
             lblTongTien.Text = $"Tổng tiền: {tongTien:N0} đ";
         }
@@ -300,11 +302,11 @@ namespace QuanLyQuanBida.UserControls
                     int? maKH = form.MaKhachHangChon;
                     string tenKhach = form.TenKhachVangLai;
 
-                    // --- PHẦN NGHIỆP VỤ CỦA BẠN ---
+                    // --- PHẦN NGHIỆP VỤ ---
                     // 1. Tạo một hóa đơn mới trong CSDL với:
                     //    - Mã bàn (lấy từ lblTenBan.Text)
-                    //    - Mã khách hàng (maKH) nếu có
-                    //    - Tên khách vãng lai (tenKhach) nếu có
+                    //    - Mã khách hàng (maKH)
+                    //    - Tên khách vãng lai (tenKhach)
                     //    - Thời gian bắt đầu là DateTime.Now
                     //    - Trạng thái hóa đơn là "Chưa thanh toán"
                     //

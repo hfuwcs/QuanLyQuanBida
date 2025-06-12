@@ -8,15 +8,12 @@ using System.Threading.Tasks;
 
 namespace QuanLyQuanBida.BLL
 {
-    public class BanBidaBLL
+    public class KhachHangBLL
     {
-        private BanBidaDAL bidaDAL = new BanBidaDAL();
-
-        public List<BanBidaDTO> LayDanhSachBan()
+        KhachHangDAL khachHangDAL = new KhachHangDAL();
+        public List<KhachHangDTO> LayDanhSachKhachHang()
         {
-            return bidaDAL.LayDanhSachBan();
+            return khachHangDAL.LayDanhSachKhachHang();
         }
-        
-        
     }
 }

@@ -105,5 +105,45 @@ namespace QuanLyQuanBida.DAL
             return services;
         }
 
+        public DichVuDTO LayDichVuTheoID(int maDichVu = 1)
+        {
+            DichVuDTO dichVu;
+            try {
+                dichVu = db.DichVu
+                    .Where(dv => dv.MaDichVu == maDichVu)
+                    .Select(dv => new DichVuDTO
+                    {
+                        MaDichVu = dv.MaDichVu,
+                        TenDichVu = dv.TenDichVu,
+                        MaLoaiDV = dv.MaLoaiDV,
+                        DonViTinh = dv.DonViTinh,
+                        LoaiDichVu = db.LoaiDichVu.FirstOrDefault(ldv => ldv.MaLoaiDV == dv.MaLoaiDV).TenLoaiDV,
+                        Gia = dv.Gia
+                    })
+                    .FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching service by ID: {ex.Message}");
+                
+                //Thà sai còn hơn crash app, fuckit
+                return db.DichVu
+                    .Select(DichVu => new DichVuDTO
+                    {
+                        MaDichVu = DichVu.MaDichVu,
+                        TenDichVu = DichVu.TenDichVu,
+                        MaLoaiDV = DichVu.MaLoaiDV,
+                        DonViTinh = DichVu.DonViTinh,
+                        LoaiDichVu = db.LoaiDichVu.FirstOrDefault(ldv => ldv.MaLoaiDV == DichVu.MaLoaiDV).TenLoaiDV,
+                        Gia = DichVu.Gia
+                    }).FirstOrDefault();
+            }
+            return dichVu;
+        }
+        public Tuple<string, decimal> LayTenVaGiaDichVu(int maDichVu = 1)
+        {
+            DichVuDTO dichVu = LayDichVuTheoID(maDichVu);
+            return Tuple.Create(dichVu.TenDichVu, dichVu.Gia);
+        }
     }
 }

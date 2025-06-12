@@ -12,7 +12,10 @@ namespace QuanLyQuanBida.UserControls
 {
     public partial class ucQuanLyDichVu : UserControl
     {
-        private BanBidaBLL bll = new BanBidaBLL();
+        private BanBidaBLL BanBidaBll = new BanBidaBLL();
+        private KhachHangBLL KhachHangBLL = new KhachHangBLL();
+        private DichVuBLL DichVuBLL = new DichVuBLL();
+        private LoaiDichVuBLL LoaiDichVuBLL = new LoaiDichVuBLL();
 
         //private class DichVu
         //{
@@ -44,7 +47,7 @@ namespace QuanLyQuanBida.UserControls
 
         private void LayDanhSachDichVu()
         {
-            danhSachDichVu = bll.LayDanhSachDichVu();
+            danhSachDichVu = DichVuBLL.LayDanhSachDichVu();
         }
 
         private void SetupDataGridView()
@@ -107,7 +110,7 @@ namespace QuanLyQuanBida.UserControls
 
         private void LoadLoaiDichVuToComboBox()
         {
-            var loaiDichVu = bll.LayDanhSachLoaiDichVuToComboBox();
+            var loaiDichVu = LoaiDichVuBLL.LayDanhSachLoaiDichVuToComboBox();
 
             // ComboBox lọc
             cboLocLoaiDV.Items.Clear();
