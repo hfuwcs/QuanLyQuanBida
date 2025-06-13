@@ -55,7 +55,7 @@ namespace QuanLyQuanBida.DAL
             {
                 var hoaDon = new HoaDon
                 {
-                    MaHoaDon = TaoMaHoaDonNgauNhien(db),
+                    MaHoaDon = 0, //tự động tăng
                     ThoiGianBatDau = DateTime.Now,
                     GiamGia = 0,
                     TrangThai = "Chưa thanh toán",
@@ -87,20 +87,6 @@ namespace QuanLyQuanBida.DAL
                 }
                 return 0; 
             }
-        }
-        public int TaoMaHoaDonNgauNhien(DB_QuanLyQuanBidaEntities db)
-        {
-            int maHoaDon;
-            Random rnd = new Random();
-
-            do
-            {
-                int timePart = (int)(DateTime.Now.Ticks % 100000); // 5 chữ số
-                int randomPart = rnd.Next(10000, 99999);           // 5 chữ số
-                maHoaDon = int.Parse($"{timePart}{randomPart}".Substring(0, 9)); // Tổng: 9 chữ số
-
-            } while (db.HoaDon.Any(h => h.MaHoaDon == maHoaDon)); 
-            return maHoaDon;
         }
     }
 }

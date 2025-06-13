@@ -25,6 +25,9 @@ namespace QuanLyQuanBida.UserControls
         private int previousMaBan = -1;
         private int maHoaDonHienTai = 0;
         private DateTime? thoiGianBatDauHienTai = null;
+
+        private HoaDonDTO hoaDonContext = null;
+        private BanBidaDTO banContext = null;
         public ucSoDoBan()
         {
             InitializeComponent();
@@ -211,16 +214,19 @@ namespace QuanLyQuanBida.UserControls
         {
             Button btn = sender as Button;
 
+            this.banContext = (BanBidaDTO)btn.Tag;
             BanBidaDTO banDuocChon = btn.Tag as BanBidaDTO;
+            this.hoaDonContext = null;
+
 
             maBanHienTai = banDuocChon.MaBan;
             if (maBanHienTai == previousMaBan)
             {
-                return; // Không làm gì nếu bàn đã được chọn
+                return;
             }
             else
             {
-                previousMaBan = maBanHienTai; // Cập nhật bàn đã chọn
+                previousMaBan = maBanHienTai; 
             }
 
             var hoaDonHienTai = hoaDonBLL.LayHoaDonHienTaiCuaBan(banDuocChon.MaBan);
@@ -495,6 +501,9 @@ namespace QuanLyQuanBida.UserControls
         }
         private void btnBatDauChoi_Click(object sender, EventArgs e)
         {
+            if (maBanHienTai == 0) return;
+            string tenBanHienTai = lblTenBan.Text;
+
             using (var form = new frmBatDauChoi(lblTenBan.Text))
             {
                 if (form.ShowDialog() == DialogResult.OK)
@@ -504,7 +513,6 @@ namespace QuanLyQuanBida.UserControls
 
                     if(maKH == null && string.IsNullOrWhiteSpace(tenKhach))
                     {
-                        MessageBox.Show("Vui lòng chọn khách hàng hoặc nhập tên khách vãng lai.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                     else if (maKH == null && !string.IsNullOrWhiteSpace(tenKhach))
@@ -517,7 +525,7 @@ namespace QuanLyQuanBida.UserControls
                     }
                     int maNhanVien = Program.NhanVienHienTai.MaNhanVien;
 
-                    hoaDonBLL.TaoHoaDon(maKH.Value, tenKhach, maBanHienTai, maNhanVien);
+                    int maHoaDonMoi = hoaDonBLL.TaoHoaDon(maKH.Value, tenKhach, maBanHienTai, maNhanVien);
                     // Tải lại danh sách bàn để cập nhật màu sắc.
                     LoadBanBida();
                     //
@@ -525,9 +533,13 @@ namespace QuanLyQuanBida.UserControls
                     // 4. Cập nhật giao diện bên phải để hiển thị hóa đơn mới.
                     //    (Ẩn nút Bắt đầu, hiện nút Thanh toán,...)
 
-                    MessageBox.Show($"Bắt đầu chơi cho {lblTenBan.Text}.\nKH ID: {maKH?.ToString() ?? "N/A"}\nTên khách: {tenKhach}");
+                    MessageBox.Show($"Bắt đầu chơi cho {tenBanHienTai} thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     LoadBanBida();
+                    
+                    lblTrangThai.Text = "Trạng thái: Đang chơi";
+                    lblGioVao.Text = "Giờ vào: " + this.thoiGianBatDauHienTai.Value.ToString("HH:mm:ss dd/MM/yyyy");
+
                     lblTenBan.Text = "CHỌN BÀN";
                     lblTrangThai.Text = "Trạng thái:";
                     dgvChiTietHoaDon.Rows.Clear();

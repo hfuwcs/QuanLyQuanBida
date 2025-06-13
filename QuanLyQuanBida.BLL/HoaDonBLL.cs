@@ -80,16 +80,7 @@ namespace QuanLyQuanBida.BLL
             }
             // Cập nhật trạng thái bàn thành "Đang chơi"
             banDal.CapNhatTrangThaiBan(maBan, "Đang chơi");
-            return HoaDonDAL.TaoHoaDon(maKH,tenKhach,maBan, maNV);
-        }
-        public int ThanhToanHoaDon(int maHoaDon, decimal tongTien, decimal giamGia, decimal tienGio, decimal tienDichVu)
-        {
-            if (maHoaDon <= 0 || tongTien < 0 || giamGia < 0 || tienGio < 0 || tienDichVu < 0)
-            {
-                throw new ArgumentException("Thông tin thanh toán không hợp lệ.");
-            }
-            
-            return HoaDonDAL.CapNhatHoaDon(maHoaDon, tongTien, giamGia, tienGio, tienDichVu);
+            return maHoaDon;
         }
         public bool ThanhToan(int maHoaDon, int maBan, decimal tongTien, decimal giamGia, decimal tienGio, decimal tienDichVu)
         {
