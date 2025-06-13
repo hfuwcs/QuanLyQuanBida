@@ -261,6 +261,10 @@ namespace QuanLyQuanBida.UserControls
                 string tenKhachHang = formChonKhach.TenKhachVangLai;
 
                 // Xác định tên khách hàng cuối cùng
+                if(!maKH.HasValue)
+                {
+                    maKH = 3;
+                }
                 if (maKH.HasValue && maKH > 0)
                 {
                     var khachHangDTO = KhachHangBLL.LayThongTinKhachHang(maKH.Value);
@@ -271,27 +275,26 @@ namespace QuanLyQuanBida.UserControls
                     MessageBox.Show("Vui lòng chọn khách hàng thành viên hoặc nhập tên khách vãng lai.", "Thông tin thiếu", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-
-                try
-                {
-                    int maHoaDonMoiVuaTao = hoaDonBLL.TaoHoaDon(maKH.Value, tenKhachHang, this.banContext.MaBan, Program.NhanVienHienTai.MaNhanVien, this.danhSachDichVuChonTruoc);
-
-                    if (maHoaDonMoiVuaTao > 0)
+                    try
                     {
-                        MessageBox.Show($"Bắt đầu chơi cho {this.banContext.TenBan} thành công.\nKhách hàng: {tenKhachHang}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.danhSachDichVuChonTruoc.Clear();
-                        LoadBanBida();
+                        int maHoaDonMoiVuaTao = hoaDonBLL.TaoHoaDon(maKH.Value, tenKhachHang, this.banContext.MaBan, Program.NhanVienHienTai.MaNhanVien, this.danhSachDichVuChonTruoc);
+
+                        if (maHoaDonMoiVuaTao > 0)
+                        {
+                            MessageBox.Show($"Bắt đầu chơi cho {this.banContext.TenBan} thành công.\nKhách hàng: {tenKhachHang}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.danhSachDichVuChonTruoc.Clear();
+                            LoadBanBida();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không thể tạo hóa đơn mới. Vui lòng thử lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Không thể tạo hóa đơn mới. Vui lòng thử lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Đã có lỗi xảy ra: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        LoadBanBida(); // Tải lại phòng trường hợp trạng thái bàn bị lỗi
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Đã có lỗi xảy ra: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    LoadBanBida(); // Tải lại phòng trường hợp trạng thái bàn bị lỗi
-                }
             }
         }
 
