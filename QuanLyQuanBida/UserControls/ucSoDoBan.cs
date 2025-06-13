@@ -479,7 +479,6 @@ namespace QuanLyQuanBida.UserControls
                     tongTien += Convert.ToDecimal(row.Cells["colThanhTien"].Value);
                 }
             }
-            this.hoaDonContext.TongTien = tongTien; // Cập nhật tổng tiền vào context
             lblTongTien.Text = $"Tổng tiền: {tongTien:N0} đ";
         }
 
