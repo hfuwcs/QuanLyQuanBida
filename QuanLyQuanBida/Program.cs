@@ -1,4 +1,6 @@
-﻿using System;
+﻿using QuanLyQuanBida.DTO;
+using QuanLyQuanBida.Forms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,12 +13,21 @@ namespace QuanLyQuanBida
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        public static NhanVienDTO NhanVienHienTai = null;
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMain());
+            frmLogin loginForm = new frmLogin();
+            DialogResult result = loginForm.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                NhanVienHienTai = loginForm.NhanVienLogin;
+
+                Application.Run(new frmMain());
+            }
         }
     }
 }

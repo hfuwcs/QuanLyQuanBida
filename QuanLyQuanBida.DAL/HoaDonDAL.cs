@@ -49,7 +49,7 @@ namespace QuanLyQuanBida.DAL
                 }).ToList();
             return chiTietDichVu;
         }
-        public int TaoHoaDon(int maKH, string tenKhach, int maBan)
+        public int TaoHoaDon(int maKH, string tenKhach, int maBan, int maNV)
         {
             using (var db = new DB_QuanLyQuanBidaEntities())
             {
@@ -61,7 +61,7 @@ namespace QuanLyQuanBida.DAL
                     TrangThai = "Chưa thanh toán",
                     MaBan = maBan,
                     MaKhachHang = maKH,
-                    MaNhanVienTao = null, // Chưa có làm form đăng nhập nhân viên
+                    MaNhanVienTao = maNV,
                 };
                 db.HoaDon.Add(hoaDon);
                 db.SaveChanges();

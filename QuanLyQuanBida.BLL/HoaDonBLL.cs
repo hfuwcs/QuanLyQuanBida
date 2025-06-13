@@ -59,7 +59,7 @@ namespace QuanLyQuanBida.BLL
             return HoaDonDAL.LayHoaDonChuaThanhToanTheoMaBan(maBan);
         }
 
-        public int TaoHoaDon(int maKH, string tenKhach, int maBan)
+        public int TaoHoaDon(int maKH, string tenKhach, int maBan, int maNV)
         {
             if (maKH <= 0 || maBan <= 0 || string.IsNullOrEmpty(tenKhach))
             {
@@ -72,14 +72,14 @@ namespace QuanLyQuanBida.BLL
             {
                 throw new InvalidOperationException("Bàn không trống hoặc không tồn tại.");
             }
-            int maHoaDon = HoaDonDAL.TaoHoaDon(maKH, tenKhach, maBan);
+            int maHoaDon = HoaDonDAL.TaoHoaDon(maKH, tenKhach, maBan, maNV);
             if(maHoaDon <= 0)
             {
                 throw new Exception("Không thể tạo hóa đơn mới.");
             }
             // Cập nhật trạng thái bàn thành "Đang chơi"
             banDal.CapNhatTrangThaiBan(maBan, "Đang chơi");
-            return HoaDonDAL.TaoHoaDon(maKH,tenKhach,maBan);
+            return HoaDonDAL.TaoHoaDon(maKH,tenKhach,maBan, maNV);
         }
         public decimal LayDonGiaTheoGio(int maLoaiBan)
         {

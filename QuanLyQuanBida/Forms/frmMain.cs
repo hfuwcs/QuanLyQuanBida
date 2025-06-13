@@ -1,4 +1,5 @@
-﻿using QuanLyQuanBida.UserControls;
+﻿using QuanLyQuanBida.DTO;
+using QuanLyQuanBida.UserControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,7 @@ namespace QuanLyQuanBida
     public partial class frmMain : Form
     {
         private Button currentButton;
-
+        public static int MaNhanVien { get; set; } = Program.NhanVienHienTai.MaNhanVien;
         public frmMain()
         {
             InitializeComponent();

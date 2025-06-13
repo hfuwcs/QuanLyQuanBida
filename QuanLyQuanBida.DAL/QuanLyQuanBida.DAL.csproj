@@ -97,6 +97,7 @@
     <Compile Include="NhanVien.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="NhanVienDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VaiTro.cs">
       <DependentUpon>BidaModel.tt</DependentUpon>

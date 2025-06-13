@@ -463,10 +463,10 @@ namespace QuanLyQuanBida.UserControls
                     {
                         tenKhach = KhachHangBLL.LayTenKhachHang((int)maKH);
                     }
+                    int maNhanVien = Program.NhanVienHienTai.MaNhanVien;
 
-                    // --- PHẦN NGHIỆP VỤ ---
-                    hoaDonBLL.TaoHoaDon(maKH.Value, tenKhach, maBanHienTai);
-                    // 3. Tải lại danh sách bàn để cập nhật màu sắc.
+                    hoaDonBLL.TaoHoaDon(maKH.Value, tenKhach, maBanHienTai, maNhanVien);
+                    // Tải lại danh sách bàn để cập nhật màu sắc.
                     LoadBanBida();
                     //
                     // 4. Cập nhật giao diện bên phải để hiển thị hóa đơn mới.

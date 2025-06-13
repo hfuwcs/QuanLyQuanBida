@@ -46,9 +46,14 @@
     <Compile Include="HoaDonBLL.cs" />
     <Compile Include="KhachHangBLL.cs" />
     <Compile Include="LoaiDichVuBLL.cs" />
+    <Compile Include="NhanVienBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Helper\Helper.csproj">
+      <Project>{278995f7-52bb-4f0e-a4a2-2ff0805e253d}</Project>
+      <Name>Helper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QuanLyQuanBida.DAL\QuanLyQuanBida.DAL.csproj">
       <Project>{912746e7-c224-43e4-9cf1-b8843f56a47f}</Project>
       <Name>QuanLyQuanBida.DAL</Name>
