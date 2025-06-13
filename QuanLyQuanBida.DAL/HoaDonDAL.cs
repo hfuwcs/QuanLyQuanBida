@@ -24,10 +24,25 @@ namespace QuanLyQuanBida.DAL
             {
                 return db.HoaDon
                          .Where(hd => hd.MaBan == maBan && hd.TrangThai == "Chưa thanh toán")
+                         .OrderByDescending(hd => hd.ThoiGianBatDau)
                          .Select(hd => new HoaDonDTO
                          {
                              MaHoaDon = hd.MaHoaDon,
-                             ThoiGianBatDau = hd.ThoiGianBatDau
+                             ThoiGianBatDau = hd.ThoiGianBatDau,
+
+                             MaBan = hd.BanBida.MaBan,
+                             TenBan = hd.BanBida.TenBan,
+                             GiaTheoGio = hd.BanBida.LoaiBan.GiaTheoGio,
+
+                             ChiTietDichVu = hd.ChiTietHoaDon.Select(ct => new ChiTietHoaDonDTO
+                             {
+                                 MaCTHD = ct.MaCTHD,
+                                 MaDichVu = ct.MaDichVu,
+                                 TenDichVu = ct.DichVu.TenDichVu,
+                                 SoLuong = ct.SoLuong,
+                                 DonGia = ct.DonGia,
+                                 ThanhTien = ct.ThanhTien
+                             }).ToList()
                          })
                          .FirstOrDefault();
             }

@@ -9,6 +9,7 @@ namespace QuanLyQuanBida.DTO
     public class ChiTietHoaDonDTO
     {
         public int MaCTHD { get; set; }
+        public string TenDichVu { get; set; }
         public int MaHoaDon { get; set; }
         public int MaDichVu { get; set; }
         public int SoLuong { get; set; }

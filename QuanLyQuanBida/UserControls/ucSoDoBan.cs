@@ -23,7 +23,6 @@ namespace QuanLyQuanBida.UserControls
 
         private int maBanHienTai = 0;
         private int previousMaBan = -1;
-        private int maHoaDonHienTai = 0;
         private DateTime? thoiGianBatDauHienTai = null;
 
         private HoaDonDTO hoaDonContext = null;
@@ -49,8 +48,16 @@ namespace QuanLyQuanBida.UserControls
         // Load Bàn
         private void LoadBanBida()
         {
+            int selectedBanId = 0;
+            if (this.banContext != null)
+            {
+                selectedBanId = this.banContext.MaBan;
+            }
+
             flpBanBida.Controls.Clear();
             List<BanBidaDTO> danhSachBan = BanBidaBll.LayDanhSachBan();
+
+            Button buttonToReselect = null; 
 
             foreach (var banDTO in danhSachBan)
             {
@@ -81,6 +88,20 @@ namespace QuanLyQuanBida.UserControls
                 }
                 btn.Click += Ban_Click;
                 flpBanBida.Controls.Add(btn);
+
+                if (banDTO.MaBan == selectedBanId)
+                {
+                    buttonToReselect = btn;
+                }
+            }
+
+            if (buttonToReselect != null)
+            {
+                buttonToReselect.PerformClick();
+            }
+            else
+            {
+                ResetPanelThongTin();
             }
         }
 
@@ -213,66 +234,44 @@ namespace QuanLyQuanBida.UserControls
         private void Ban_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
-
             this.banContext = (BanBidaDTO)btn.Tag;
-            BanBidaDTO banDuocChon = btn.Tag as BanBidaDTO;
+
             this.hoaDonContext = null;
 
+            lblTenBan.Text = banContext.TenBan;
+            lblTrangThai.Text = "Trạng thái: " + banContext.TrangThai;
 
-            maBanHienTai = banDuocChon.MaBan;
-            if (maBanHienTai == previousMaBan)
+            dgvChiTietHoaDon.Rows.Clear();
+
+            if (banContext.TrangThai == "Đang chơi")
             {
-                return;
+                this.hoaDonContext = hoaDonBLL.LayHoaDonHienTaiCuaBan(banContext.MaBan);
+
+                if (this.hoaDonContext != null)
+                {
+                    lblGioVao.Text = "Giờ vào: " + this.hoaDonContext.ThoiGianBatDau.ToString("HH:mm:ss dd/MM/yyyy");
+
+                    CapNhatDongTienGio(); 
+                    LoadChiTietDichVu();
+                }
+
+                btnBatDauChoi.Visible = false;
+                btnThanhToan.Visible = true;
+                btnInHoaDon.Visible = true;
             }
-            else
+            else // Bàn Trống hoặc Bảo trì
             {
-                previousMaBan = maBanHienTai; 
-            }
-
-            var hoaDonHienTai = hoaDonBLL.LayHoaDonHienTaiCuaBan(banDuocChon.MaBan);
-            lblTenBan.Text = btn.Text;
-            string trangThai = banDuocChon.TrangThai.ToString();
-            lblTrangThai.Text = "Trạng thái: " + trangThai;
-            var serviceInfo = DichVuBLL.LayDichVuTheoID(Convert.ToInt32(banDuocChon.MaBan));
-
-            if (trangThai == "Trống")
-            {
-                btnBatDauChoi.Visible = true;
+                btnBatDauChoi.Visible = (banContext.TrangThai == "Trống");
                 btnThanhToan.Visible = false;
                 btnInHoaDon.Visible = false;
-                dgvChiTietHoaDon.Rows.Clear();
                 lblGioVao.Text = "Giờ vào: N/A";
             }
-            else
-            {
-                btnBatDauChoi.Visible = false;
-                btnThanhToan.Visible = (trangThai == "Đang chơi");
-                btnInHoaDon.Visible = (trangThai == "Đang chơi");
-                if (trangThai == "Đang chơi")
-                {
-                    lblGioVao.Text = "Giờ vào: " + DateTime.Now.AddHours(-1).ToString("HH:mm");
 
-
-                    maHoaDonHienTai = hoaDonHienTai.MaHoaDon;
-                    thoiGianBatDauHienTai = hoaDonHienTai.ThoiGianBatDau;
-
-                    lblGioVao.Text = "Giờ vào: " + thoiGianBatDauHienTai.Value.ToString("HH:mm:ss dd/MM/yyyy");
-
-                    var donGiaGio = banDuocChon.GiaTheoGio;
-                    var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDauHienTai.Value, DateTime.Now, donGiaGio);
-                    decimal tienGioTamTinh = ketQuaTinhTien.Item2;
-
-                    if(tienGioTamTinh > 0)
-                    {
-                        CapNhatDongTienGio();
-                        LoadChiTietDichVu(maHoaDonHienTai);
-                    }
-                }
-            }
             TinhTongTien();
         }
 
-        public void LoadChiTietDichVu(int maHoaDon)
+
+        private void LoadChiTietDichVu()
         {
             for (int i = dgvChiTietHoaDon.Rows.Count - 1; i >= 0; i--)
             {
@@ -282,36 +281,41 @@ namespace QuanLyQuanBida.UserControls
                     dgvChiTietHoaDon.Rows.RemoveAt(i);
                 }
             }
-            var chiTietDichVu = hoaDonBLL.LayChiTietDichVu(maHoaDon);
-            if (chiTietDichVu != null)
+
+            if (this.hoaDonContext == null || this.hoaDonContext.ChiTietDichVu == null)
             {
-                foreach (var item in chiTietDichVu)
-                {
-                    int rowIndex = dgvChiTietHoaDon.Rows.Add();
-                    DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
-                    newRow.Tag = item.MaDichVu;
-                    newRow.Cells["colMaDichVu"].Value = item.MaDichVu;
-                    newRow.Cells["colTenSanPham"].Value = item.TenDichVu;
-                    newRow.Cells["colSoLuong"].Value = item.SoLuong;
-                    newRow.Cells["colDonGia"].Value = item.Gia;
-                    newRow.Cells["colThanhTien"].Value = item.Gia * item.SoLuong;
-                }
+                return;
+            }
+
+            var chiTietDichVu = this.hoaDonContext.ChiTietDichVu;
+
+            foreach (var item in chiTietDichVu)
+            {
+                int rowIndex = dgvChiTietHoaDon.Rows.Add();
+                DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
+
+                string tenDV = DichVuBLL.LayTenDichVu(item.MaDichVu);
+                newRow.Tag = item.MaCTHD;
+
+                newRow.Cells["colTenSanPham"].Value = tenDV;
+                newRow.Cells["colSoLuong"].Value = item.SoLuong;
+                newRow.Cells["colDonGia"].Value = item.DonGia; // Đơn giá tại thời điểm gọi món
+                newRow.Cells["colThanhTien"].Value = item.DonGia * item.SoLuong;
             }
         }
 
         private void CapNhatDongTienGio()
         {
-            if (maBanHienTai == 0 || thoiGianBatDauHienTai == null)
+            if (this.banContext == null || this.hoaDonContext == null)
             {
                 XoaDongTienGio();
                 return;
             }
 
-            BanBidaDTO banHienTai = BanBidaBll.LayChiTietBan(maBanHienTai); 
-            if (banHienTai == null) return;
+            decimal donGiaGio = this.banContext.GiaTheoGio;
+            DateTime thoiGianBatDau = this.hoaDonContext.ThoiGianBatDau;
 
-            decimal donGiaGio = banHienTai.GiaTheoGio;
-            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDauHienTai.Value, DateTime.Now, donGiaGio);
+            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDau, DateTime.Now, donGiaGio);
             decimal tienGioHienTai = ketQuaTinhTien.Item2;
             int phutDaTinh = ketQuaTinhTien.Item1;
 
@@ -327,8 +331,8 @@ namespace QuanLyQuanBida.UserControls
 
             if (rowTienGio == null)
             {
-                int rowIndex = dgvChiTietHoaDon.Rows.Add();
-                rowTienGio = dgvChiTietHoaDon.Rows[rowIndex];
+                dgvChiTietHoaDon.Rows.Insert(0, 1);
+                rowTienGio = dgvChiTietHoaDon.Rows[0];
                 rowTienGio.Tag = "TIEN_GIO";
             }
 
@@ -431,14 +435,20 @@ namespace QuanLyQuanBida.UserControls
         private void btnThanhToan_Click(object sender, EventArgs e)
         {
             //1. Xem nó có chơi k đã
-            if (maHoaDonHienTai == 0 || maBanHienTai == 0 || thoiGianBatDauHienTai == null)
+            if (this.hoaDonContext == null)
             {
-                MessageBox.Show("Vui lòng chọn một bàn đang chơi để thanh toán.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng chọn một bàn đang chơi hợp lệ để thanh toán.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            BanBidaDTO banHienTai = BanBidaBll.LayChiTietBan(maBanHienTai);
-            if (banHienTai == null) return;
-            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDauHienTai.Value, DateTime.Now, banHienTai.GiaTheoGio);
+
+            // Tất cả thông tin cần thiết đều nằm trong 'hoaDonContext'
+            int maHoaDonCanThanhToan = this.hoaDonContext.MaHoaDon;
+            int maBanCanThanhToan = this.hoaDonContext.MaBan;
+            DateTime thoiGianBatDau = this.hoaDonContext.ThoiGianBatDau;
+            decimal donGia = this.hoaDonContext.GiaTheoGio;
+
+            // Tính toán lại tiền giờ lần cuối cùng
+            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDau, DateTime.Now, donGia);
             decimal tienGio = ketQuaTinhTien.Item2;
 
             // 2. Tính tổng tiền dịch vụ
@@ -467,7 +477,7 @@ namespace QuanLyQuanBida.UserControls
 
             if (MessageBox.Show(thongBao, "Xác nhận thanh toán", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                bool thanhCong = hoaDonBLL.ThanhToan(maHoaDonHienTai, maBanHienTai, tongTien, giamGia, tienGio, tienDichVu);
+                bool thanhCong = hoaDonBLL.ThanhToan(maHoaDonCanThanhToan, maBanCanThanhToan, tongTien, giamGia, tienGio, tienDichVu);
 
                 if (thanhCong)
                 {
@@ -491,8 +501,6 @@ namespace QuanLyQuanBida.UserControls
             dgvChiTietHoaDon.Rows.Clear();
             lblTongTien.Text = "Tổng tiền: 0đ";
 
-            maBanHienTai = 0;
-            maHoaDonHienTai = 0;
             thoiGianBatDauHienTai = null;
 
             btnBatDauChoi.Visible = false;

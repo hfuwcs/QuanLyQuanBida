@@ -127,5 +127,13 @@ namespace QuanLyQuanBida.DAL
             DichVuDTO dichVu = LayDichVuTheoID(maDichVu);
             return Tuple.Create(dichVu.TenDichVu, dichVu.Gia);
         }
+        public string LayTenDichVu(int maDV)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var dichVu = db.DichVu.FirstOrDefault(dv => dv.MaDichVu == maDV);
+                return dichVu != null ? dichVu.TenDichVu : string.Empty;
+            }
+        }
     }
 }

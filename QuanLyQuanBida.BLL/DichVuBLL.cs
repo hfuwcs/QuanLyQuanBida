@@ -26,5 +26,9 @@ namespace QuanLyQuanBida.BLL
         {
             return dichVuDAL.LayTenVaGiaDichVu(maDichVu);
         }
+        public string LayTenDichVu(int maDV)
+        {
+            return dichVuDAL.LayTenDichVu(maDV);
+        }
     }
 }
