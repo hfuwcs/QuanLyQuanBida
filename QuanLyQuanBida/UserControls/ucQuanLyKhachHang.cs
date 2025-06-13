@@ -1,8 +1,9 @@
-﻿using System;
+﻿using QuanLyQuanBida.BLL; // Thêm BLL
+using QuanLyQuanBida.BLL.QuanLyQuanBida.BLL;
+using QuanLyQuanBida.DTO; // Thêm DTO
+using QuanLyQuanBida.Forms; // Thêm Forms
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -10,106 +11,80 @@ namespace QuanLyQuanBida.UserControls
 {
     public partial class ucQuanLyKhachHang : UserControl
     {
-        // Lớp nội bộ để lưu trữ dữ liệu mẫu
-        private class KhachHang
-        {
-            public int MaKhachHang { get; set; }
-            public string HoTen { get; set; }
-            public string SoDienThoai { get; set; }
-            public int DiemTichLuy { get; set; }
-            public string HangThanhVien { get; set; }
-        }
-
-        // Danh sách dữ liệu mẫu
-        private List<KhachHang> danhSachKhachHang;
-
+        private KhachHangBLL khachHangBLL = new KhachHangBLL();
+        private List<KhachHangDTO> danhSachKhachHangFull;
         public ucQuanLyKhachHang()
         {
             InitializeComponent();
-            this.Load += UcQuanLyKhachHang_Load;
+            this.Load += UcQuanLyKhachHang_Load; 
         }
 
         private void UcQuanLyKhachHang_Load(object sender, EventArgs e)
         {
-            TaoDuLieuMau();
+            dgvKhachHang.SelectionChanged -= dgvKhachHang_SelectionChanged;
+
             SetupDataGridView();
-            LoadDataToGrid();
+            RefreshDataAndGrid();
+
+            MakeInputFieldsReadOnly();
             ClearFields();
+
+            dgvKhachHang.SelectionChanged += dgvKhachHang_SelectionChanged;
         }
 
-        private void TaoDuLieuMau()
+        private void RefreshDataAndGrid()
         {
-            danhSachKhachHang = new List<KhachHang>
+            danhSachKhachHangFull = khachHangBLL.LayDanhSachKhachHangDayDu();
+            FilterDataGrid(); // Lọc và hiển thị
+            if (dgvKhachHang.Rows.Count > 0)
             {
-                new KhachHang { MaKhachHang = 1, HoTen = "Nguyễn Phi Hùng", SoDienThoai = "0901234567", DiemTichLuy = 150, HangThanhVien = "Bạc" },
-                new KhachHang { MaKhachHang = 2, HoTen = "Trần Phạm Trọng Nhân", SoDienThoai = "0987654321", DiemTichLuy = 550, HangThanhVien = "Vàng" },
-                new KhachHang { MaKhachHang = 3, HoTen = "Lưu Hoàng Phúc", SoDienThoai = "0123456789", DiemTichLuy = 1200, HangThanhVien = "Kim Cương" },
-                new KhachHang { MaKhachHang = 4, HoTen = "Lê Thị Lan", SoDienThoai = "0334455667", DiemTichLuy = 50, HangThanhVien = "Thân thiết" }
-            };
+                dgvKhachHang.ClearSelection();
+            }
+            else
+            {
+                ClearFields();
+            }
         }
+
+        private void MakeInputFieldsReadOnly()
+        {
+            txtMaKhachHang.ReadOnly = true;
+            txtHoTen.ReadOnly = true;
+            txtSoDienThoai.ReadOnly = true;
+            numDiemTichLuy.ReadOnly = true;
+            numDiemTichLuy.Increment = 0;
+            txtHangThanhVien.ReadOnly = true;
+        }
+
 
         private void SetupDataGridView()
         {
             dgvKhachHang.AutoGenerateColumns = false;
             dgvKhachHang.Columns.Clear();
-            
-            var colMaKhahHang = new DataGridViewTextBoxColumn
-            {
-                Name = "MaKhachHang",
-                HeaderText = "Mã KH",
-                DataPropertyName = "MaKhachHang",
-                Width = 80
-            };
-            dgvKhachHang.Columns.Add(colMaKhahHang);
-            
-            var colHoTen = new DataGridViewTextBoxColumn
-            {
-                Name = "HoTen",
-                HeaderText = "Họ Tên",
-                DataPropertyName = "HoTen",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            };
-            dgvKhachHang.Columns.Add(colHoTen);
 
-            var colSoDienThoai = new DataGridViewTextBoxColumn
-            {
-                Name = "SoDienThoai",
-                HeaderText = "Số Điện Thoại",
-                DataPropertyName = "SoDienThoai",
-                Width = 150
-            };
-            dgvKhachHang.Columns.Add(colSoDienThoai);
-
-            var colDiemTichLuy = new DataGridViewTextBoxColumn
-            {
-                Name = "DiemTichLuy",
-                HeaderText = "Điểm",
-                DataPropertyName = "DiemTichLuy",
-                Width = 80
-            };
-            dgvKhachHang.Columns.Add(colDiemTichLuy);
-
-            var colHangThanhVien = new DataGridViewTextBoxColumn
-            {
-                Name = "HangThanhVien",
-                HeaderText = "Hạng",
-                DataPropertyName = "HangThanhVien",
-                Width = 120
-            };
-            dgvKhachHang.Columns.Add(colHangThanhVien);
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { Name = "MaKhachHang", HeaderText = "Mã KH", DataPropertyName = "MaKhachHang", Width = 80 });
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { Name = "HoTen", HeaderText = "Họ Tên", DataPropertyName = "HoTen", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { Name = "SoDienThoai", HeaderText = "Số Điện Thoại", DataPropertyName = "SoDienThoai", Width = 150 });
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { Name = "DiemTichLuy", HeaderText = "Điểm", DataPropertyName = "DiemTichLuy", Width = 80 });
+            dgvKhachHang.Columns.Add(new DataGridViewTextBoxColumn { Name = "HangThanhVien", HeaderText = "Hạng", DataPropertyName = "HangThanhVien", Width = 120 });
         }
 
-        private void LoadDataToGrid()
+        private void FilterDataGrid() // Đổi tên từ LoadDataToGrid
         {
-            var tuKhoa = txtTimKiem.Text.ToLower();
-            var filteredList = danhSachKhachHang
+            if (danhSachKhachHangFull == null) return;
+
+            string tuKhoa = txtTimKiem.Text.ToLower().Trim();
+            var filteredList = danhSachKhachHangFull
                 .Where(kh => string.IsNullOrEmpty(tuKhoa) ||
                              kh.HoTen.ToLower().Contains(tuKhoa) ||
                              kh.SoDienThoai.Contains(tuKhoa))
                 .ToList();
 
             dgvKhachHang.DataSource = null;
-            dgvKhachHang.DataSource = filteredList;
+            if (filteredList.Any())
+            {
+                dgvKhachHang.DataSource = filteredList;
+            }
         }
 
         private void ClearFields()
@@ -118,69 +93,86 @@ namespace QuanLyQuanBida.UserControls
             txtHoTen.Text = "";
             txtSoDienThoai.Text = "";
             numDiemTichLuy.Value = 0;
-            txtHangThanhVien.Text = "Thân thiết";
-            txtHoTen.Focus();
+            txtHangThanhVien.Text = ""; // Hạng sẽ được cập nhật khi chọn dòng
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            ClearFields();
-        }
-
-        private void btnLuu_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtHoTen.Text) || string.IsNullOrWhiteSpace(txtSoDienThoai.Text))
+            using (frmThemSuaKhachHang formThemKH = new frmThemSuaKhachHang())
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ Họ tên và Số điện thoại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!string.IsNullOrEmpty(txtMaKhachHang.Text)) // Sửa
-            {
-                int maKH = int.Parse(txtMaKhachHang.Text);
-                var khachHang = danhSachKhachHang.FirstOrDefault(kh => kh.MaKhachHang == maKH);
-                if (khachHang != null)
+                if (formThemKH.ShowDialog() == DialogResult.OK)
                 {
-                    khachHang.HoTen = txtHoTen.Text;
-                    khachHang.SoDienThoai = txtSoDienThoai.Text;
-                    khachHang.DiemTichLuy = (int)numDiemTichLuy.Value;
-                    khachHang.HangThanhVien = txtHangThanhVien.Text;
-                    MessageBox.Show("Cập nhật thông tin khách hàng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RefreshDataAndGrid();
+                    if (formThemKH.SavedKhachHang != null)
+                    {
+                        SelectRowByMaKhachHang(formThemKH.SavedKhachHang.MaKhachHang);
+                    }
                 }
             }
-            else // Thêm mới
-            {
-                int newId = danhSachKhachHang.Any() ? danhSachKhachHang.Max(kh => kh.MaKhachHang) + 1 : 1;
-                var khachHangMoi = new KhachHang
-                {
-                    MaKhachHang = newId,
-                    HoTen = txtHoTen.Text,
-                    SoDienThoai = txtSoDienThoai.Text,
-                    DiemTichLuy = (int)numDiemTichLuy.Value,
-                    HangThanhVien = txtHangThanhVien.Text
-                };
-                danhSachKhachHang.Add(khachHangMoi);
-                MessageBox.Show("Thêm khách hàng mới thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            LoadDataToGrid();
-            ClearFields();
         }
+
+        private void btnSuaKH_Click(object sender, EventArgs e) 
+        {
+            if (dgvKhachHang.SelectedRows.Count > 0)
+            {
+                int maKH = Convert.ToInt32(dgvKhachHang.SelectedRows[0].Cells["MaKhachHang"].Value);
+                var khachHangCanSua = khachHangBLL.LayThongTinKhachHang(maKH); // Lấy thông tin mới nhất
+
+                if (khachHangCanSua != null)
+                {
+                    using (frmThemSuaKhachHang formSuaKH = new frmThemSuaKhachHang(khachHangCanSua))
+                    {
+                        if (formSuaKH.ShowDialog() == DialogResult.OK)
+                        {
+                            RefreshDataAndGrid();
+                            if (formSuaKH.SavedKhachHang != null)
+                            {
+                                SelectRowByMaKhachHang(formSuaKH.SavedKhachHang.MaKhachHang);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Không tìm thấy khách hàng để sửa. Vui lòng làm mới danh sách.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một khách hàng để sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (dgvKhachHang.SelectedRows.Count > 0)
             {
-                if (MessageBox.Show("Bạn có chắc chắn muốn xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                string tenKH = dgvKhachHang.SelectedRows[0].Cells["HoTen"].Value.ToString();
+                if (MessageBox.Show($"Bạn có chắc chắn muốn xóa khách hàng '{tenKH}'?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int maKH = Convert.ToInt32(dgvKhachHang.SelectedRows[0].Cells["MaKhachHang"].Value);
-                    var khachHang = danhSachKhachHang.FirstOrDefault(kh => kh.MaKhachHang == maKH);
-                    if (khachHang != null)
+                    try
                     {
-                        danhSachKhachHang.Remove(khachHang);
-                        LoadDataToGrid();
-                        ClearFields();
-                        MessageBox.Show("Xóa khách hàng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        bool success = khachHangBLL.XoaKhachHang(maKH);
+                        if (success)
+                        {
+                            MessageBox.Show("Xóa khách hàng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            RefreshDataAndGrid();
+                            ClearFields();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Xóa khách hàng thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (InvalidOperationException exOp)
+                    {
+                        MessageBox.Show(exOp.Message, "Không thể xóa", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Đã xảy ra lỗi khi xóa: " + ex.Message, "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -195,17 +187,35 @@ namespace QuanLyQuanBida.UserControls
             if (dgvKhachHang.SelectedRows.Count > 0)
             {
                 DataGridViewRow row = dgvKhachHang.SelectedRows[0];
-                txtMaKhachHang.Text = row.Cells["MaKhachHang"].Value.ToString();
-                txtHoTen.Text = row.Cells["HoTen"].Value.ToString();
-                txtSoDienThoai.Text = row.Cells["SoDienThoai"].Value.ToString();
-                numDiemTichLuy.Value = Convert.ToDecimal(row.Cells["DiemTichLuy"].Value);
-                txtHangThanhVien.Text = row.Cells["HangThanhVien"].Value.ToString();
+                txtMaKhachHang.Text = row.Cells["MaKhachHang"].Value?.ToString() ?? "";
+                txtHoTen.Text = row.Cells["HoTen"].Value?.ToString() ?? "";
+                txtSoDienThoai.Text = row.Cells["SoDienThoai"].Value?.ToString() ?? "";
+                numDiemTichLuy.Value = Convert.ToDecimal(row.Cells["DiemTichLuy"].Value ?? 0);
+                txtHangThanhVien.Text = row.Cells["HangThanhVien"].Value?.ToString() ?? "";
+            }
+            else
+            {
+                ClearFields();
             }
         }
 
         private void txtTimKiem_TextChanged(object sender, EventArgs e)
         {
-            LoadDataToGrid();
+            FilterDataGrid();
         }
+
+        private void SelectRowByMaKhachHang(int maKH)
+        {
+            foreach (DataGridViewRow row in dgvKhachHang.Rows)
+            {
+                if (row.Cells["MaKhachHang"].Value != null && (int)row.Cells["MaKhachHang"].Value == maKH)
+                {
+                    row.Selected = true;
+                    dgvKhachHang.CurrentCell = row.Cells[1]; // Focus vào cột Họ Tên
+                    return;
+                }
+            }
+        }
+        // Loại bỏ btnLuu_Click
     }
 }

@@ -23,7 +23,8 @@ namespace QuanLyQuanBida.UserControls
             this.label6 = new System.Windows.Forms.Label();
             this.numGiaBan = new System.Windows.Forms.NumericUpDown();
             this.btnXoa = new System.Windows.Forms.Button();
-            this.btnLuu = new System.Windows.Forms.Button();
+            // this.btnLuu đã được xóa theo yêu cầu
+            this.btnSua = new System.Windows.Forms.Button(); // Khởi tạo btnSua
             this.btnThem = new System.Windows.Forms.Button();
             this.cboLoaiDichVu = new System.Windows.Forms.ComboBox();
             this.txtDonViTinh = new System.Windows.Forms.TextBox();
@@ -53,7 +54,8 @@ namespace QuanLyQuanBida.UserControls
             this.pnlInputArea.Controls.Add(this.label6);
             this.pnlInputArea.Controls.Add(this.numGiaBan);
             this.pnlInputArea.Controls.Add(this.btnXoa);
-            this.pnlInputArea.Controls.Add(this.btnLuu);
+            // this.pnlInputArea.Controls.Add(this.btnLuu); // DÒNG NÀY ĐÃ BỊ XÓA
+            this.pnlInputArea.Controls.Add(this.btnSua);    // THÊM DÒNG NÀY
             this.pnlInputArea.Controls.Add(this.btnThem);
             this.pnlInputArea.Controls.Add(this.cboLoaiDichVu);
             this.pnlInputArea.Controls.Add(this.txtDonViTinh);
@@ -65,9 +67,9 @@ namespace QuanLyQuanBida.UserControls
             this.pnlInputArea.Controls.Add(this.label2);
             this.pnlInputArea.Controls.Add(this.label1);
             this.pnlInputArea.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlInputArea.Location = new System.Drawing.Point(644, 0);
+            this.pnlInputArea.Location = new System.Drawing.Point(644, 0); // Giữ nguyên Location của panel
             this.pnlInputArea.Name = "pnlInputArea";
-            this.pnlInputArea.Size = new System.Drawing.Size(400, 641);
+            this.pnlInputArea.Size = new System.Drawing.Size(400, 641); // Giữ nguyên Size của panel
             this.pnlInputArea.TabIndex = 0;
             // 
             // label6
@@ -95,50 +97,50 @@ namespace QuanLyQuanBida.UserControls
             this.numGiaBan.TabIndex = 4;
             this.numGiaBan.ThousandsSeparator = true;
             // 
-            // btnXoa
-            // 
-            this.btnXoa.BackColor = System.Drawing.Color.Firebrick;
-            this.btnXoa.FlatAppearance.BorderSize = 0;
-            this.btnXoa.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnXoa.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnXoa.ForeColor = System.Drawing.Color.White;
-            this.btnXoa.Location = new System.Drawing.Point(274, 350);
-            this.btnXoa.Name = "btnXoa";
-            this.btnXoa.Size = new System.Drawing.Size(100, 45);
-            this.btnXoa.TabIndex = 7;
-            this.btnXoa.Text = "Xóa";
-            this.btnXoa.UseVisualStyleBackColor = false;
-            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
-            // 
-            // btnLuu
-            // 
-            this.btnLuu.BackColor = System.Drawing.Color.SeaGreen;
-            this.btnLuu.FlatAppearance.BorderSize = 0;
-            this.btnLuu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLuu.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnLuu.ForeColor = System.Drawing.Color.White;
-            this.btnLuu.Location = new System.Drawing.Point(150, 350);
-            this.btnLuu.Name = "btnLuu";
-            this.btnLuu.Size = new System.Drawing.Size(100, 45);
-            this.btnLuu.TabIndex = 6;
-            this.btnLuu.Text = "Lưu";
-            this.btnLuu.UseVisualStyleBackColor = false;
-            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
-            // 
-            // btnThem
+            // btnThem (Giữ nguyên hoặc điều chỉnh Location nếu cần)
             // 
             this.btnThem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.btnThem.FlatAppearance.BorderSize = 0;
             this.btnThem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnThem.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnThem.ForeColor = System.Drawing.Color.White;
-            this.btnThem.Location = new System.Drawing.Point(26, 350);
+            this.btnThem.Location = new System.Drawing.Point(26, 350); // Ví dụ: Nút đầu tiên
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(100, 45);
-            this.btnThem.TabIndex = 5;
+            this.btnThem.TabIndex = 5; // Cập nhật TabIndex nếu cần
             this.btnThem.Text = "Thêm";
             this.btnThem.UseVisualStyleBackColor = false;
             this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
+            // 
+            // btnSua (NÚT MỚI)
+            // 
+            this.btnSua.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7))))); // Màu vàng cam
+            this.btnSua.FlatAppearance.BorderSize = 0;
+            this.btnSua.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSua.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnSua.ForeColor = System.Drawing.Color.Black; // Chữ đen cho dễ đọc trên nền vàng
+            this.btnSua.Location = new System.Drawing.Point(150, 350); // Ví dụ: Nút ở giữa
+            this.btnSua.Name = "btnSua";
+            this.btnSua.Size = new System.Drawing.Size(100, 45);
+            this.btnSua.TabIndex = 6; // Cập nhật TabIndex nếu cần
+            this.btnSua.Text = "Sửa";
+            this.btnSua.UseVisualStyleBackColor = false;
+            this.btnSua.Click += new System.EventHandler(this.btnSua_Click); // Tạo event handler này trong code-behind
+            // 
+            // btnXoa (Giữ nguyên hoặc điều chỉnh Location nếu cần)
+            // 
+            this.btnXoa.BackColor = System.Drawing.Color.Firebrick;
+            this.btnXoa.FlatAppearance.BorderSize = 0;
+            this.btnXoa.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnXoa.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnXoa.ForeColor = System.Drawing.Color.White;
+            this.btnXoa.Location = new System.Drawing.Point(274, 350); // Ví dụ: Nút cuối cùng
+            this.btnXoa.Name = "btnXoa";
+            this.btnXoa.Size = new System.Drawing.Size(100, 45);
+            this.btnXoa.TabIndex = 7; // Cập nhật TabIndex nếu cần
+            this.btnXoa.Text = "Xóa";
+            this.btnXoa.UseVisualStyleBackColor = false;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
             // cboLoaiDichVu
             // 
@@ -170,7 +172,7 @@ namespace QuanLyQuanBida.UserControls
             this.txtMaDichVu.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.txtMaDichVu.Location = new System.Drawing.Point(140, 78);
             this.txtMaDichVu.Name = "txtMaDichVu";
-            this.txtMaDichVu.ReadOnly = true;
+            // this.txtMaDichVu.ReadOnly = true; // Sẽ được set từ code-behind
             this.txtMaDichVu.Size = new System.Drawing.Size(234, 34);
             this.txtMaDichVu.TabIndex = 0;
             // 
@@ -354,9 +356,9 @@ namespace QuanLyQuanBida.UserControls
         private TextBox txtTenDichVu;
         private TextBox txtMaDichVu;
         private ComboBox cboLoaiDichVu;
-        private Button btnXoa;
-        private Button btnLuu;
         private Button btnThem;
+        private System.Windows.Forms.Button btnSua;
+        private Button btnXoa;
         private Label label6;
         private NumericUpDown numGiaBan;
         private ComboBox cboLocLoaiDV;

@@ -1,23 +1,23 @@
-﻿using QuanLyQuanBida.DAL;
-using QuanLyQuanBida.DTO;
-using System;
+﻿using QuanLyQuanBida.DTO; // Thêm
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// ... other usings
 
-namespace QuanLyQuanBida.BLL
+public class LoaiDichVuBLL
 {
-    public class LoaiDichVuBLL
+    private LoaiDichVuDAL loaiDichVuDAL = new LoaiDichVuDAL();
+
+    public List<string> LayDanhSachTenLoaiDichVu() 
     {
-        private LoaiDichVuDAL loaiDichVuDAL = new LoaiDichVuDAL();
-        public List<string> LayDanhSachLoaiDichVu()
-        {
-            return loaiDichVuDAL.LayDanhSachLoaiDichVu();
-        }
-        public List<string> LayDanhSachLoaiDichVuToComboBox()
-        {
-            return loaiDichVuDAL.LoadLoaiDichVuToComboBox();
-        }
+        return loaiDichVuDAL.LayDanhSachTenLoaiDichVu();
+    }
+
+    public List<LoaiDichVuDTO> LayDanhSachLoaiDichVuDayDu()
+    {
+        return loaiDichVuDAL.LayDanhSachLoaiDichVuDayDu();
+    }
+
+    public int? LayMaLoaiDichVuTheoTen(string tenLoaiDV)
+    {
+        return loaiDichVuDAL.LayMaLoaiDichVuTheoTen(tenLoaiDV);
     }
 }

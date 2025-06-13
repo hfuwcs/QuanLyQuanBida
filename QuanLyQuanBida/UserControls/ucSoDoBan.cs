@@ -1,4 +1,5 @@
 ﻿using QuanLyQuanBida.BLL;
+using QuanLyQuanBida.BLL.QuanLyQuanBida.BLL;
 using QuanLyQuanBida.DTO;
 using QuanLyQuanBida.Forms;
 using System;
@@ -100,7 +101,7 @@ namespace QuanLyQuanBida.UserControls
         private void LoadLoaiDichVu()
         {
             flpLoaiDichVu.Controls.Clear();
-            var categories = LoaiDichVuBLL.LayDanhSachLoaiDichVu();
+            var categories = LoaiDichVuBLL.LayDanhSachTenLoaiDichVu();
             foreach (var cat in categories)
             {
                 Button btn = new Button

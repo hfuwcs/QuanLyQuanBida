@@ -1,6 +1,7 @@
 ﻿using QuanLyQuanBida.DTO;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -133,6 +134,77 @@ namespace QuanLyQuanBida.DAL
             {
                 var dichVu = db.DichVu.FirstOrDefault(dv => dv.MaDichVu == maDV);
                 return dichVu != null ? dichVu.TenDichVu : string.Empty;
+            }
+        }
+        public DichVuDTO ThemDichVu(DichVuDTO dichVuMoiDTO)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                // Mapping từ DTO sang Entity
+                var dichVuEntity = new DichVu // Tên class Entity của bạn
+                {
+                    TenDichVu = dichVuMoiDTO.TenDichVu,
+                    MaLoaiDV = dichVuMoiDTO.MaLoaiDV, // DTO phải có MaLoaiDV (int?)
+                    DonViTinh = dichVuMoiDTO.DonViTinh,
+                    Gia = dichVuMoiDTO.Gia
+                    // MaDichVu sẽ tự tăng nếu là Identity column trong DB
+                };
+
+                db.DichVu.Add(dichVuEntity);
+                db.SaveChanges();
+
+                // Cập nhật lại DTO với MaDichVu mới được tạo (nếu DB tự tăng)
+                // và nạp lại TenLoaiDV để hiển thị đúng
+                dichVuMoiDTO.MaDichVu = dichVuEntity.MaDichVu;
+                if (dichVuEntity.LoaiDichVu != null) // Nếu navigation property được load
+                {
+                    dichVuMoiDTO.LoaiDichVu = dichVuEntity.LoaiDichVu.TenLoaiDV;
+                }
+                else if (dichVuMoiDTO.MaLoaiDV.HasValue) // Hoặc query lại tên loại DV
+                {
+                    var loaiDV = db.LoaiDichVu.Find(dichVuMoiDTO.MaLoaiDV.Value);
+                    if (loaiDV != null) dichVuMoiDTO.LoaiDichVu = loaiDV.TenLoaiDV;
+                }
+                return dichVuMoiDTO; // Trả về DTO đã được cập nhật MaDichVu
+            }
+        }
+
+        public bool SuaDichVu(DichVuDTO dichVuCapNhatDTO)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var dichVuEntity = db.DichVu.Find(dichVuCapNhatDTO.MaDichVu);
+                if (dichVuEntity == null) return false;
+
+                dichVuEntity.TenDichVu = dichVuCapNhatDTO.TenDichVu;
+                dichVuEntity.MaLoaiDV = dichVuCapNhatDTO.MaLoaiDV; // DTO phải có MaLoaiDV (int?)
+                dichVuEntity.DonViTinh = dichVuCapNhatDTO.DonViTinh;
+                dichVuEntity.Gia = dichVuCapNhatDTO.Gia;
+
+                db.Entry(dichVuEntity).State = EntityState.Modified;
+                db.SaveChanges();
+                return true;
+            }
+        }
+
+        public bool XoaDichVu(int maDichVu)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var dichVuEntity = db.DichVu.Find(maDichVu);
+                if (dichVuEntity == null) return false;
+
+                // Kiểm tra xem dịch vụ có đang được sử dụng trong ChiTietHD không (QUAN TRỌNG)
+                bool dangSuDung = db.ChiTietHoaDon.Any(cthd => cthd.MaDichVu == maDichVu);
+                if (dangSuDung)
+                {
+                    // Không cho xóa nếu đang được sử dụng, hoặc bạn có thể implement soft delete
+                    throw new InvalidOperationException("Dịch vụ đang được sử dụng trong hóa đơn, không thể xóa.");
+                }
+
+                db.DichVu.Remove(dichVuEntity);
+                db.SaveChanges();
+                return true;
             }
         }
     }

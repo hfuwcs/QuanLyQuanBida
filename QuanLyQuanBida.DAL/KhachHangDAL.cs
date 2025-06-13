@@ -1,9 +1,10 @@
-﻿using System;
+﻿using QuanLyQuanBida.DTO;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using QuanLyQuanBida.DTO;
 
 namespace QuanLyQuanBida.DAL
 {
@@ -11,16 +12,21 @@ namespace QuanLyQuanBida.DAL
     {
         private DB_QuanLyQuanBidaEntities db = new DB_QuanLyQuanBidaEntities();
 
-        public List<KhachHangDTO> LayDanhSachKhachHang()
+        public List<KhachHangDTO> LayDanhSachKhachHangDayDu() 
         {
-            var khachHangs = db.KhachHang
-                .Select(kh => new KhachHangDTO
-                {
-                    MaKhachHang = kh.MaKhachHang,
-                    HoTenVaSDT = kh.HoTen + " - " + kh.SoDienThoai
-                })
-                .ToList();
-            return khachHangs;
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                return db.KhachHang
+                    .Select(kh => new KhachHangDTO
+                    {
+                        MaKhachHang = kh.MaKhachHang,
+                        HoTen = kh.HoTen,    
+                        SoDienThoai = kh.SoDienThoai,  
+                        DiemTichLuy = kh.DiemTichLuy, 
+                        HangThanhVien = kh.HangThanhVien,
+                    })
+                    .ToList();
+            }
         }
         public string LayTenKhachHang(int maKhachHang)
         {
@@ -28,6 +34,20 @@ namespace QuanLyQuanBida.DAL
                 .Where(kh => kh.MaKhachHang == maKhachHang)
                 .Select(kh => kh.HoTen)
                 .FirstOrDefault();
+        }
+        public List<KhachHangDTO> LayDanhSachKhachHangChoComboBox()
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var khachHangs = db.KhachHang
+                    .Select(kh => new KhachHangDTO
+                    {
+                        MaKhachHang = kh.MaKhachHang,
+                        HoTenVaSDT = kh.HoTen + " - " + kh.SoDienThoai 
+                    })
+                    .ToList();
+                return khachHangs;
+            }
         }
         public KhachHangDTO LayThongTinKhachHang(int maKhachHang)
         {
@@ -42,6 +62,63 @@ namespace QuanLyQuanBida.DAL
                     HangThanhVien = kh.HangThanhVien
                 })
                 .FirstOrDefault();
+        }
+        public KhachHangDTO ThemKhachHang(KhachHangDTO khachHangMoiDTO)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var khachHangEntity = new KhachHang
+                {
+                    HoTen = khachHangMoiDTO.HoTen,
+                    SoDienThoai = khachHangMoiDTO.SoDienThoai,
+                    DiemTichLuy = khachHangMoiDTO.DiemTichLuy,
+                    HangThanhVien = khachHangMoiDTO.HangThanhVien,
+                    NgayTao = DateTime.Now
+                };
+                db.KhachHang.Add(khachHangEntity);
+                db.SaveChanges();
+
+                khachHangMoiDTO.MaKhachHang = khachHangEntity.MaKhachHang;
+
+                return khachHangMoiDTO;
+            }
+        }
+
+        public bool SuaKhachHang(KhachHangDTO khachHangCapNhatDTO)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var khachHangEntity = db.KhachHang.Find(khachHangCapNhatDTO.MaKhachHang);
+                if (khachHangEntity == null) return false;
+
+                khachHangEntity.HoTen = khachHangCapNhatDTO.HoTen;
+                khachHangEntity.SoDienThoai = khachHangCapNhatDTO.SoDienThoai;
+                khachHangEntity.DiemTichLuy = khachHangCapNhatDTO.DiemTichLuy;
+                khachHangEntity.HangThanhVien = khachHangCapNhatDTO.HangThanhVien;
+
+                db.Entry(khachHangEntity).State = EntityState.Modified;
+                db.SaveChanges();
+                return true;
+            }
+        }
+
+        public bool XoaKhachHang(int maKhachHang)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var khachHangEntity = db.KhachHang.Find(maKhachHang);
+                if (khachHangEntity == null) return false;
+
+                bool coHoaDon = db.HoaDon.Any(hd => hd.MaKhachHang == maKhachHang);
+                if (coHoaDon)
+                {
+                    throw new InvalidOperationException("Khách hàng đã có hóa đơn, không thể xóa trực tiếp. Cân nhắc vô hiệu hóa khách hàng.");
+                }
+
+                db.KhachHang.Remove(khachHangEntity);
+                db.SaveChanges();
+                return true;
+            }
         }
     }
 }

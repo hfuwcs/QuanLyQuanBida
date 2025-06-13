@@ -1,4 +1,5 @@
 ﻿using QuanLyQuanBida.BLL;
+using QuanLyQuanBida.BLL.QuanLyQuanBida.BLL;
 using QuanLyQuanBida.DTO;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace QuanLyQuanBida.Forms
 
         private void LoadKhachHang()
         {
-            List<KhachHangDTO> danhSachKH = KhachHangBLL.LayDanhSachKhachHang();
+            List<KhachHangDTO> danhSachKH = KhachHangBLL.LayDanhSachKhachHangDayDu();
             cboKhachHang.DataSource = danhSachKH;
             cboKhachHang.DisplayMember = "HoTenVaSDT";
             cboKhachHang.ValueMember = "MaKhachHang";
