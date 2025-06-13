@@ -12,6 +12,7 @@ namespace QuanLyQuanBida.BLL
     {
         HoaDonDAL HoaDonDAL = new HoaDonDAL();
         private BanBidaDAL banDal = new BanBidaDAL();
+        private BanBidaDAL banBidaDAL = new BanBidaDAL();
         public Tuple<int, decimal> TinhTienGio(DateTime thoiGianBatDau, DateTime thoiGianKetThuc, decimal donGiaTheoGio)
         {
             if (thoiGianKetThuc <= thoiGianBatDau || donGiaTheoGio <= 0)
@@ -80,6 +81,34 @@ namespace QuanLyQuanBida.BLL
             // Cập nhật trạng thái bàn thành "Đang chơi"
             banDal.CapNhatTrangThaiBan(maBan, "Đang chơi");
             return HoaDonDAL.TaoHoaDon(maKH,tenKhach,maBan, maNV);
+        }
+        public int ThanhToanHoaDon(int maHoaDon, decimal tongTien, decimal giamGia, decimal tienGio, decimal tienDichVu)
+        {
+            if (maHoaDon <= 0 || tongTien < 0 || giamGia < 0 || tienGio < 0 || tienDichVu < 0)
+            {
+                throw new ArgumentException("Thông tin thanh toán không hợp lệ.");
+            }
+            
+            return HoaDonDAL.CapNhatHoaDon(maHoaDon, tongTien, giamGia, tienGio, tienDichVu);
+        }
+        public bool ThanhToan(int maHoaDon, int maBan, decimal tongTien, decimal giamGia, decimal tienGio, decimal tienDichVu)
+        {
+            try
+            {
+                int ketQuaHD = HoaDonDAL.CapNhatHoaDon(maHoaDon, tongTien, giamGia, tienGio, tienDichVu);
+
+                if (ketQuaHD > 0)
+                {
+                    banBidaDAL.CapNhatTrangThaiBan(maBan, "Trống");
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
         public decimal LayDonGiaTheoGio(int maLoaiBan)
         {

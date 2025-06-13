@@ -424,22 +424,74 @@ namespace QuanLyQuanBida.UserControls
 
         private void btnThanhToan_Click(object sender, EventArgs e)
         {
-            if (dgvChiTietHoaDon.Rows.Count > 0)
+            //1. Xem nó có chơi k đã
+            if (maHoaDonHienTai == 0 || maBanHienTai == 0 || thoiGianBatDauHienTai == null)
             {
-                var result = MessageBox.Show($"Xác nhận thanh toán cho {lblTenBan.Text}?\nTổng tiền: {lblTongTien.Text.Split(':')[1].Trim()}",
-                                             "Xác nhận thanh toán", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
+                MessageBox.Show("Vui lòng chọn một bàn đang chơi để thanh toán.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            BanBidaDTO banHienTai = BanBidaBll.LayChiTietBan(maBanHienTai);
+            if (banHienTai == null) return;
+            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDauHienTai.Value, DateTime.Now, banHienTai.GiaTheoGio);
+            decimal tienGio = ketQuaTinhTien.Item2;
+
+            // 2. Tính tổng tiền dịch vụ
+            decimal tienDichVu = 0;
+            foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
+            {
+                // Tính mỗi dịch vụ thôi mount fuack
+                if (row.Tag == null || row.Tag.ToString() != "TIEN_GIO")
                 {
-                    MessageBox.Show("Thanh toán thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    
-                    // Reset
-                    dgvChiTietHoaDon.Rows.Clear();
-                    lblTenBan.Text = "CHỌN BÀN";
-                    lblTrangThai.Text = "Trạng thái: ";
-                    lblGioVao.Text = "Giờ vào: N/A";
-                    TinhTongTien();
+                    tienDichVu += Convert.ToDecimal(row.Cells["colThanhTien"].Value);
                 }
             }
+
+            // 3. Tính giảm giá và tổng tiền cuối cùng
+            decimal giamGia = 0; //Cút m, nghèo lắm k có giảm giá đâu
+            decimal tongTien = tienGio + tienDichVu - giamGia;
+
+
+            // Hiển thị hộp thoại xác nhận
+            string thongBao = $"Thanh toán cho {lblTenBan.Text}?\n\n" +
+                              $"Tiền giờ: {tienGio:N0}đ\n" +
+                              $"Tiền dịch vụ: {tienDichVu:N0}đ\n" +
+                              $"Giảm giá: {giamGia:N0}đ\n" +
+                              $"----------------------------------\n" +
+                              $"TỔNG TIỀN: {tongTien:N0}đ";
+
+            if (MessageBox.Show(thongBao, "Xác nhận thanh toán", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                bool thanhCong = hoaDonBLL.ThanhToan(maHoaDonHienTai, maBanHienTai, tongTien, giamGia, tienGio, tienDichVu);
+
+                if (thanhCong)
+                {
+                    MessageBox.Show("Thanh toán thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Reset GUI
+                    ResetPanelThongTin();
+                    LoadBanBida();
+                }
+                else
+                {
+                    MessageBox.Show("Có lỗi xảy ra trong quá trình thanh toán.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+        private void ResetPanelThongTin()
+        {
+            lblTenBan.Text = "CHỌN BÀN";
+            lblTrangThai.Text = "Trạng thái:";
+            lblGioVao.Text = "Giờ vào: N/A";
+            dgvChiTietHoaDon.Rows.Clear();
+            lblTongTien.Text = "Tổng tiền: 0đ";
+
+            maBanHienTai = 0;
+            maHoaDonHienTai = 0;
+            thoiGianBatDauHienTai = null;
+
+            btnBatDauChoi.Visible = false;
+            btnThanhToan.Visible = false;
+            btnInHoaDon.Visible = false;
         }
         private void btnBatDauChoi_Click(object sender, EventArgs e)
         {
@@ -469,6 +521,7 @@ namespace QuanLyQuanBida.UserControls
                     // Tải lại danh sách bàn để cập nhật màu sắc.
                     LoadBanBida();
                     //
+                    ///Chưa làm, f
                     // 4. Cập nhật giao diện bên phải để hiển thị hóa đơn mới.
                     //    (Ẩn nút Bắt đầu, hiện nút Thanh toán,...)
 

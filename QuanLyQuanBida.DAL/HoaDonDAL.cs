@@ -69,7 +69,25 @@ namespace QuanLyQuanBida.DAL
                 return hoaDon.MaHoaDon;
             }
         }
-
+        public int CapNhatHoaDon(int maHoaDon, decimal tongTien,decimal giamGia, decimal tienGio,decimal tienDichVu)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var hoaDon = db.HoaDon.FirstOrDefault(hd => hd.MaHoaDon == maHoaDon);
+                if (hoaDon != null)
+                {
+                    hoaDon.TongTien = tongTien;
+                    hoaDon.GiamGia = giamGia;
+                    hoaDon.TienGio = tienGio;
+                    hoaDon.TienDichVu = tienDichVu;
+                    hoaDon.ThoiGianKetThuc = DateTime.Now; 
+                    hoaDon.TrangThai = "Đã thanh toán"; 
+                    db.SaveChanges();
+                    return 1;
+                }
+                return 0; 
+            }
+        }
         public int TaoMaHoaDonNgauNhien(DB_QuanLyQuanBidaEntities db)
         {
             int maHoaDon;
