@@ -24,6 +24,7 @@ namespace QuanLyQuanBida.DAL
                         SoDienThoai = kh.SoDienThoai,  
                         DiemTichLuy = kh.DiemTichLuy, 
                         HangThanhVien = kh.HangThanhVien,
+                        HoTenVaSDT = kh.HoTen + " - " + kh.SoDienThoai
                     })
                     .ToList();
             }

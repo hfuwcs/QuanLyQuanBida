@@ -124,5 +124,28 @@ namespace QuanLyQuanBida.BLL
         {
             return HoaDonDAL.LayThoiGianBatDau(maHoaDon);
         }
+        public Dictionary<string, double> GetMonthlyRevenue(int year)
+        {
+            return HoaDonDAL.GetMonthlyRevenue(year);
+        }
+        public Dictionary<string, double> GetMonthlyRevenue(DateTime startDate, DateTime endDate)
+        {
+            return HoaDonDAL.GetMonthlyRevenue(startDate, endDate);
+        }
+
+        public Dictionary<string, double> GetRevenueByCategory()
+        {
+            return HoaDonDAL.GetRevenueByCategory();
+        }
+
+        public Dictionary<string, double> GetTopRevenueByTable(int topN = 5)
+        {
+            return HoaDonDAL.GetTopRevenueByTable(topN);
+        }
+
+        public Dictionary<DateTime, double> GetDailyRevenue(int days = 7)
+        {
+            return HoaDonDAL.GetDailyRevenue(days);
+        }
     }
 }

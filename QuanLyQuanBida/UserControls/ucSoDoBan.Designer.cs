@@ -278,6 +278,7 @@ namespace QuanLyQuanBida.UserControls
             this.btnInHoaDon.TabIndex = 5;
             this.btnInHoaDon.Text = "In Hóa Đơn";
             this.btnInHoaDon.UseVisualStyleBackColor = false;
+            this.btnInHoaDon.Click += new System.EventHandler(this.btnInHoaDon_Click);
             // 
             // btnThanhToan
             // 

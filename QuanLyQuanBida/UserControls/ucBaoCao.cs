@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuanLyQuanBida.BLL;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace QuanLyQuanBida.UserControls
 {
     public partial class ucBaoCao : UserControl
     {
+        private HoaDonBLL baoCaoBLL = new HoaDonBLL(); 
+
         public ucBaoCao()
         {
             InitializeComponent();
@@ -17,21 +20,19 @@ namespace QuanLyQuanBida.UserControls
 
         private void UcBaoCao_Load(object sender, EventArgs e)
         {
-            SetupDoanhThuThangChart();
-            SetupDoanhThuTheoLoaiDVChart();
-            SetupDoanhThuTheoBanChart();
-            SetupDoanhThuTheoNgayChart();
+            LoadDoanhThuThangChart();
+            LoadDoanhThuTheoLoaiDVChart();
+            LoadDoanhThuTheoBanChart();
+            LoadDoanhThuTheoNgayChart();
         }
 
-        private void SetupDoanhThuThangChart()
+        private void LoadDoanhThuThangChart()
         {
-            var monthlyRevenue = new Dictionary<string, double>
-            {
-                { "Tháng 6", 25000000 },
-                { "Tháng 7", 31000000 },
-                { "Tháng 8", 45000000 },
-                { "Tháng 9", 38000000 }
-            };
+
+            DateTime endDate = DateTime.Now;
+            DateTime startDate = endDate.AddMonths(-3).AddDays(-endDate.Day + 1); // Đầu của 3 tháng trước
+            var monthlyRevenue = baoCaoBLL.GetMonthlyRevenue(startDate, endDate);
+
 
             chartDoanhThuThang.Series.Clear();
             chartDoanhThuThang.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
@@ -42,95 +43,100 @@ namespace QuanLyQuanBida.UserControls
                 ChartType = SeriesChartType.Column
             };
 
-            foreach (var item in monthlyRevenue)
+            if (monthlyRevenue != null)
             {
-                series.Points.AddXY(item.Key, item.Value);
+                foreach (var item in monthlyRevenue)
+                {
+                    series.Points.AddXY(item.Key, item.Value); 
+                }
             }
-
             chartDoanhThuThang.Series.Add(series);
         }
 
-        private void SetupDoanhThuTheoLoaiDVChart()
+        private void LoadDoanhThuTheoLoaiDVChart()
         {
-            // Dữ liệu mẫu
-            var revenueByCategory = new Dictionary<string, double>
-            {
-                { "Tiền giờ", 55 },
-                { "Đồ uống", 25 },
-                { "Đồ ăn", 15 },
-                { "Khác", 5 }
-            };
+            var revenueByCategory = baoCaoBLL.GetRevenueByCategory();
 
             chartDoanhThuTheoLoaiDV.Series.Clear();
             Series series = new Series("Tỷ lệ")
             {
                 ChartType = SeriesChartType.Doughnut,
                 IsValueShownAsLabel = true,
-                LabelFormat = "0.##'%'",
+                LabelFormat = "0.##'%'", 
                 Font = new Font("Segoe UI", 10f, FontStyle.Bold),
                 LabelForeColor = Color.White
             };
 
-            foreach (var item in revenueByCategory)
+            if (revenueByCategory != null)
             {
-                series.Points.AddXY(item.Key, item.Value);
-            }
 
+                double totalRevenue = revenueByCategory.Sum(x => x.Value);
+                if (totalRevenue > 0)
+                {
+                    foreach (var item in revenueByCategory)
+                    {
+                        DataPoint dataPoint = new DataPoint();
+                        dataPoint.SetValueXY(item.Key, (item.Value / totalRevenue) * 100);
+                        dataPoint.Label = $"{item.Key}\n({(item.Value / totalRevenue):P1})"; 
+                        dataPoint.LegendText = item.Key; 
+                        series.Points.Add(dataPoint);
+                    }
+                }
+            }
             chartDoanhThuTheoLoaiDV.Series.Add(series);
+            chartDoanhThuTheoLoaiDV.Legends[0].Enabled = true; 
         }
 
-        // Cấu hình và tải dữ liệu cho Biểu đồ Doanh thu theo Bàn
-        private void SetupDoanhThuTheoBanChart()
+        private void LoadDoanhThuTheoBanChart()
         {
-            // Dữ liệu mẫu
-            var revenueByTable = new Dictionary<string, double>
-            {
-                { "VIP 1", 8500000 }, { "L-06", 6200000 }, { "L-02", 5800000 },
-                { "VIP 2", 4500000 }, { "L-10", 3100000 }
-            };
+            var revenueByTable = baoCaoBLL.GetTopRevenueByTable(5); 
 
             chartDoanhThuTheoBan.Series.Clear();
             chartDoanhThuTheoBan.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
+            chartDoanhThuTheoBan.ChartAreas[0].AxisX.Interval = 1;
+
             Series series = new Series("Doanh thu")
             {
                 ChartType = SeriesChartType.Bar
             };
 
-            foreach (var item in revenueByTable)
+            if (revenueByTable != null)
             {
-                series.Points.AddXY(item.Key, item.Value);
+                var sortedRevenueByTable = revenueByTable.OrderByDescending(kvp => kvp.Value).ToList();
+                foreach (var item in sortedRevenueByTable)
+                {
+                    series.Points.AddXY(item.Key, item.Value);
+                }
             }
-
             chartDoanhThuTheoBan.Series.Add(series);
         }
 
-        // Cấu hình và tải dữ liệu cho Biểu đồ Doanh thu theo Ngày
-        private void SetupDoanhThuTheoNgayChart()
+        private void LoadDoanhThuTheoNgayChart()
         {
-            // Dữ liệu mẫu
-            var revenueByDay = new Dictionary<DateTime, double>
-            {
-                { DateTime.Now.AddDays(-6), 1200000 }, { DateTime.Now.AddDays(-5), 1800000 },
-                { DateTime.Now.AddDays(-4), 1500000 }, { DateTime.Now.AddDays(-3), 2500000 },
-                { DateTime.Now.AddDays(-2), 2200000 }, { DateTime.Now.AddDays(-1), 3100000 },
-                { DateTime.Now, 4500000 }
-            };
+            var revenueByDay = baoCaoBLL.GetDailyRevenue(7); 
 
             chartDoanhThuTheoNgay.Series.Clear();
             chartDoanhThuTheoNgay.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
             chartDoanhThuTheoNgay.ChartAreas[0].AxisX.LabelStyle.Format = "dd/MM";
+            chartDoanhThuTheoNgay.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Days;
+            chartDoanhThuTheoNgay.ChartAreas[0].AxisX.Interval = 1;
+
 
             Series series = new Series("Doanh thu")
             {
                 ChartType = SeriesChartType.Spline,
-                BorderWidth = 3
+                BorderWidth = 3,
+                XValueType = ChartValueType.Date
             };
 
-            foreach (var item in revenueByDay)
+            if (revenueByDay != null)
             {
-                series.Points.AddXY(item.Key, item.Value);
+                var sortedRevenueByDay = revenueByDay.OrderBy(kvp => kvp.Key).ToList();
+                foreach (var item in sortedRevenueByDay)
+                {
+                    series.Points.AddXY(item.Key.ToOADate(), item.Value);
+                }
             }
-
             chartDoanhThuTheoNgay.Series.Add(series);
         }
     }
