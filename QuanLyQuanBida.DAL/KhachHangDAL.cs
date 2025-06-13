@@ -22,5 +22,12 @@ namespace QuanLyQuanBida.DAL
                 .ToList();
             return khachHangs;
         }
+        public string LayTenKhachHang(int maKhachHang)
+        {
+            return db.KhachHang
+                .Where(kh => kh.MaKhachHang == maKhachHang)
+                .Select(kh => kh.HoTen)
+                .FirstOrDefault();
+        }
     }
 }

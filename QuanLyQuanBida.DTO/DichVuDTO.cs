@@ -14,5 +14,6 @@ namespace QuanLyQuanBida.DTO
         public string DonViTinh { get; set; }
         public string LoaiDichVu { get; set; }
         public decimal Gia { get; set; }
+        public int SoLuong { get; set; }
     }
 }

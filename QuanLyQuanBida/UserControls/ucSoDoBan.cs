@@ -259,13 +259,38 @@ namespace QuanLyQuanBida.UserControls
                     if(tienGioTamTinh > 0)
                     {
                         CapNhatDongTienGio();
-
-                        // Tải các dịch vụ khác đã gọi vào grid
-                        //LoadChiTietHoaDon(maHoaDonHienTai);
+                        LoadChiTietDichVu(maHoaDonHienTai);
                     }
                 }
             }
             TinhTongTien();
+        }
+
+        public void LoadChiTietDichVu(int maHoaDon)
+        {
+            for (int i = dgvChiTietHoaDon.Rows.Count - 1; i >= 0; i--)
+            {
+                var row = dgvChiTietHoaDon.Rows[i];
+                if (row.Tag == null || row.Tag.ToString() != "TIEN_GIO")
+                {
+                    dgvChiTietHoaDon.Rows.RemoveAt(i);
+                }
+            }
+            var chiTietDichVu = hoaDonBLL.LayChiTietDichVu(maHoaDon);
+            if (chiTietDichVu != null)
+            {
+                foreach (var item in chiTietDichVu)
+                {
+                    int rowIndex = dgvChiTietHoaDon.Rows.Add();
+                    DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
+                    newRow.Tag = item.MaDichVu;
+                    newRow.Cells["colMaDichVu"].Value = item.MaDichVu;
+                    newRow.Cells["colTenSanPham"].Value = item.TenDichVu;
+                    newRow.Cells["colSoLuong"].Value = item.SoLuong;
+                    newRow.Cells["colDonGia"].Value = item.Gia;
+                    newRow.Cells["colThanhTien"].Value = item.Gia * item.SoLuong;
+                }
+            }
         }
 
         private void CapNhatDongTienGio()
@@ -425,18 +450,24 @@ namespace QuanLyQuanBida.UserControls
                     int? maKH = form.MaKhachHangChon;
                     string tenKhach = form.TenKhachVangLai;
 
+                    if(maKH == null && string.IsNullOrWhiteSpace(tenKhach))
+                    {
+                        MessageBox.Show("Vui lòng chọn khách hàng hoặc nhập tên khách vãng lai.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    else if (maKH == null && !string.IsNullOrWhiteSpace(tenKhach))
+                    {
+                        maKH = 0;
+                    }
+                    else if (maKH != null && string.IsNullOrWhiteSpace(tenKhach))
+                    {
+                        tenKhach = KhachHangBLL.LayTenKhachHang((int)maKH);
+                    }
+
                     // --- PHẦN NGHIỆP VỤ ---
-                    // 1. Tạo một hóa đơn mới trong CSDL với:
-                    //    - Mã bàn (lấy từ lblTenBan.Text)
-                    //    - Mã khách hàng (maKH)
-                    //    - Tên khách vãng lai (tenKhach)
-                    //    - Thời gian bắt đầu là DateTime.Now
-                    //    - Trạng thái hóa đơn là "Chưa thanh toán"
-                    //
-                    // 2. Cập nhật trạng thái của bàn trong CSDL thành "Đang chơi".
-                    //
+                    hoaDonBLL.TaoHoaDon(maKH.Value, tenKhach, maBanHienTai);
                     // 3. Tải lại danh sách bàn để cập nhật màu sắc.
-                    //    LoadBanBida();
+                    LoadBanBida();
                     //
                     // 4. Cập nhật giao diện bên phải để hiển thị hóa đơn mới.
                     //    (Ẩn nút Bắt đầu, hiện nút Thanh toán,...)

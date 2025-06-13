@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuanLyQuanBida.DAL", "QuanL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuanLyQuanBida.DTO", "QuanLyQuanBida.DTO\QuanLyQuanBida.DTO.csproj", "{D4F30629-2F6F-45A8-B7D6-1E4E5F4734FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{278995F7-52BB-4F0E-A4A2-2FF0805E253D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D4F30629-2F6F-45A8-B7D6-1E4E5F4734FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4F30629-2F6F-45A8-B7D6-1E4E5F4734FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4F30629-2F6F-45A8-B7D6-1E4E5F4734FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{278995F7-52BB-4F0E-A4A2-2FF0805E253D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{278995F7-52BB-4F0E-A4A2-2FF0805E253D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{278995F7-52BB-4F0E-A4A2-2FF0805E253D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{278995F7-52BB-4F0E-A4A2-2FF0805E253D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

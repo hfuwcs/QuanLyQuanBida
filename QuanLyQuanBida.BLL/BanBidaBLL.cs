@@ -20,7 +20,13 @@ namespace QuanLyQuanBida.BLL
         {
             return bidaDAL.LayChiTietBan(maBan);
         }
-
-
+        public int CapNhatTrangThaiBan(int maBan, string trangThai)
+        {
+            if (string.IsNullOrEmpty(trangThai) || (trangThai != "Trống" && trangThai != "Đang chơi" && trangThai != "Bảo trì"))
+            {
+                throw new ArgumentException("Trạng thái bàn không hợp lệ.");
+            }
+            return bidaDAL.CapNhatTrangThaiBan(maBan, trangThai);
+        }
     }
 }

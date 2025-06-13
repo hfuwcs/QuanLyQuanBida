@@ -15,5 +15,9 @@ namespace QuanLyQuanBida.BLL
         {
             return khachHangDAL.LayDanhSachKhachHang();
         }
+        public string LayTenKhachHang(int maKhachHang)
+        {
+            return khachHangDAL.LayTenKhachHang(maKhachHang);
+        }
     }
 }

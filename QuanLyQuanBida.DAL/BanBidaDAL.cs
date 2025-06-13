@@ -49,5 +49,19 @@ namespace QuanLyQuanBida.DAL
                 .FirstOrDefault();
             return donGia;
         }
+        public int CapNhatTrangThaiBan(int maBan, string trangThai)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var ban = db.BanBida.FirstOrDefault(b => b.MaBan == maBan);
+                if (ban != null)
+                {
+                    ban.TrangThai = trangThai;
+                    db.SaveChanges();
+                    return 1; // Cập nhật thành công
+                }
+                return 0; // Không tìm thấy bàn
+            }
+        }
     }
 }

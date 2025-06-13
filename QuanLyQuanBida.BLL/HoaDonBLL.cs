@@ -44,12 +44,42 @@ namespace QuanLyQuanBida.BLL
                 // Tổng số phút cuối cùng cần tính tiền
                 int tongSoPhutTinhTien = phutGioDau + (soBlockTinhTien * kichThuocBlock);
 
-                // Tính tổng tiền dựa trên số phút đã được quy đổi
                 decimal donGiaTheoPhut = donGiaTheoGio / 60;
                 decimal tongTien = tongSoPhutTinhTien * donGiaTheoPhut;
 
                 return Tuple.Create(tongSoPhutTinhTien, tongTien);
             }
+        }
+        public List<DichVuDTO> LayChiTietDichVu(int maHoaDon)
+        { 
+            return HoaDonDAL.LayChiTietDichVu(maHoaDon);
+        }
+        public HoaDonDTO LayHoaDonHienTaiCuaBan(int maBan)
+        {
+            return HoaDonDAL.LayHoaDonChuaThanhToanTheoMaBan(maBan);
+        }
+
+        public int TaoHoaDon(int maKH, string tenKhach, int maBan)
+        {
+            if (maKH <= 0 || maBan <= 0 || string.IsNullOrEmpty(tenKhach))
+            {
+                throw new ArgumentException("Thông tin khách hàng hoặc bàn không hợp lệ.");
+            }
+
+            ///Coi bàn có xài được k
+            var ban = banDal.LayChiTietBan(maBan);
+            if (ban == null || ban.TrangThai != "Trống")
+            {
+                throw new InvalidOperationException("Bàn không trống hoặc không tồn tại.");
+            }
+            int maHoaDon = HoaDonDAL.TaoHoaDon(maKH, tenKhach, maBan);
+            if(maHoaDon <= 0)
+            {
+                throw new Exception("Không thể tạo hóa đơn mới.");
+            }
+            // Cập nhật trạng thái bàn thành "Đang chơi"
+            banDal.CapNhatTrangThaiBan(maBan, "Đang chơi");
+            return HoaDonDAL.TaoHoaDon(maKH,tenKhach,maBan);
         }
         public decimal LayDonGiaTheoGio(int maLoaiBan)
         {
@@ -59,10 +89,6 @@ namespace QuanLyQuanBida.BLL
         public DateTime LayThoiGianBatDau(int maHoaDon)
         {
             return HoaDonDAL.LayThoiGianBatDau(maHoaDon);
-        }
-        public HoaDonDTO LayHoaDonHienTaiCuaBan(int maBan)
-        {
-            return HoaDonDAL.LayHoaDonChuaThanhToanTheoMaBan(maBan);
         }
     }
 }
