@@ -274,14 +274,13 @@ namespace QuanLyQuanBida.UserControls
 
                 try
                 {
-                    // Gọi BLL để tạo hóa đơn, truyền cả danh sách dịch vụ đã chọn trước
                     int maHoaDonMoiVuaTao = hoaDonBLL.TaoHoaDon(maKH.Value, tenKhachHang, this.banContext.MaBan, Program.NhanVienHienTai.MaNhanVien, this.danhSachDichVuChonTruoc);
 
                     if (maHoaDonMoiVuaTao > 0)
                     {
                         MessageBox.Show($"Bắt đầu chơi cho {this.banContext.TenBan} thành công.\nKhách hàng: {tenKhachHang}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.danhSachDichVuChonTruoc.Clear(); // Xóa danh sách tạm
-                        LoadBanBida(); // Tải lại sơ đồ bàn để cập nhật trạng thái
+                        this.danhSachDichVuChonTruoc.Clear();
+                        LoadBanBida();
                     }
                     else
                     {
@@ -480,6 +479,7 @@ namespace QuanLyQuanBida.UserControls
                     tongTien += Convert.ToDecimal(row.Cells["colThanhTien"].Value);
                 }
             }
+            this.hoaDonContext.TongTien = tongTien; // Cập nhật tổng tiền vào context
             lblTongTien.Text = $"Tổng tiền: {tongTien:N0} đ";
         }
 
@@ -502,36 +502,25 @@ namespace QuanLyQuanBida.UserControls
 
         private void btnInHoaDon_Click(object sender, EventArgs e)
         {
-            if (this.hoaDonContext == null)
+            if (this.hoaDonContext.ChiTietDichVu == null || !this.hoaDonContext.ChiTietDichVu.Any() || this.hoaDonContext.ChiTietDichVu.Any(ct => string.IsNullOrEmpty(ct.TenDichVu)))
             {
-                MessageBox.Show("Vui lòng chọn một bàn đã có hóa đơn để in.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                var hoaDonDayDu = hoaDonBLL.LayHoaDonHienTaiCuaBan(banContext.MaBan);
+                CapNhatDongTienGio();
+                LoadChiTietDichVuVaoDGV();
 
-            if (this.hoaDonContext.TrangThai != "Đã thanh toán" && this.banContext.TrangThai != "Đang chơi") // Hoặc một trạng thái phù hợp để in
-            {
-                // Nếu bạn muốn chỉ in hóa đơn sau khi đã thanh toán, kiểm tra trạng thái của hoaDonContext
-                // Hoặc nếu bạn muốn in tạm tính khi đang chơi:
-                // Cần đảm bảo hoaDonContext được cập nhật đầy đủ thông tin (tiền giờ tạm tính, các dịch vụ...)
-                MessageBox.Show("Chỉ có thể in hóa đơn đã thanh toán hoặc đang trong phiên chơi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            // Đảm bảo ChiTietDichVu đã được nạp
-            // Nếu chưa, bạn cần gọi một phương thức từ BLL để nạp chi tiết dịch vụ cho hoaDonContext
-            if (this.hoaDonContext.ChiTietDichVu == null || !this.hoaDonContext.ChiTietDichVu.Any())
-            {
-                // Giả sử có phương thức này trong HoaDonBLL
-                // this.hoaDonContext.ChiTietDichVu = hoaDonBLL.LayChiTietDichVuChoHoaDon(this.hoaDonContext.MaHoaDon);
-
-                // Hoặc nếu LayHoaDonHienTaiCuaBan đã nạp rồi thì không cần
+                if (hoaDonDayDu != null)
+                {
+                    this.hoaDonContext = hoaDonDayDu; 
+                }
+                else
+                {
+                    MessageBox.Show("Không thể lấy đầy đủ thông tin chi tiết hóa đơn để in.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
 
             HoaDonPrinter printer = new HoaDonPrinter(this.hoaDonContext);
-
-            // Chọn 1 trong 2:
-            // printer.Print(); // Để mở PrintDialog và tiến hành in
-            printer.Preview(); // Để mở PrintPreviewDialog
+            printer.Preview(); 
         }
         #endregion
     }

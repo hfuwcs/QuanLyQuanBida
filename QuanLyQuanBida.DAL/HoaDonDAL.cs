@@ -34,6 +34,7 @@ namespace QuanLyQuanBida.DAL
                              MaBan = hd.BanBida.MaBan,
                              TenBan = hd.BanBida.TenBan,
                              GiaTheoGio = hd.BanBida.LoaiBan.GiaTheoGio,
+                             TongTien = hd.TongTien ?? 0,
 
                              ChiTietDichVu = hd.ChiTietHoaDon.Select(ct => new ChiTietHoaDonDTO
                              {
@@ -42,7 +43,7 @@ namespace QuanLyQuanBida.DAL
                                  TenDichVu = ct.DichVu.TenDichVu,
                                  SoLuong = ct.SoLuong,
                                  DonGia = ct.DonGia,
-                                 ThanhTien = ct.ThanhTien
+                                 ThanhTien = ct.ThanhTien, 
                              }).ToList()
                          })
                          .FirstOrDefault();
