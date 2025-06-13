@@ -11,8 +11,8 @@ namespace QuanLyQuanBida.BLL
     public class HoaDonBLL
     {
         HoaDonDAL HoaDonDAL = new HoaDonDAL();
-        private BanBidaDAL banDal = new BanBidaDAL();
         private BanBidaDAL banBidaDAL = new BanBidaDAL();
+        private ChiTietHoaDonDAL ChiTietHoaDonDAL = new ChiTietHoaDonDAL();
         public Tuple<int, decimal> TinhTienGio(DateTime thoiGianBatDau, DateTime thoiGianKetThuc, decimal donGiaTheoGio)
         {
             if (thoiGianKetThuc <= thoiGianBatDau || donGiaTheoGio <= 0)
@@ -57,30 +57,44 @@ namespace QuanLyQuanBida.BLL
         }
         public HoaDonDTO LayHoaDonHienTaiCuaBan(int maBan)
         {
-            return HoaDonDAL.LayHoaDonChuaThanhToanTheoMaBan(maBan);
+            var hoaDon = HoaDonDAL.LayHoaDonChuaThanhToanTheoMaBan(maBan);
+            if (hoaDon != null)
+            {
+                hoaDon.ChiTietDichVu = ChiTietHoaDonDAL.LayChiTietDichVuTheoMaHD(hoaDon.MaHoaDon);
+            }
+            return hoaDon;
         }
 
-        public int TaoHoaDon(int maKH, string tenKhach, int maBan, int maNV)
+        public int TaoHoaDon(int maKH, string tenKhach, int maBan, int maNV, List<ChiTietHoaDonDTO> dichVuChonTruoc) 
         {
-            if (maKH <= 0 || maBan <= 0 || string.IsNullOrEmpty(tenKhach))
+            if ((maKH <= 0 && string.IsNullOrWhiteSpace(tenKhach)) || maBan <= 0)
             {
                 throw new ArgumentException("Thông tin khách hàng hoặc bàn không hợp lệ.");
             }
 
-            ///Coi bàn có xài được k
-            var ban = banDal.LayChiTietBan(maBan);
+            var ban = banBidaDAL.LayChiTietBan(maBan);
             if (ban == null || ban.TrangThai != "Trống")
             {
                 throw new InvalidOperationException("Bàn không trống hoặc không tồn tại.");
             }
-            int maHoaDon = HoaDonDAL.TaoHoaDon(maKH, tenKhach, maBan, maNV);
-            if(maHoaDon <= 0)
+
+            int maHoaDonMoi = HoaDonDAL.TaoHoaDon(maKH, tenKhach, maBan, maNV);
+            if (maHoaDonMoi <= 0)
             {
                 throw new Exception("Không thể tạo hóa đơn mới.");
             }
-            // Cập nhật trạng thái bàn thành "Đang chơi"
-            banDal.CapNhatTrangThaiBan(maBan, "Đang chơi");
-            return maHoaDon;
+
+            if (dichVuChonTruoc != null && dichVuChonTruoc.Any())
+            {
+                bool themOk = ChiTietHoaDonDAL.ThemDanhSachDichVuVaoHoaDon(maHoaDonMoi, dichVuChonTruoc);
+                if (!themOk)
+                {
+                    Console.WriteLine($"Lỗi khi thêm dịch vụ chọn trước cho hóa đơn {maHoaDonMoi}");
+                }
+            }
+
+            banBidaDAL.CapNhatTrangThaiBan(maBan, "Đang chơi");
+            return maHoaDonMoi;
         }
         public bool ThanhToan(int maHoaDon, int maBan, decimal tongTien, decimal giamGia, decimal tienGio, decimal tienDichVu)
         {
@@ -103,7 +117,7 @@ namespace QuanLyQuanBida.BLL
         }
         public decimal LayDonGiaTheoGio(int maLoaiBan)
         {
-            return banDal.LayDonGiaTheoGio(maLoaiBan);
+            return banBidaDAL.LayDonGiaTheoGio(maLoaiBan);
         }
 
         public DateTime LayThoiGianBatDau(int maHoaDon)

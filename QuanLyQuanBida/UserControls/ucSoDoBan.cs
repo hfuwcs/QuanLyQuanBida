@@ -3,61 +3,53 @@ using QuanLyQuanBida.DTO;
 using QuanLyQuanBida.Forms;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace QuanLyQuanBida.UserControls
 {
     public partial class ucSoDoBan : UserControl
     {
-        private BanBidaBLL BanBidaBll = new BanBidaBLL();
-        private KhachHangBLL KhachHangBLL = new KhachHangBLL();
-        private DichVuBLL DichVuBLL = new DichVuBLL();
-        private LoaiDichVuBLL LoaiDichVuBLL = new LoaiDichVuBLL();
-        private HoaDonBLL hoaDonBLL = new HoaDonBLL();
+        // Business Logic Layer
+        private readonly BanBidaBLL BanBidaBll = new BanBidaBLL();
+        private readonly KhachHangBLL KhachHangBLL = new KhachHangBLL();
+        private readonly DichVuBLL DichVuBLL = new DichVuBLL();
+        private readonly LoaiDichVuBLL LoaiDichVuBLL = new LoaiDichVuBLL();
+        private readonly HoaDonBLL hoaDonBLL = new HoaDonBLL();
+        private readonly ChiTietHoaDonBLL chiTietHoaDonBLL = new ChiTietHoaDonBLL();
 
-        private int maBanHienTai = 0;
-        private int previousMaBan = -1;
-        private DateTime? thoiGianBatDauHienTai = null;
-
-        private HoaDonDTO hoaDonContext = null;
+        // Data Context for UI
         private BanBidaDTO banContext = null;
+        private HoaDonDTO hoaDonContext = null;
+        private List<ChiTietHoaDonDTO> danhSachDichVuChonTruoc = new List<ChiTietHoaDonDTO>();
+
         public ucSoDoBan()
         {
             InitializeComponent();
             this.Load += UcSoDoBan_Load;
-            this.dgvChiTietHoaDon.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvChiTietHoaDon_CellContentClick);
+            this.dgvChiTietHoaDon.CellContentClick += new DataGridViewCellEventHandler(this.dgvChiTietHoaDon_CellContentClick);
         }
+
+        #region Form & Control Load Events
 
         private void UcSoDoBan_Load(object sender, EventArgs e)
         {
-            LoadBanBida();
+            SetupDataGridView();
             LoadLoaiDichVu();
             if (flpLoaiDichVu.Controls.Count > 0)
             {
                 (flpLoaiDichVu.Controls[0] as Button).PerformClick();
             }
-            SetupDataGridView();
+            LoadBanBida();
         }
 
-        // Load Bàn
         private void LoadBanBida()
         {
-            int selectedBanId = 0;
-            if (this.banContext != null)
-            {
-                selectedBanId = this.banContext.MaBan;
-            }
-
+            int selectedBanId = this.banContext?.MaBan ?? 0;
             flpBanBida.Controls.Clear();
             List<BanBidaDTO> danhSachBan = BanBidaBll.LayDanhSachBan();
-
-            Button buttonToReselect = null; 
+            Button buttonToReselect = null;
 
             foreach (var banDTO in danhSachBan)
             {
@@ -108,11 +100,10 @@ namespace QuanLyQuanBida.UserControls
         private void LoadLoaiDichVu()
         {
             flpLoaiDichVu.Controls.Clear();
-            string[] categories = LoaiDichVuBLL.LayDanhSachLoaiDichVu().ToArray();
-
+            var categories = LoaiDichVuBLL.LayDanhSachLoaiDichVu();
             foreach (var cat in categories)
             {
-                Button btn = new Button()
+                Button btn = new Button
                 {
                     Text = cat,
                     AutoSize = true,
@@ -130,15 +121,14 @@ namespace QuanLyQuanBida.UserControls
         {
             flpDichVu.Controls.Clear();
             var services = DichVuBLL.LayDanhSachDichVu(category);
-
             foreach (var service in services)
             {
-                Button btn = new Button()
+                Button btn = new Button
                 {
                     Width = 150,
                     Height = 80,
-                    Text = $"{service.TenDichVu}\n{service.Gia:N0}đ",
-                    Tag = service.MaDichVu,
+                    Text = $"{service.TenDichVu}\n{service.Gia:N0} đ",
+                    Tag = service,
                     Font = new Font("Segoe UI", 10),
                     TextAlign = ContentAlignment.MiddleCenter,
                     BackColor = Color.FromArgb(63, 63, 70),
@@ -150,93 +140,30 @@ namespace QuanLyQuanBida.UserControls
             }
         }
 
-        // Cài đặt cho Bảng chi tiết hóa đơn
         private void SetupDataGridView()
         {
+            dgvChiTietHoaDon.Columns.Clear();
             dgvChiTietHoaDon.AutoGenerateColumns = false;
 
-            var colMaDichVu = new DataGridViewTextBoxColumn
-            {
-                Name = "colMaDichVu",
-                DataPropertyName = "MaDichVu",
-                ReadOnly = true,
-                Visible = false,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            };
-            dgvChiTietHoaDon.Columns.Add(colMaDichVu);
-
-            var colTenSP = new DataGridViewTextBoxColumn
-            {
-                Name = "colTenSanPham",
-                HeaderText = "Tên sản phẩm",
-                DataPropertyName = "TenDichVu", 
-                ReadOnly = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            };
-            dgvChiTietHoaDon.Columns.Add(colTenSP);
-
-            var colGiam = new DataGridViewButtonColumn
-            {
-                Name = "colGiamSoLuong",
-                HeaderText = "-",
-                Text = "-",
-                UseColumnTextForButtonValue = true, 
-                Width = 40
-            };
-            dgvChiTietHoaDon.Columns.Add(colGiam);
-
-            // 3. Cột Số lượng (TextBoxColumn)
-            var colSoLuong = new DataGridViewTextBoxColumn
-            {
-                Name = "colSoLuong",
-                HeaderText = "SL",
-                DataPropertyName = "SoLuong",
-                ReadOnly = false,
-                Width = 50,
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
-            };
-            dgvChiTietHoaDon.Columns.Add(colSoLuong);
-
-            var colTang = new DataGridViewButtonColumn
-            {
-                Name = "colTangSoLuong",
-                HeaderText = "+",
-                Text = "+",
-                UseColumnTextForButtonValue = true,
-                Width = 40
-            };
-            dgvChiTietHoaDon.Columns.Add(colTang);
-
-            var colDonGia = new DataGridViewTextBoxColumn
-            {
-                Name = "colDonGia",
-                HeaderText = "Đơn giá",
-                DataPropertyName = "Gia",
-                ReadOnly = true,
-                Width = 100
-            };
-            colDonGia.DefaultCellStyle.Format = "N0";
-            dgvChiTietHoaDon.Columns.Add(colDonGia);
-
-            var colThanhTien = new DataGridViewTextBoxColumn
-            {
-                Name = "colThanhTien",
-                HeaderText = "Thành tiền",
-                DataPropertyName = "ThanhTien",
-                ReadOnly = true,
-                Width = 120
-            };
-            colThanhTien.DefaultCellStyle.Format = "N0";
-            dgvChiTietHoaDon.Columns.Add(colThanhTien);
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { Name = "colMaDichVu", Visible = false });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { Name = "colTenSanPham", HeaderText = "Tên sản phẩm", ReadOnly = true, AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewButtonColumn { Name = "colGiamSoLuong", HeaderText = "", Text = "-", UseColumnTextForButtonValue = true, Width = 30 });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSoLuong", HeaderText = "SL", ReadOnly = true, Width = 40, DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter } });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewButtonColumn { Name = "colTangSoLuong", HeaderText = "", Text = "+", UseColumnTextForButtonValue = true, Width = 30 });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { Name = "colDonGia", HeaderText = "Đơn giá", ReadOnly = true, Width = 100, DefaultCellStyle = { Format = "N0" } });
+            dgvChiTietHoaDon.Columns.Add(new DataGridViewTextBoxColumn { Name = "colThanhTien", HeaderText = "Thành tiền", ReadOnly = true, Width = 120, DefaultCellStyle = { Format = "N0" } });
         }
 
-        // Sự kiện khi nhấn vào 1 bàn
+        #endregion
+
+        #region UI Event Handlers (Clicks)
+
         private void Ban_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
             this.banContext = (BanBidaDTO)btn.Tag;
-
             this.hoaDonContext = null;
+            this.danhSachDichVuChonTruoc.Clear();
 
             lblTenBan.Text = banContext.TenBan;
             lblTrangThai.Text = "Trạng thái: " + banContext.TrangThai;
@@ -246,245 +173,152 @@ namespace QuanLyQuanBida.UserControls
             if (banContext.TrangThai == "Đang chơi")
             {
                 this.hoaDonContext = hoaDonBLL.LayHoaDonHienTaiCuaBan(banContext.MaBan);
-
                 if (this.hoaDonContext != null)
                 {
                     lblGioVao.Text = "Giờ vào: " + this.hoaDonContext.ThoiGianBatDau.ToString("HH:mm:ss dd/MM/yyyy");
-
-                    CapNhatDongTienGio(); 
-                    LoadChiTietDichVu();
+                    CapNhatDongTienGio();
+                    LoadChiTietDichVuVaoDGV();
                 }
-
                 btnBatDauChoi.Visible = false;
                 btnThanhToan.Visible = true;
                 btnInHoaDon.Visible = true;
             }
-            else // Bàn Trống hoặc Bảo trì
+            else
             {
+                lblGioVao.Text = "Giờ vào: N/A";
+                XoaDongTienGio();
                 btnBatDauChoi.Visible = (banContext.TrangThai == "Trống");
                 btnThanhToan.Visible = false;
                 btnInHoaDon.Visible = false;
-                lblGioVao.Text = "Giờ vào: N/A";
             }
-
             TinhTongTien();
         }
 
-
-        private void LoadChiTietDichVu()
-        {
-            for (int i = dgvChiTietHoaDon.Rows.Count - 1; i >= 0; i--)
-            {
-                var row = dgvChiTietHoaDon.Rows[i];
-                if (row.Tag == null || row.Tag.ToString() != "TIEN_GIO")
-                {
-                    dgvChiTietHoaDon.Rows.RemoveAt(i);
-                }
-            }
-
-            if (this.hoaDonContext == null || this.hoaDonContext.ChiTietDichVu == null)
-            {
-                return;
-            }
-
-            var chiTietDichVu = this.hoaDonContext.ChiTietDichVu;
-
-            foreach (var item in chiTietDichVu)
-            {
-                int rowIndex = dgvChiTietHoaDon.Rows.Add();
-                DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
-
-                string tenDV = DichVuBLL.LayTenDichVu(item.MaDichVu);
-                newRow.Tag = item.MaCTHD;
-
-                newRow.Cells["colTenSanPham"].Value = tenDV;
-                newRow.Cells["colSoLuong"].Value = item.SoLuong;
-                newRow.Cells["colDonGia"].Value = item.DonGia; // Đơn giá tại thời điểm gọi món
-                newRow.Cells["colThanhTien"].Value = item.DonGia * item.SoLuong;
-            }
-        }
-
-        private void CapNhatDongTienGio()
-        {
-            if (this.banContext == null || this.hoaDonContext == null)
-            {
-                XoaDongTienGio();
-                return;
-            }
-
-            decimal donGiaGio = this.banContext.GiaTheoGio;
-            DateTime thoiGianBatDau = this.hoaDonContext.ThoiGianBatDau;
-
-            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDau, DateTime.Now, donGiaGio);
-            decimal tienGioHienTai = ketQuaTinhTien.Item2;
-            int phutDaTinh = ketQuaTinhTien.Item1;
-
-            DataGridViewRow rowTienGio = null;
-            foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
-            {
-                if (row.Tag != null && row.Tag.ToString() == "TIEN_GIO")
-                {
-                    rowTienGio = row;
-                    break;
-                }
-            }
-
-            if (rowTienGio == null)
-            {
-                dgvChiTietHoaDon.Rows.Insert(0, 1);
-                rowTienGio = dgvChiTietHoaDon.Rows[0];
-                rowTienGio.Tag = "TIEN_GIO";
-            }
-
-            rowTienGio.Cells["colTenSanPham"].Value = $"Tiền giờ ({phutDaTinh} phút)";
-            rowTienGio.Cells["colSoLuong"].Value = 1;
-            rowTienGio.Cells["colDonGia"].Value = donGiaGio;
-            rowTienGio.Cells["colThanhTien"].Value = tienGioHienTai;
-
-            rowTienGio.ReadOnly = true;
-            rowTienGio.DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224); // Màu xám nhạt
-            rowTienGio.DefaultCellStyle.ForeColor = Color.Black;
-            rowTienGio.DefaultCellStyle.SelectionBackColor = Color.FromArgb(224, 224, 224);
-            rowTienGio.DefaultCellStyle.SelectionForeColor = Color.Black;
-
-            if (rowTienGio.Cells["colGiamSoLuong"] is DataGridViewButtonCell cellGiam)
-            {
-                cellGiam.Value = "";
-            }
-            if (rowTienGio.Cells["colTangSoLuong"] is DataGridViewButtonCell cellTang)
-            {
-                cellTang.Value = "";
-            }
-        }
-
-        private void XoaDongTienGio()
-        {
-            foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
-            {
-                if (row.Tag != null && row.Tag.ToString() == "TIEN_GIO")
-                {
-                    dgvChiTietHoaDon.Rows.Remove(row);
-                    break;
-                }
-            }
-        }
         private void LoaiDichVu_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
-            foreach (Button b in flpLoaiDichVu.Controls)
+            foreach (Control c in flpLoaiDichVu.Controls)
             {
-                b.BackColor = Color.DimGray;
+                c.BackColor = Color.DimGray;
             }
             btn.BackColor = Color.Goldenrod;
             LoadDichVu(btn.Text);
         }
 
-        // Sự kiện khi nhấn vào 1 sản phẩm/dịch vụ để thêm vào hóa đơn
         private void DichVu_Click(object sender, EventArgs e)
         {
-            if (lblTenBan.Text == "CHỌN BÀN")
+            if (this.banContext == null || this.banContext.TrangThai == "Bảo trì")
             {
-                MessageBox.Show("Vui lòng chọn bàn trước khi thêm dịch vụ!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng chọn bàn hợp lệ hoặc bàn không đang bảo trì.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            Button btn = sender as Button;
-            var serviceInfo = DichVuBLL.LayDichVuTheoID(Convert.ToInt32(btn.Tag));
-            string tenSP = serviceInfo.TenDichVu;
-            decimal donGia = serviceInfo.Gia;
-
-            bool existed = false;
-            foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
-            {
-                if (row.Cells["colTenSanPham"].Value.ToString() == tenSP)
-                {
-                    int currentQty = Convert.ToInt32(row.Cells["colSoLuong"].Value); // Số lượng hiện tại
-                    row.Cells["colSoLuong"].Value = currentQty + 1;
-                    row.Cells["colThanhTien"].Value = (currentQty + 1) * donGia;
-                    existed = true;
-                    break;
-                }
-            }
-
-            if (!existed)
-            {
-                int rowIndex = dgvChiTietHoaDon.Rows.Add();
-                
-                DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
-
-                newRow.Tag = serviceInfo.MaDichVu;
-
-                newRow.Cells["colTenSanPham"].Value = tenSP;
-                newRow.Cells["colSoLuong"].Value = 1;
-                newRow.Cells["colDonGia"].Value = donGia;
-                newRow.Cells["colThanhTien"].Value = donGia;
-            }
-            TinhTongTien();
+            Button btnDV = sender as Button;
+            var serviceDTO = (DichVuDTO)btnDV.Tag;
+            CapNhatChiTietHoaDon(serviceDTO, 1); // Tăng số lượng lên 1
         }
 
-        private void TinhTongTien()
+        private void dgvChiTietHoaDon_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            decimal tongTien = 0;
-            foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
+            if (e.RowIndex < 0) return;
+
+            var row = dgvChiTietHoaDon.Rows[e.RowIndex];
+            if (row.Tag?.ToString() == "TIEN_GIO" || row.Cells["colMaDichVu"].Value == null) return;
+
+            var maDichVu = Convert.ToInt32(row.Cells["colMaDichVu"].Value);
+            var serviceInfo = DichVuBLL.LayDichVuTheoID(maDichVu); // Lấy thông tin mới nhất
+            if (serviceInfo == null) return;
+
+            var columnName = dgvChiTietHoaDon.Columns[e.ColumnIndex].Name;
+
+            if (columnName == "colGiamSoLuong")
             {
-                tongTien += Convert.ToDecimal(row.Cells["colThanhTien"].Value);
+                CapNhatChiTietHoaDon(serviceInfo, -1);
             }
-            lblTongTien.Text = $"Tổng tiền: {tongTien:N0} đ";
+            else if (columnName == "colTangSoLuong")
+            {
+                CapNhatChiTietHoaDon(serviceInfo, 1); 
+            }
+        }
+
+        private void btnBatDauChoi_Click(object sender, EventArgs e)
+        {
+            if (this.banContext == null || this.banContext.TrangThai != "Trống")
+            {
+                MessageBox.Show("Vui lòng chọn một bàn đang trống để bắt đầu chơi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var formChonKhach = new frmBatDauChoi(this.banContext.TenBan))
+            {
+                if (formChonKhach.ShowDialog() != DialogResult.OK) return;
+
+                int? maKH = formChonKhach.MaKhachHangChon;
+                string tenKhachHang = formChonKhach.TenKhachVangLai;
+
+                // Xác định tên khách hàng cuối cùng
+                if (maKH.HasValue && maKH > 0)
+                {
+                    var khachHangDTO = KhachHangBLL.LayThongTinKhachHang(maKH.Value);
+                    if (khachHangDTO != null) tenKhachHang = khachHangDTO.HoTen;
+                }
+                else if (string.IsNullOrWhiteSpace(tenKhachHang))
+                {
+                    MessageBox.Show("Vui lòng chọn khách hàng thành viên hoặc nhập tên khách vãng lai.", "Thông tin thiếu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                try
+                {
+                    // Gọi BLL để tạo hóa đơn, truyền cả danh sách dịch vụ đã chọn trước
+                    int maHoaDonMoiVuaTao = hoaDonBLL.TaoHoaDon(maKH.Value, tenKhachHang, this.banContext.MaBan, Program.NhanVienHienTai.MaNhanVien, this.danhSachDichVuChonTruoc);
+
+                    if (maHoaDonMoiVuaTao > 0)
+                    {
+                        MessageBox.Show($"Bắt đầu chơi cho {this.banContext.TenBan} thành công.\nKhách hàng: {tenKhachHang}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.danhSachDichVuChonTruoc.Clear(); // Xóa danh sách tạm
+                        LoadBanBida(); // Tải lại sơ đồ bàn để cập nhật trạng thái
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể tạo hóa đơn mới. Vui lòng thử lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Đã có lỗi xảy ra: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    LoadBanBida(); // Tải lại phòng trường hợp trạng thái bàn bị lỗi
+                }
+            }
         }
 
         private void btnThanhToan_Click(object sender, EventArgs e)
         {
-            //1. Xem nó có chơi k đã
             if (this.hoaDonContext == null)
             {
                 MessageBox.Show("Vui lòng chọn một bàn đang chơi hợp lệ để thanh toán.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Tất cả thông tin cần thiết đều nằm trong 'hoaDonContext'
-            int maHoaDonCanThanhToan = this.hoaDonContext.MaHoaDon;
-            int maBanCanThanhToan = this.hoaDonContext.MaBan;
-            DateTime thoiGianBatDau = this.hoaDonContext.ThoiGianBatDau;
-            decimal donGia = this.hoaDonContext.GiaTheoGio;
-
-            // Tính toán lại tiền giờ lần cuối cùng
-            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDau, DateTime.Now, donGia);
+            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(this.hoaDonContext.ThoiGianBatDau, DateTime.Now, this.banContext.GiaTheoGio);
             decimal tienGio = ketQuaTinhTien.Item2;
-
-            // 2. Tính tổng tiền dịch vụ
-            decimal tienDichVu = 0;
-            foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
-            {
-                // Tính mỗi dịch vụ thôi mount fuack
-                if (row.Tag == null || row.Tag.ToString() != "TIEN_GIO")
-                {
-                    tienDichVu += Convert.ToDecimal(row.Cells["colThanhTien"].Value);
-                }
-            }
-
-            // 3. Tính giảm giá và tổng tiền cuối cùng
-            decimal giamGia = 0; //Cút m, nghèo lắm k có giảm giá đâu
+            decimal tienDichVu = this.hoaDonContext.ChiTietDichVu?.Sum(ct => ct.SoLuong * ct.DonGia) ?? 0;
+            decimal giamGia = 0; // Logic giảm giá nếu có
             decimal tongTien = tienGio + tienDichVu - giamGia;
 
-
-            // Hiển thị hộp thoại xác nhận
             string thongBao = $"Thanh toán cho {lblTenBan.Text}?\n\n" +
-                              $"Tiền giờ: {tienGio:N0}đ\n" +
-                              $"Tiền dịch vụ: {tienDichVu:N0}đ\n" +
-                              $"Giảm giá: {giamGia:N0}đ\n" +
+                              $"Tiền giờ: {tienGio:N0} đ\n" +
+                              $"Tiền dịch vụ: {tienDichVu:N0} đ\n" +
+                              $"Giảm giá: {giamGia:N0} đ\n" +
                               $"----------------------------------\n" +
-                              $"TỔNG TIỀN: {tongTien:N0}đ";
+                              $"TỔNG TIỀN: {tongTien:N0} đ";
 
             if (MessageBox.Show(thongBao, "Xác nhận thanh toán", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                bool thanhCong = hoaDonBLL.ThanhToan(maHoaDonCanThanhToan, maBanCanThanhToan, tongTien, giamGia, tienGio, tienDichVu);
-
+                bool thanhCong = hoaDonBLL.ThanhToan(this.hoaDonContext.MaHoaDon, this.banContext.MaBan, tongTien, giamGia, tienGio, tienDichVu);
                 if (thanhCong)
                 {
                     MessageBox.Show("Thanh toán thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Reset GUI
-                    ResetPanelThongTin();
                     LoadBanBida();
                 }
                 else
@@ -493,102 +327,185 @@ namespace QuanLyQuanBida.UserControls
                 }
             }
         }
+
+        #endregion
+
+        #region Core Logic & Data Handling
+
+        /// <summary>
+        /// Trung tâm xử lý việc thêm/bớt dịch vụ.
+        /// </summary>
+        /// <param name="serviceDTO">Dịch vụ cần cập nhật.</param>
+        /// <param name="changeAmount">Số lượng thay đổi (1 để thêm, -1 để bớt).</param>
+        private void CapNhatChiTietHoaDon(DichVuDTO serviceDTO, int changeAmount)
+        {
+            // Tìm dòng tương ứng trong DataGridView
+            DataGridViewRow existingRow = dgvChiTietHoaDon.Rows
+                .Cast<DataGridViewRow>()
+                .FirstOrDefault(r => r.Cells["colMaDichVu"].Value != null && Convert.ToInt32(r.Cells["colMaDichVu"].Value) == serviceDTO.MaDichVu);
+
+            int soLuongHienTai = existingRow != null ? Convert.ToInt32(existingRow.Cells["colSoLuong"].Value) : 0;
+            int soLuongMoi = soLuongHienTai + changeAmount;
+
+            // Xử lý lưu trữ dựa trên trạng thái bàn
+            if (this.banContext.TrangThai == "Trống")
+            {
+                var itemChonTruoc = danhSachDichVuChonTruoc.FirstOrDefault(dv => dv.MaDichVu == serviceDTO.MaDichVu);
+                if (soLuongMoi > 0)
+                {
+                    if (itemChonTruoc != null)
+                    {
+                        itemChonTruoc.SoLuong = soLuongMoi;
+                    }
+                    else
+                    {
+                        danhSachDichVuChonTruoc.Add(new ChiTietHoaDonDTO { MaDichVu = serviceDTO.MaDichVu, TenDichVu = serviceDTO.TenDichVu, SoLuong = soLuongMoi, DonGia = serviceDTO.Gia });
+                    }
+                }
+                else
+                {
+                    if (itemChonTruoc != null) danhSachDichVuChonTruoc.Remove(itemChonTruoc);
+                }
+                // Tải lại DGV từ danh sách chọn trước
+                LoadDanhSachChonTruocVaoDGV();
+            }
+            else if (this.banContext.TrangThai == "Đang chơi" && this.hoaDonContext != null)
+            {
+                try
+                {
+                    chiTietHoaDonBLL.ThemHoacCapNhatDichVuChoHoaDon(this.hoaDonContext.MaHoaDon, serviceDTO.MaDichVu, soLuongMoi, serviceDTO.Gia);
+
+                    this.hoaDonContext = hoaDonBLL.LayHoaDonHienTaiCuaBan(this.banContext.MaBan);
+                    LoadChiTietDichVuVaoDGV();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi cập nhật dịch vụ: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.hoaDonContext = hoaDonBLL.LayHoaDonHienTaiCuaBan(this.banContext.MaBan);
+                    LoadChiTietDichVuVaoDGV();
+                }
+            }
+            TinhTongTien();
+        }
+
+        private void LoadChiTietDichVuVaoDGV()
+        {
+            XoaDongDichVu(); // Xóa các dòng dịch vụ cũ
+            if (this.hoaDonContext?.ChiTietDichVu == null) return;
+
+            foreach (var item in this.hoaDonContext.ChiTietDichVu)
+            {
+                ThemRowDichVuVaoDGV(item.MaDichVu, DichVuBLL.LayTenDichVu(item.MaDichVu), item.SoLuong, item.DonGia, item.MaCTHD);
+            }
+            TinhTongTien();
+        }
+
+        private void LoadDanhSachChonTruocVaoDGV()
+        {
+            XoaDongDichVu();
+            if (this.danhSachDichVuChonTruoc == null) return;
+
+            foreach (var item in this.danhSachDichVuChonTruoc)
+            {
+                ThemRowDichVuVaoDGV(item.MaDichVu, item.TenDichVu, item.SoLuong, item.DonGia, null);
+            }
+            TinhTongTien();
+        }
+
+        private void ThemRowDichVuVaoDGV(int maDichVu, string tenDichVu, int soLuong, decimal donGia, int? maCTHD)
+        {
+            int rowIndex = dgvChiTietHoaDon.Rows.Add();
+            DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
+
+            newRow.Tag = maCTHD; // Lưu MaCTHD (nếu có) vào Tag
+            newRow.Cells["colMaDichVu"].Value = maDichVu;
+            newRow.Cells["colTenSanPham"].Value = tenDichVu;
+            newRow.Cells["colSoLuong"].Value = soLuong;
+            newRow.Cells["colDonGia"].Value = donGia;
+            newRow.Cells["colThanhTien"].Value = soLuong * donGia;
+        }
+
+        #endregion
+
+        #region UI Helper Methods
+
+        private void CapNhatDongTienGio()
+        {
+            XoaDongTienGio();
+            if (this.banContext == null || this.hoaDonContext == null) return;
+
+            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(this.hoaDonContext.ThoiGianBatDau, DateTime.Now, this.banContext.GiaTheoGio);
+            int phutDaTinh = ketQuaTinhTien.Item1;
+            decimal tienGioHienTai = ketQuaTinhTien.Item2;
+
+            dgvChiTietHoaDon.Rows.Insert(0, 1);
+            var rowTienGio = dgvChiTietHoaDon.Rows[0];
+            rowTienGio.Tag = "TIEN_GIO";
+            rowTienGio.Cells["colTenSanPham"].Value = $"Tiền giờ ({phutDaTinh} phút)";
+            rowTienGio.Cells["colSoLuong"].Value = 1;
+            rowTienGio.Cells["colDonGia"].Value = this.banContext.GiaTheoGio; // Hiển thị giá theo giờ
+            rowTienGio.Cells["colThanhTien"].Value = tienGioHienTai;
+
+            rowTienGio.ReadOnly = true;
+            rowTienGio.DefaultCellStyle.BackColor = Color.LightGray;
+            rowTienGio.DefaultCellStyle.SelectionBackColor = Color.LightGray;
+            rowTienGio.DefaultCellStyle.ForeColor = Color.Black;
+            rowTienGio.DefaultCellStyle.SelectionForeColor = Color.Black;
+        }
+
+        private void XoaDongDichVu()
+        {
+            for (int i = dgvChiTietHoaDon.Rows.Count - 1; i >= 0; i--)
+            {
+                if (dgvChiTietHoaDon.Rows[i].Tag?.ToString() != "TIEN_GIO")
+                {
+                    dgvChiTietHoaDon.Rows.RemoveAt(i);
+                }
+            }
+        }
+
+        private void XoaDongTienGio()
+        {
+            for (int i = dgvChiTietHoaDon.Rows.Count - 1; i >= 0; i--)
+            {
+                if (dgvChiTietHoaDon.Rows[i].Tag?.ToString() == "TIEN_GIO")
+                {
+                    dgvChiTietHoaDon.Rows.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
+        private void TinhTongTien()
+        {
+            decimal tongTien = 0;
+            foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
+            {
+                if (row.Cells["colThanhTien"].Value != null)
+                {
+                    tongTien += Convert.ToDecimal(row.Cells["colThanhTien"].Value);
+                }
+            }
+            lblTongTien.Text = $"Tổng tiền: {tongTien:N0} đ";
+        }
+
         private void ResetPanelThongTin()
         {
             lblTenBan.Text = "CHỌN BÀN";
             lblTrangThai.Text = "Trạng thái:";
             lblGioVao.Text = "Giờ vào: N/A";
             dgvChiTietHoaDon.Rows.Clear();
-            lblTongTien.Text = "Tổng tiền: 0đ";
+            lblTongTien.Text = "Tổng tiền: 0 đ";
 
-            thoiGianBatDauHienTai = null;
+            this.banContext = null;
+            this.hoaDonContext = null;
+            this.danhSachDichVuChonTruoc.Clear();
 
             btnBatDauChoi.Visible = false;
             btnThanhToan.Visible = false;
             btnInHoaDon.Visible = false;
         }
-        private void btnBatDauChoi_Click(object sender, EventArgs e)
-        {
-            if (maBanHienTai == 0) return;
-            string tenBanHienTai = lblTenBan.Text;
 
-            using (var form = new frmBatDauChoi(lblTenBan.Text))
-            {
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    int? maKH = form.MaKhachHangChon;
-                    string tenKhach = form.TenKhachVangLai;
-
-                    if(maKH == null && string.IsNullOrWhiteSpace(tenKhach))
-                    {
-                        return;
-                    }
-                    else if (maKH == null && !string.IsNullOrWhiteSpace(tenKhach))
-                    {
-                        maKH = 0;
-                    }
-                    else if (maKH != null && string.IsNullOrWhiteSpace(tenKhach))
-                    {
-                        tenKhach = KhachHangBLL.LayTenKhachHang((int)maKH);
-                    }
-                    int maNhanVien = Program.NhanVienHienTai.MaNhanVien;
-
-                    int maHoaDonMoi = hoaDonBLL.TaoHoaDon(maKH.Value, tenKhach, maBanHienTai, maNhanVien);
-                    // Tải lại danh sách bàn để cập nhật màu sắc.
-                    LoadBanBida();
-                    //
-                    ///Chưa làm, f
-                    // 4. Cập nhật giao diện bên phải để hiển thị hóa đơn mới.
-                    //    (Ẩn nút Bắt đầu, hiện nút Thanh toán,...)
-
-                    MessageBox.Show($"Bắt đầu chơi cho {tenBanHienTai} thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    LoadBanBida();
-                    
-                    lblTrangThai.Text = "Trạng thái: Đang chơi";
-                    lblGioVao.Text = "Giờ vào: " + this.thoiGianBatDauHienTai.Value.ToString("HH:mm:ss dd/MM/yyyy");
-
-                    lblTenBan.Text = "CHỌN BÀN";
-                    lblTrangThai.Text = "Trạng thái:";
-                    dgvChiTietHoaDon.Rows.Clear();
-                    btnBatDauChoi.Visible = false;
-                }
-            }
-        }
-        private void dgvChiTietHoaDon_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-
-            string columnName = dgvChiTietHoaDon.Columns[e.ColumnIndex].Name;
-            DataGridViewRow selectedRow = dgvChiTietHoaDon.Rows[e.RowIndex];
-            if (selectedRow.Tag != null && selectedRow.Tag.ToString() == "TIEN_GIO")
-            {
-                return;
-            }
-            int soLuongHienTai = Convert.ToInt32(selectedRow.Cells["colSoLuong"].Value);
-            decimal donGia = Convert.ToDecimal(selectedRow.Cells["colDonGia"].Value);
-
-            if (columnName == "colGiamSoLuong")
-            {
-                int soLuongMoi = soLuongHienTai - 1;
-                if (soLuongMoi > 0)
-                {
-                    selectedRow.Cells["colSoLuong"].Value = soLuongMoi;
-                    selectedRow.Cells["colThanhTien"].Value = soLuongMoi * donGia;
-                }
-                else
-                {
-                    dgvChiTietHoaDon.Rows.Remove(selectedRow);
-                }
-                TinhTongTien();
-            }
-            else if (columnName == "colTangSoLuong")
-            {
-                int soLuongMoi = soLuongHienTai + 1;
-                selectedRow.Cells["colSoLuong"].Value = soLuongMoi;
-                selectedRow.Cells["colThanhTien"].Value = soLuongMoi * donGia;
-                TinhTongTien();
-            }
-        }
+        #endregion
     }
 }

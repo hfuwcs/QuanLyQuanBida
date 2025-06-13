@@ -29,5 +29,19 @@ namespace QuanLyQuanBida.DAL
                 .Select(kh => kh.HoTen)
                 .FirstOrDefault();
         }
+        public KhachHangDTO LayThongTinKhachHang(int maKhachHang)
+        {
+            return db.KhachHang
+                .Where(kh => kh.MaKhachHang == maKhachHang)
+                .Select(kh => new KhachHangDTO
+                {
+                    MaKhachHang = kh.MaKhachHang,
+                    HoTen = kh.HoTen,
+                    SoDienThoai = kh.SoDienThoai,
+                    DiemTichLuy = kh.DiemTichLuy,
+                    HangThanhVien = kh.HangThanhVien
+                })
+                .FirstOrDefault();
+        }
     }
 }

@@ -17,17 +17,14 @@ namespace QuanLyQuanBida.UserControls
 
         private void UcBaoCao_Load(object sender, EventArgs e)
         {
-            // Set up và tải dữ liệu cho từng biểu đồ
             SetupDoanhThuThangChart();
             SetupDoanhThuTheoLoaiDVChart();
             SetupDoanhThuTheoBanChart();
             SetupDoanhThuTheoNgayChart();
         }
 
-        // Cấu hình và tải dữ liệu cho Biểu đồ Doanh thu tháng
         private void SetupDoanhThuThangChart()
         {
-            // Dữ liệu mẫu
             var monthlyRevenue = new Dictionary<string, double>
             {
                 { "Tháng 6", 25000000 },
