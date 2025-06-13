@@ -12,5 +12,6 @@ namespace QuanLyQuanBida.DTO
         public string TenBan { get; set; }
         public Nullable<int> MaLoaiBan { get; set; }
         public string TrangThai { get; set; }
+        public decimal GiaTheoGio { get; set; }
     }
 }

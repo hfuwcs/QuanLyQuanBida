@@ -1,4 +1,5 @@
 ﻿using QuanLyQuanBida.DAL;
+using QuanLyQuanBida.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace QuanLyQuanBida.BLL
     public class HoaDonBLL
     {
         HoaDonDAL HoaDonDAL = new HoaDonDAL();
+        private BanBidaDAL banDal = new BanBidaDAL();
         public Tuple<int, decimal> TinhTienGio(DateTime thoiGianBatDau, DateTime thoiGianKetThuc, decimal donGiaTheoGio)
         {
             if (thoiGianKetThuc <= thoiGianBatDau || donGiaTheoGio <= 0)
@@ -49,10 +51,18 @@ namespace QuanLyQuanBida.BLL
                 return Tuple.Create(tongSoPhutTinhTien, tongTien);
             }
         }
+        public decimal LayDonGiaTheoGio(int maLoaiBan)
+        {
+            return banDal.LayDonGiaTheoGio(maLoaiBan);
+        }
 
         public DateTime LayThoiGianBatDau(int maHoaDon)
         {
             return HoaDonDAL.LayThoiGianBatDau(maHoaDon);
+        }
+        public HoaDonDTO LayHoaDonHienTaiCuaBan(int maBan)
+        {
+            return HoaDonDAL.LayHoaDonChuaThanhToanTheoMaBan(maBan);
         }
     }
 }

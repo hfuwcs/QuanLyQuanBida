@@ -15,18 +15,39 @@ namespace QuanLyQuanBida.DAL
             var tables = db.BanBida
                 .Select(b => new BanBidaDTO
                 {
+                    MaBan = b.MaBan,
+                    MaLoaiBan = b.MaLoaiBan,
                     TenBan = b.TenBan,
-                    TrangThai = b.TrangThai
+                    TrangThai = b.TrangThai,
+                    GiaTheoGio = b.LoaiBan.GiaTheoGio,
                     //== "Trống" ? "Trống" : (b.TrangThai == "DangChoi" ? "Đang chơi" : "Bảo trì")
                 })
                 .ToList();
             return tables;
         }
-        public DateTime LayGioVaoChoi()
+        
+        public BanBidaDTO LayChiTietBan(int maBan)
         {
-            DateTime gioVaoChoi = DateTime.Now;
-
-            return gioVaoChoi;
+            var table = db.BanBida
+                .Where(b => b.MaBan == maBan)
+                .Select(b => new BanBidaDTO
+                {
+                    MaBan = b.MaBan,
+                    MaLoaiBan = b.MaLoaiBan,
+                    TenBan = b.TenBan,
+                    TrangThai = b.TrangThai,
+                    GiaTheoGio = b.LoaiBan.GiaTheoGio
+                })
+                .FirstOrDefault();
+            return table;
+        }
+        public decimal LayDonGiaTheoGio(int maLoaiBan)
+        {
+            var donGia = db.LoaiBan
+                .Where(lb => lb.MaLoaiBan == maLoaiBan)
+                .Select(lb => lb.GiaTheoGio)
+                .FirstOrDefault();
+            return donGia;
         }
     }
 }

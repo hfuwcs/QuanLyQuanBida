@@ -16,7 +16,11 @@ namespace QuanLyQuanBida.BLL
         {
             return bidaDAL.LayDanhSachBan();
         }
-        
-        
+        public BanBidaDTO LayChiTietBan(int maBan)
+        {
+            return bidaDAL.LayChiTietBan(maBan);
+        }
+
+
     }
 }

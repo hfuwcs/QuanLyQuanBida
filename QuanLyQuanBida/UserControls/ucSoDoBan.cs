@@ -19,6 +19,12 @@ namespace QuanLyQuanBida.UserControls
         private KhachHangBLL KhachHangBLL = new KhachHangBLL();
         private DichVuBLL DichVuBLL = new DichVuBLL();
         private LoaiDichVuBLL LoaiDichVuBLL = new LoaiDichVuBLL();
+        private HoaDonBLL hoaDonBLL = new HoaDonBLL();
+
+        private int maBanHienTai = 0;
+        private int previousMaBan = -1;
+        private int maHoaDonHienTai = 0;
+        private DateTime? thoiGianBatDauHienTai = null;
         public ucSoDoBan()
         {
             InitializeComponent();
@@ -50,7 +56,7 @@ namespace QuanLyQuanBida.UserControls
                     Width = 120,
                     Height = 60,
                     Text = banDTO.TenBan,
-                    Tag = banDTO.TrangThai,
+                    Tag = banDTO,
                     Font = new Font("Segoe UI", 10, FontStyle.Bold),
                     Margin = new Padding(10)
                 };
@@ -204,10 +210,24 @@ namespace QuanLyQuanBida.UserControls
         private void Ban_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
+
+            BanBidaDTO banDuocChon = btn.Tag as BanBidaDTO;
+
+            maBanHienTai = banDuocChon.MaBan;
+            if (maBanHienTai == previousMaBan)
+            {
+                return; // Không làm gì nếu bàn đã được chọn
+            }
+            else
+            {
+                previousMaBan = maBanHienTai; // Cập nhật bàn đã chọn
+            }
+
+            var hoaDonHienTai = hoaDonBLL.LayHoaDonHienTaiCuaBan(banDuocChon.MaBan);
             lblTenBan.Text = btn.Text;
-            string trangThai = btn.Tag.ToString();
-            lblTrangThai.Text = "Trạng thái: " + btn.Tag.ToString();
-            var serviceInfo = DichVuBLL.LayDichVuTheoID(Convert.ToInt32(btn.Tag));
+            string trangThai = banDuocChon.TrangThai.ToString();
+            lblTrangThai.Text = "Trạng thái: " + trangThai;
+            var serviceInfo = DichVuBLL.LayDichVuTheoID(Convert.ToInt32(banDuocChon.MaBan));
 
             if (trangThai == "Trống")
             {
@@ -227,26 +247,92 @@ namespace QuanLyQuanBida.UserControls
                     lblGioVao.Text = "Giờ vào: " + DateTime.Now.AddHours(-1).ToString("HH:mm");
 
 
-                    //Chỗ này phải truy vấn từ CSDL để lấy chi tiết hóa đơn
-                    //Giá tiền của bàn
-                    //Giờ chơi tính tới hiện tại
-                    //Nhân cả 2 lại
+                    maHoaDonHienTai = hoaDonHienTai.MaHoaDon;
+                    thoiGianBatDauHienTai = hoaDonHienTai.ThoiGianBatDau;
 
-                    //int rowIndex = dgvChiTietHoaDon.Rows.Add();
+                    lblGioVao.Text = "Giờ vào: " + thoiGianBatDauHienTai.Value.ToString("HH:mm:ss dd/MM/yyyy");
 
-                    //DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
+                    var donGiaGio = banDuocChon.GiaTheoGio;
+                    var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDauHienTai.Value, DateTime.Now, donGiaGio);
+                    decimal tienGioTamTinh = ketQuaTinhTien.Item2;
 
-                    //newRow.Tag = serviceInfo.MaDichVu;
+                    if(tienGioTamTinh > 0)
+                    {
+                        CapNhatDongTienGio();
 
-                    //newRow.Cells["colTenSanPham"].Value = tenSP;
-                    //newRow.Cells["colSoLuong"].Value = 1;
-                    //newRow.Cells["colDonGia"].Value = donGia;
-                    //newRow.Cells["colThanhTien"].Value = donGia;
+                        // Tải các dịch vụ khác đã gọi vào grid
+                        //LoadChiTietHoaDon(maHoaDonHienTai);
+                    }
                 }
             }
             TinhTongTien();
         }
 
+        private void CapNhatDongTienGio()
+        {
+            if (maBanHienTai == 0 || thoiGianBatDauHienTai == null)
+            {
+                XoaDongTienGio();
+                return;
+            }
+
+            BanBidaDTO banHienTai = BanBidaBll.LayChiTietBan(maBanHienTai); 
+            if (banHienTai == null) return;
+
+            decimal donGiaGio = banHienTai.GiaTheoGio;
+            var ketQuaTinhTien = hoaDonBLL.TinhTienGio(thoiGianBatDauHienTai.Value, DateTime.Now, donGiaGio);
+            decimal tienGioHienTai = ketQuaTinhTien.Item2;
+            int phutDaTinh = ketQuaTinhTien.Item1;
+
+            DataGridViewRow rowTienGio = null;
+            foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
+            {
+                if (row.Tag != null && row.Tag.ToString() == "TIEN_GIO")
+                {
+                    rowTienGio = row;
+                    break;
+                }
+            }
+
+            if (rowTienGio == null)
+            {
+                int rowIndex = dgvChiTietHoaDon.Rows.Add();
+                rowTienGio = dgvChiTietHoaDon.Rows[rowIndex];
+                rowTienGio.Tag = "TIEN_GIO";
+            }
+
+            rowTienGio.Cells["colTenSanPham"].Value = $"Tiền giờ ({phutDaTinh} phút)";
+            rowTienGio.Cells["colSoLuong"].Value = 1;
+            rowTienGio.Cells["colDonGia"].Value = donGiaGio;
+            rowTienGio.Cells["colThanhTien"].Value = tienGioHienTai;
+
+            rowTienGio.ReadOnly = true;
+            rowTienGio.DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224); // Màu xám nhạt
+            rowTienGio.DefaultCellStyle.ForeColor = Color.Black;
+            rowTienGio.DefaultCellStyle.SelectionBackColor = Color.FromArgb(224, 224, 224);
+            rowTienGio.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+            if (rowTienGio.Cells["colGiamSoLuong"] is DataGridViewButtonCell cellGiam)
+            {
+                cellGiam.Value = "";
+            }
+            if (rowTienGio.Cells["colTangSoLuong"] is DataGridViewButtonCell cellTang)
+            {
+                cellTang.Value = "";
+            }
+        }
+
+        private void XoaDongTienGio()
+        {
+            foreach (DataGridViewRow row in dgvChiTietHoaDon.Rows)
+            {
+                if (row.Tag != null && row.Tag.ToString() == "TIEN_GIO")
+                {
+                    dgvChiTietHoaDon.Rows.Remove(row);
+                    break;
+                }
+            }
+        }
         private void LoaiDichVu_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
@@ -371,7 +457,10 @@ namespace QuanLyQuanBida.UserControls
 
             string columnName = dgvChiTietHoaDon.Columns[e.ColumnIndex].Name;
             DataGridViewRow selectedRow = dgvChiTietHoaDon.Rows[e.RowIndex];
-
+            if (selectedRow.Tag != null && selectedRow.Tag.ToString() == "TIEN_GIO")
+            {
+                return;
+            }
             int soLuongHienTai = Convert.ToInt32(selectedRow.Cells["colSoLuong"].Value);
             decimal donGia = Convert.ToDecimal(selectedRow.Cells["colDonGia"].Value);
 
