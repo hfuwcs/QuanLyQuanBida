@@ -1,4 +1,5 @@
-﻿using QuanLyQuanBida.BLL;
+﻿using Helper;
+using QuanLyQuanBida.BLL;
 using QuanLyQuanBida.BLL.QuanLyQuanBida.BLL;
 using QuanLyQuanBida.DTO;
 using QuanLyQuanBida.Forms;
@@ -255,46 +256,41 @@ namespace QuanLyQuanBida.UserControls
 
             using (var formChonKhach = new frmBatDauChoi(this.banContext.TenBan))
             {
-                if (formChonKhach.ShowDialog() != DialogResult.OK) return;
+                if (formChonKhach.ShowDialog() == DialogResult.OK)
+                {
+                    int maKH = formChonKhach.MaKhachHangChon;
+                    string tenKhachVangLai = formChonKhach.TenKhachVangLai;
+                    int maNhanVien = Program.NhanVienHienTai.MaNhanVien;
 
-                int? maKH = formChonKhach.MaKhachHangChon;
-                string tenKhachHang = formChonKhach.TenKhachVangLai;
-
-                // Xác định tên khách hàng cuối cùng
-                if(!maKH.HasValue)
-                {
-                    maKH = 3;
-                }
-                if (maKH.HasValue && maKH > 0)
-                {
-                    var khachHangDTO = KhachHangBLL.LayThongTinKhachHang(maKH.Value);
-                    if (khachHangDTO != null) tenKhachHang = khachHangDTO.HoTen;
-                }
-                else if (string.IsNullOrWhiteSpace(tenKhachHang))
-                {
-                    MessageBox.Show("Vui lòng chọn khách hàng thành viên hoặc nhập tên khách vãng lai.", "Thông tin thiếu", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
                     try
                     {
-                        int maHoaDonMoiVuaTao = hoaDonBLL.TaoHoaDon(maKH.Value, tenKhachHang, this.banContext.MaBan, Program.NhanVienHienTai.MaNhanVien, this.danhSachDichVuChonTruoc);
+                        // Gọi phương thức BLL đã được sửa đổi
+                        int maHoaDonMoiVuaTao = hoaDonBLL.TaoHoaDon(maKH, tenKhachVangLai, this.banContext.MaBan, maNhanVien, this.danhSachDichVuChonTruoc);
 
                         if (maHoaDonMoiVuaTao > 0)
                         {
-                            MessageBox.Show($"Bắt đầu chơi cho {this.banContext.TenBan} thành công.\nKhách hàng: {tenKhachHang}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            string tenHienThi;
+                            if (maKH == AppSettings.VangLaiCustomerId)
+                            {
+                                tenHienThi = tenKhachVangLai;
+                            }
+                            else
+                            {
+                                var khachHangDTO = KhachHangBLL.LayThongTinKhachHang(maKH);
+                                tenHienThi = khachHangDTO?.HoTen ?? $"Thành viên #{maKH}";
+                            }
+
+                            MessageBox.Show($"Bắt đầu chơi cho {this.banContext.TenBan} thành công.\nKhách hàng: {tenHienThi}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             this.danhSachDichVuChonTruoc.Clear();
                             LoadBanBida();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Không thể tạo hóa đơn mới. Vui lòng thử lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show("Đã có lỗi xảy ra: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        LoadBanBida(); // Tải lại phòng trường hợp trạng thái bàn bị lỗi
+                        LoadBanBida();
                     }
+                }
             }
         }
 

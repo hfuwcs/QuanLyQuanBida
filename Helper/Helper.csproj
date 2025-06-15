@@ -59,14 +59,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppSettings.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QuanLyQuanBida.DAL\QuanLyQuanBida.DAL.csproj">
-      <Project>{912746e7-c224-43e4-9cf1-b8843f56a47f}</Project>
-      <Name>QuanLyQuanBida.DAL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\QuanLyQuanBida.DTO\QuanLyQuanBida.DTO.csproj">
       <Project>{d4f30629-2f6f-45a8-b7d6-1e4e5f4734fe}</Project>
       <Name>QuanLyQuanBida.DTO</Name>

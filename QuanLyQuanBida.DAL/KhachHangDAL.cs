@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QuanLyQuanBida;
 
 namespace QuanLyQuanBida.DAL
 {
@@ -119,6 +120,33 @@ namespace QuanLyQuanBida.DAL
                 db.KhachHang.Remove(khachHangEntity);
                 db.SaveChanges();
                 return true;
+            }
+        }
+        public List<KhachHangDTO> LayDanhSachThanhVien(int pageNumber, int pageSize, string searchTerm)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                var query = db.KhachHang
+                              .Where(kh => kh.MaKhachHang != 3);
+
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    query = query.Where(kh => kh.HoTen.Contains(searchTerm) || kh.SoDienThoai.Contains(searchTerm));
+                }
+
+                return query.OrderBy(kh => kh.HoTen)
+                            .Skip((pageNumber - 1) * pageSize)
+                            .Take(pageSize)
+                            .Select(kh => new KhachHangDTO
+                            {
+                                MaKhachHang = kh.MaKhachHang,
+                                HoTen = kh.HoTen,
+                                SoDienThoai = kh.SoDienThoai,
+                                DiemTichLuy = kh.DiemTichLuy,
+                                HangThanhVien = kh.HangThanhVien,
+                                HoTenVaSDT = kh.HoTen + " - " + kh.SoDienThoai
+                            })
+                            .ToList();
             }
         }
     }

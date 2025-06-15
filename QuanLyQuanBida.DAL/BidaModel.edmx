@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DB_QuanLyQuanBidaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DB_QuanLyQuanBidaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="BanBida">
           <Key>
             <PropertyRef Name="MaBan" />
@@ -50,6 +50,7 @@
           <Property Name="GiamGia" Type="decimal" Precision="18" Scale="2" />
           <Property Name="TongTien" Type="decimal" Precision="18" Scale="2" />
           <Property Name="TrangThai" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TenKhachVangLai" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="KhachHang">
           <Key>
@@ -235,8 +236,7 @@
             <End Role="NhanVien" EntitySet="NhanVien" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DB_QuanLyQuanBidaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -295,6 +295,7 @@
           <NavigationProperty Name="ChiTietHoaDon" Relationship="Self.FK__ChiTietHo__MaHoa__5BE2A6F2" FromRole="HoaDon" ToRole="ChiTietHoaDon" />
           <NavigationProperty Name="KhachHang" Relationship="Self.FK__HoaDon__MaKhachH__571DF1D5" FromRole="HoaDon" ToRole="KhachHang" />
           <NavigationProperty Name="NhanVien" Relationship="Self.FK__HoaDon__MaNhanVi__5812160E" FromRole="HoaDon" ToRole="NhanVien" />
+          <Property Name="TenKhachVangLai" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="KhachHang">
           <Key>
@@ -528,6 +529,7 @@
           <EntitySetMapping Name="HoaDon">
             <EntityTypeMapping TypeName="DB_QuanLyQuanBidaModel.HoaDon">
               <MappingFragment StoreEntitySet="HoaDon">
+                <ScalarProperty Name="TenKhachVangLai" ColumnName="TenKhachVangLai" />
                 <ScalarProperty Name="MaHoaDon" ColumnName="MaHoaDon" />
                 <ScalarProperty Name="MaBan" ColumnName="MaBan" />
                 <ScalarProperty Name="MaKhachHang" ColumnName="MaKhachHang" />

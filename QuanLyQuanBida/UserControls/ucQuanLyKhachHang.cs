@@ -211,11 +211,10 @@ namespace QuanLyQuanBida.UserControls
                 if (row.Cells["MaKhachHang"].Value != null && (int)row.Cells["MaKhachHang"].Value == maKH)
                 {
                     row.Selected = true;
-                    dgvKhachHang.CurrentCell = row.Cells[1]; // Focus vào cột Họ Tên
+                    dgvKhachHang.CurrentCell = row.Cells[1];
                     return;
                 }
             }
         }
-        // Loại bỏ btnLuu_Click
     }
 }

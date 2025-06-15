@@ -24,6 +24,9 @@ namespace QuanLyQuanBida.Forms
             this.txtKhachVangLai = new System.Windows.Forms.TextBox();
             this.btnBatDau = new System.Windows.Forms.Button();
             this.btnHuy = new System.Windows.Forms.Button();
+            this.radThanhVien = new System.Windows.Forms.RadioButton();
+            this.radVangLai = new System.Windows.Forms.RadioButton();
+            this.txtTimKiemKH = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // lblTitle
@@ -31,7 +34,7 @@ namespace QuanLyQuanBida.Forms
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
-            this.lblTitle.Location = new System.Drawing.Point(28, 18);
+            this.lblTitle.Location = new System.Drawing.Point(19, -2);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(245, 37);
             this.lblTitle.TabIndex = 0;
@@ -111,6 +114,34 @@ namespace QuanLyQuanBida.Forms
             this.btnHuy.Text = "Hủy";
             this.btnHuy.UseVisualStyleBackColor = false;
             // 
+            // radThanhVien
+            // 
+            this.radThanhVien.AutoSize = true;
+            this.radThanhVien.Checked = true;
+            this.radThanhVien.Location = new System.Drawing.Point(12, 101);
+            this.radThanhVien.Name = "radThanhVien";
+            this.radThanhVien.Size = new System.Drawing.Size(17, 16);
+            this.radThanhVien.TabIndex = 7;
+            this.radThanhVien.TabStop = true;
+            this.radThanhVien.UseVisualStyleBackColor = true;
+            // 
+            // radVangLai
+            // 
+            this.radVangLai.AutoSize = true;
+            this.radVangLai.Location = new System.Drawing.Point(12, 181);
+            this.radVangLai.Name = "radVangLai";
+            this.radVangLai.Size = new System.Drawing.Size(17, 16);
+            this.radVangLai.TabIndex = 8;
+            this.radVangLai.TabStop = true;
+            this.radVangLai.UseVisualStyleBackColor = true;
+            // 
+            // txtTimKiemKH
+            // 
+            this.txtTimKiemKH.Location = new System.Drawing.Point(114, 39);
+            this.txtTimKiemKH.Name = "txtTimKiemKH";
+            this.txtTimKiemKH.Size = new System.Drawing.Size(316, 22);
+            this.txtTimKiemKH.TabIndex = 9;
+            // 
             // frmBatDauChoi
             // 
             this.AcceptButton = this.btnBatDau;
@@ -118,6 +149,9 @@ namespace QuanLyQuanBida.Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnHuy;
             this.ClientSize = new System.Drawing.Size(468, 282);
+            this.Controls.Add(this.txtTimKiemKH);
+            this.Controls.Add(this.radVangLai);
+            this.Controls.Add(this.radThanhVien);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.btnBatDau);
             this.Controls.Add(this.txtKhachVangLai);
@@ -145,5 +179,8 @@ namespace QuanLyQuanBida.Forms
         private TextBox txtKhachVangLai;
         private Button btnBatDau;
         private Button btnHuy;
+        private RadioButton radThanhVien;
+        private RadioButton radVangLai;
+        private TextBox txtTimKiemKH;
     }
 }

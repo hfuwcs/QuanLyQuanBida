@@ -31,6 +31,7 @@ namespace QuanLyQuanBida.DAL
         public Nullable<decimal> GiamGia { get; set; }
         public Nullable<decimal> TongTien { get; set; }
         public string TrangThai { get; set; }
+        public string TenKhachVangLai { get; set; }
     
         public virtual BanBida BanBida { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

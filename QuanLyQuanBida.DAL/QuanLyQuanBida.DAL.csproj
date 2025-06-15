@@ -106,6 +106,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Helper\Helper.csproj">
+      <Project>{278995f7-52bb-4f0e-a4a2-2ff0805e253d}</Project>
+      <Name>Helper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QuanLyQuanBida.DTO\QuanLyQuanBida.DTO.csproj">
       <Project>{d4f30629-2f6f-45a8-b7d6-1e4e5f4734fe}</Project>
       <Name>QuanLyQuanBida.DTO</Name>

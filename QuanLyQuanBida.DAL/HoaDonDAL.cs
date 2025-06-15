@@ -66,23 +66,21 @@ namespace QuanLyQuanBida.DAL
                 }).ToList();
             return chiTietDichVu;
         }
-        public int TaoHoaDon(int maKH, string tenKhach, int maBan, int maNV)
+        public int TaoHoaDon(int maKH, string tenKhachVangLai, int maBan, int maNV) 
         {
             using (var db = new DB_QuanLyQuanBidaEntities())
             {
                 var hoaDon = new HoaDon
                 {
-                    MaHoaDon = 0, //tự động tăng
                     ThoiGianBatDau = DateTime.Now,
-                    GiamGia = 0,
                     TrangThai = "Chưa thanh toán",
                     MaBan = maBan,
                     MaKhachHang = maKH,
                     MaNhanVienTao = maNV,
+                    TenKhachVangLai = tenKhachVangLai
                 };
                 db.HoaDon.Add(hoaDon);
                 db.SaveChanges();
-
                 return hoaDon.MaHoaDon;
             }
         }

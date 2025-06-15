@@ -81,6 +81,11 @@ namespace QuanLyQuanBida.BLL
                 if (diem >= 100) return "Bạc";
                 return "Thân thiết";
             }
+            public List<KhachHangDTO> LayDanhSachThanhVien(int pageNumber, int pageSize, string searchTerm)
+            {
+                return khachHangDAL.LayDanhSachThanhVien(pageNumber, pageSize, searchTerm);
+            }
         }
+
     }
 }

@@ -1,10 +1,10 @@
-﻿using QuanLyQuanBida.DAL;
+﻿using Helper;
+using QuanLyQuanBida;
+using QuanLyQuanBida.DAL;
 using QuanLyQuanBida.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuanLyQuanBida.BLL
 {
@@ -65,9 +65,9 @@ namespace QuanLyQuanBida.BLL
             return hoaDon;
         }
 
-        public int TaoHoaDon(int maKH, string tenKhach, int maBan, int maNV, List<ChiTietHoaDonDTO> dichVuChonTruoc) 
+        public int TaoHoaDon(int maKH, string tenKhachVangLai, int maBan, int maNV, List<ChiTietHoaDonDTO> dichVuChonTruoc) 
         {
-            if ((maKH <= 0 && string.IsNullOrWhiteSpace(tenKhach)) || maBan <= 0)
+            if ((maKH <= 0 && string.IsNullOrWhiteSpace(tenKhachVangLai)) || maBan <= 0)
             {
                 throw new ArgumentException("Thông tin khách hàng hoặc bàn không hợp lệ.");
             }
@@ -78,7 +78,22 @@ namespace QuanLyQuanBida.BLL
                 throw new InvalidOperationException("Bàn không trống hoặc không tồn tại.");
             }
 
-            int maHoaDonMoi = HoaDonDAL.TaoHoaDon(maKH, tenKhach, maBan, maNV);
+            bool isVangLai = (maKH == AppSettings.VangLaiCustomerId);
+
+            if (isVangLai)
+            {
+                if (string.IsNullOrWhiteSpace(tenKhachVangLai))
+                {
+                    throw new ArgumentException("Vui lòng nhập tên khách vãng lai.");
+                }
+            }
+            else
+            {
+                tenKhachVangLai = null;
+            }
+
+            int maHoaDonMoi = HoaDonDAL.TaoHoaDon(maKH, tenKhachVangLai, maBan, maNV);
+
             if (maHoaDonMoi <= 0)
             {
                 throw new Exception("Không thể tạo hóa đơn mới.");
