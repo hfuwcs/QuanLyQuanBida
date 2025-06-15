@@ -113,7 +113,7 @@ namespace QuanLyQuanBida.DAL
                          .Include(hd => hd.BanBida)
                          .Include(hd => hd.NhanVien)
                          .Include(hd => hd.KhachHang)
-                         .Include(hd => hd.ChiTietHoaDon.Select(cthd => cthd.DichVu)) // Nạp cả DichVu trong ChiTietHoaDon
+                         .Include(hd => hd.ChiTietHoaDon.Select(cthd => cthd.DichVu))
                          .FirstOrDefault(hd => hd.MaHoaDon == maHoaDon);
             }
         }
