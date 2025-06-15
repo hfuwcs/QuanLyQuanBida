@@ -156,7 +156,6 @@ namespace QuanLyQuanBida.BLL
 
             var reportDataList = new List<HoaDonReportDTO>();
 
-            // Chuẩn bị các thông tin chung
             var thongTinChung = new
             {
                 MaHoaDon = hoaDonEntity.MaHoaDon,
@@ -171,7 +170,6 @@ namespace QuanLyQuanBida.BLL
                 TongThanhToan = hoaDonEntity.TongTien ?? 0
             };
 
-            // Thêm dòng cho tiền giờ (nếu có)
             if (thongTinChung.TongTienGio > 0)
             {
                 TimeSpan thoiGianChoi = TimeSpan.Zero;
@@ -195,18 +193,16 @@ namespace QuanLyQuanBida.BLL
                     // Thông tin dòng
                     Item_TenDichVu = $"Tiền giờ ({thoiGianChoi.Hours}h {thoiGianChoi.Minutes}p)",
                     Item_SoLuong = 1,
-                    Item_DonGia = 0, // Đơn giá giờ có thể phức tạp, để 0 và chỉ hiện tổng
+                    Item_DonGia = 0,
                     Item_ThanhTien = thongTinChung.TongTienGio
                 });
             }
 
 
-            // Thêm các dòng cho dịch vụ
             foreach (var cthd in hoaDonEntity.ChiTietHoaDon)
             {
                 reportDataList.Add(new HoaDonReportDTO
                 {
-                    // Thông tin chung (lặp lại)
                     MaHoaDon = thongTinChung.MaHoaDon,
                     TenBan = thongTinChung.TenBan,
                     ThoiGianBatDau = thongTinChung.ThoiGianBatDau,
@@ -217,7 +213,6 @@ namespace QuanLyQuanBida.BLL
                     TongTienDichVu = thongTinChung.TongTienDichVu,
                     GiamGia = thongTinChung.GiamGia,
                     TongThanhToan = thongTinChung.TongThanhToan,
-                    // Thông tin dòng
                     Item_TenDichVu = cthd.DichVu?.TenDichVu ?? "N/A",
                     Item_SoLuong = cthd.SoLuong,
                     Item_DonGia = cthd.DonGia,
