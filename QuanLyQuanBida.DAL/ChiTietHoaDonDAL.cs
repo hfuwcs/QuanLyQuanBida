@@ -23,18 +23,17 @@ namespace QuanLyQuanBida.DAL
             {
                 var chiTiet = db.ChiTietHoaDon.FirstOrDefault(cthd => cthd.MaHoaDon == maHoaDon && cthd.MaDichVu == maDichVu);
 
-                if (chiTiet != null) // Dịch vụ đã tồn tại trong hóa đơn này
+                if (chiTiet != null)
                 {
                     if (soLuongMoi > 0)
                     {
                         chiTiet.SoLuong = soLuongMoi;
-                        // Không cập nhật DonGia ở đây, vì nó là giá tại thời điểm gọi ban đầu
                     }
-                    else // Số lượng <= 0, đánh dấu để xóa hoặc xóa trực tiếp
+                    else
                     {
                         db.ChiTietHoaDon.Remove(chiTiet);
                         db.SaveChanges();
-                        return null; // Trả về null để báo hiệu đã xóa
+                        return null; // null = xóa
                     }
                 }
                 else // Dịch vụ mới cho hóa đơn này
@@ -46,7 +45,7 @@ namespace QuanLyQuanBida.DAL
                             MaHoaDon = maHoaDon,
                             MaDichVu = maDichVu,
                             SoLuong = soLuongMoi,
-                            DonGia = donGiaTaiThoiDiemGoi // Lưu đơn giá tại thời điểm gọi
+                            DonGia = donGiaTaiThoiDiemGoi 
                         };
                         db.ChiTietHoaDon.Add(chiTiet);
                     }
@@ -56,7 +55,7 @@ namespace QuanLyQuanBida.DAL
                     }
                 }
                 db.SaveChanges();
-                return chiTiet; // Trả về entity đã lưu (sẽ có MaCTHD nếu là mới)
+                return chiTiet; 
             }
         }
 
@@ -74,7 +73,7 @@ namespace QuanLyQuanBida.DAL
                         MaHoaDon = maHoaDon,
                         MaDichVu = dvChon.MaDichVu,
                         SoLuong = dvChon.SoLuong,
-                        DonGia = dvChon.DonGia // Đảm bảo DTO này chứa DonGia chính xác
+                        DonGia = dvChon.DonGia
                     };
                     db.ChiTietHoaDon.Add(chiTiet);
                 }

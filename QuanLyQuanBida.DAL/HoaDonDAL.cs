@@ -105,6 +105,19 @@ namespace QuanLyQuanBida.DAL
                 return 0; 
             }
         }
+        public HoaDon LayHoaDonDayDuTheoMa(int maHoaDon)
+        {
+            using (var db = new DB_QuanLyQuanBidaEntities())
+            {
+                return db.HoaDon
+                         .Include(hd => hd.BanBida)
+                         .Include(hd => hd.NhanVien)
+                         .Include(hd => hd.KhachHang)
+                         .Include(hd => hd.ChiTietHoaDon.Select(cthd => cthd.DichVu)) // Nạp cả DichVu trong ChiTietHoaDon
+                         .FirstOrDefault(hd => hd.MaHoaDon == maHoaDon);
+            }
+        }
+        #region Doanh thu
         // 1. Doanh thu theo Tháng (theo năm)
         public Dictionary<string, double> GetMonthlyRevenue(int year)
         {
@@ -232,5 +245,6 @@ namespace QuanLyQuanBida.DAL
                 return dailyRevenue;
             }
         }
+        #endregion
     }
 }

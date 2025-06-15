@@ -335,7 +335,6 @@ namespace QuanLyQuanBida.UserControls
         }
         private void CapNhatChiTietHoaDon(DichVuDTO serviceDTO, int changeAmount)
         {
-            // Tìm dòng tương ứng trong DataGridView
             DataGridViewRow existingRow = dgvChiTietHoaDon.Rows
                 .Cast<DataGridViewRow>()
                 .FirstOrDefault(r => r.Cells["colMaDichVu"].Value != null && Convert.ToInt32(r.Cells["colMaDichVu"].Value) == serviceDTO.MaDichVu);
@@ -343,7 +342,6 @@ namespace QuanLyQuanBida.UserControls
             int soLuongHienTai = existingRow != null ? Convert.ToInt32(existingRow.Cells["colSoLuong"].Value) : 0;
             int soLuongMoi = soLuongHienTai + changeAmount;
 
-            // Xử lý lưu trữ dựa trên trạng thái bàn
             if (this.banContext.TrangThai == "Trống")
             {
                 var itemChonTruoc = danhSachDichVuChonTruoc.FirstOrDefault(dv => dv.MaDichVu == serviceDTO.MaDichVu);
@@ -362,7 +360,6 @@ namespace QuanLyQuanBida.UserControls
                 {
                     if (itemChonTruoc != null) danhSachDichVuChonTruoc.Remove(itemChonTruoc);
                 }
-                // Tải lại DGV từ danh sách chọn trước
                 LoadDanhSachChonTruocVaoDGV();
             }
             else if (this.banContext.TrangThai == "Đang chơi" && this.hoaDonContext != null)
@@ -419,6 +416,27 @@ namespace QuanLyQuanBida.UserControls
             newRow.Cells["colSoLuong"].Value = soLuong;
             newRow.Cells["colDonGia"].Value = donGia;
             newRow.Cells["colThanhTien"].Value = soLuong * donGia;
+        }
+        private void btnInHoaDon_Click(object sender, EventArgs e)
+        {
+            if (this.hoaDonContext.ChiTietDichVu == null || !this.hoaDonContext.ChiTietDichVu.Any() || this.hoaDonContext.ChiTietDichVu.Any(ct => string.IsNullOrEmpty(ct.TenDichVu)))
+            {
+                var hoaDonDayDu = hoaDonBLL.LayHoaDonHienTaiCuaBan(banContext.MaBan);
+                LoadChiTietDichVuVaoDGV();
+
+                if (hoaDonDayDu != null)
+                {
+                    this.hoaDonContext = hoaDonDayDu;
+                }
+                else
+                {
+                    MessageBox.Show("Không thể lấy đầy đủ thông tin chi tiết hóa đơn để in.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            HoaDonPrinter printer = new HoaDonPrinter(this.hoaDonContext);
+            printer.Preview();
         }
 
         #endregion
@@ -502,28 +520,7 @@ namespace QuanLyQuanBida.UserControls
             btnInHoaDon.Visible = false;
         }
 
-        private void btnInHoaDon_Click(object sender, EventArgs e)
-        {
-            if (this.hoaDonContext.ChiTietDichVu == null || !this.hoaDonContext.ChiTietDichVu.Any() || this.hoaDonContext.ChiTietDichVu.Any(ct => string.IsNullOrEmpty(ct.TenDichVu)))
-            {
-                var hoaDonDayDu = hoaDonBLL.LayHoaDonHienTaiCuaBan(banContext.MaBan);
-                CapNhatDongTienGio();
-                LoadChiTietDichVuVaoDGV();
-
-                if (hoaDonDayDu != null)
-                {
-                    this.hoaDonContext = hoaDonDayDu; 
-                }
-                else
-                {
-                    MessageBox.Show("Không thể lấy đầy đủ thông tin chi tiết hóa đơn để in.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-
-            HoaDonPrinter printer = new HoaDonPrinter(this.hoaDonContext);
-            printer.Preview(); 
-        }
+        
         #endregion
     }
 }

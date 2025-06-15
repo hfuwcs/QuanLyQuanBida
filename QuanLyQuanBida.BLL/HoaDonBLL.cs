@@ -124,6 +124,7 @@ namespace QuanLyQuanBida.BLL
         {
             return HoaDonDAL.LayThoiGianBatDau(maHoaDon);
         }
+        #region Thống kê hóa đơn
         public Dictionary<string, double> GetMonthlyRevenue(int year)
         {
             return HoaDonDAL.GetMonthlyRevenue(year);
@@ -146,6 +147,84 @@ namespace QuanLyQuanBida.BLL
         public Dictionary<DateTime, double> GetDailyRevenue(int days = 7)
         {
             return HoaDonDAL.GetDailyRevenue(days);
+        }
+        #endregion
+        public List<HoaDonReportDTO> LayDuLieuChoHoaDonReport(int maHoaDon)
+        {
+            var hoaDonEntity = new HoaDonDAL().LayHoaDonDayDuTheoMa(maHoaDon); // Giả sử DAL có phương thức này
+            if (hoaDonEntity == null) return null;
+
+            var reportDataList = new List<HoaDonReportDTO>();
+
+            // Chuẩn bị các thông tin chung
+            var thongTinChung = new
+            {
+                MaHoaDon = hoaDonEntity.MaHoaDon,
+                TenBan = hoaDonEntity.BanBida?.TenBan ?? "N/A",
+                ThoiGianBatDau = hoaDonEntity.ThoiGianBatDau,
+                ThoiGianKetThuc = hoaDonEntity.ThoiGianKetThuc,
+                TenNhanVien = hoaDonEntity.NhanVien?.HoTen ?? "N/A",
+                TenKhachHang = hoaDonEntity.KhachHang?.HoTen ?? "Khách vãng lai",
+                TongTienGio = hoaDonEntity.TienGio ?? 0,
+                TongTienDichVu = hoaDonEntity.TienDichVu ?? 0,
+                GiamGia = hoaDonEntity.GiamGia ?? 0,
+                TongThanhToan = hoaDonEntity.TongTien ?? 0
+            };
+
+            // Thêm dòng cho tiền giờ (nếu có)
+            if (thongTinChung.TongTienGio > 0)
+            {
+                TimeSpan thoiGianChoi = TimeSpan.Zero;
+                if (thongTinChung.ThoiGianKetThuc.HasValue)
+                {
+                    thoiGianChoi = thongTinChung.ThoiGianKetThuc.Value - thongTinChung.ThoiGianBatDau;
+                }
+                reportDataList.Add(new HoaDonReportDTO
+                {
+                    // Thông tin chung
+                    MaHoaDon = thongTinChung.MaHoaDon,
+                    TenBan = thongTinChung.TenBan,
+                    ThoiGianBatDau = thongTinChung.ThoiGianBatDau,
+                    ThoiGianKetThuc = thongTinChung.ThoiGianKetThuc,
+                    TenNhanVien = thongTinChung.TenNhanVien,
+                    TenKhachHang = thongTinChung.TenKhachHang,
+                    TongTienGio = thongTinChung.TongTienGio,
+                    TongTienDichVu = thongTinChung.TongTienDichVu,
+                    GiamGia = thongTinChung.GiamGia,
+                    TongThanhToan = thongTinChung.TongThanhToan,
+                    // Thông tin dòng
+                    Item_TenDichVu = $"Tiền giờ ({thoiGianChoi.Hours}h {thoiGianChoi.Minutes}p)",
+                    Item_SoLuong = 1,
+                    Item_DonGia = 0, // Đơn giá giờ có thể phức tạp, để 0 và chỉ hiện tổng
+                    Item_ThanhTien = thongTinChung.TongTienGio
+                });
+            }
+
+
+            // Thêm các dòng cho dịch vụ
+            foreach (var cthd in hoaDonEntity.ChiTietHoaDon)
+            {
+                reportDataList.Add(new HoaDonReportDTO
+                {
+                    // Thông tin chung (lặp lại)
+                    MaHoaDon = thongTinChung.MaHoaDon,
+                    TenBan = thongTinChung.TenBan,
+                    ThoiGianBatDau = thongTinChung.ThoiGianBatDau,
+                    ThoiGianKetThuc = thongTinChung.ThoiGianKetThuc,
+                    TenNhanVien = thongTinChung.TenNhanVien,
+                    TenKhachHang = thongTinChung.TenKhachHang,
+                    TongTienGio = thongTinChung.TongTienGio,
+                    TongTienDichVu = thongTinChung.TongTienDichVu,
+                    GiamGia = thongTinChung.GiamGia,
+                    TongThanhToan = thongTinChung.TongThanhToan,
+                    // Thông tin dòng
+                    Item_TenDichVu = cthd.DichVu?.TenDichVu ?? "N/A",
+                    Item_SoLuong = cthd.SoLuong,
+                    Item_DonGia = cthd.DonGia,
+                    Item_ThanhTien = cthd.SoLuong * cthd.DonGia
+                });
+            }
+            return reportDataList;
         }
     }
 }

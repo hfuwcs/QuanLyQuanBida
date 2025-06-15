@@ -16,7 +16,7 @@ public class HoaDonPrinter
     private int count = 0;
     private float leftMargin = 10;
     private float topMargin = 10;
-    private string line = "-----------------------------------------------------"; 
+    private string line = "                                                    ---------------------------------------------------------------"; 
 
     public HoaDonPrinter(HoaDonDTO hoaDon)
     {
@@ -81,7 +81,7 @@ public class HoaDonPrinter
         float pageHeight = ev.MarginBounds.Height; 
 
         string tenQuan = "QUÁN BIDA ở Rinascita";
-        string diaChi = "123 Đường Lê Trọng Tấn, Phường Tây Thạnh, Quận Tân Phú, TP HCM";
+        string diaChi = "140 Đường Lê Trọng Tấn, Phường Tây Thạnh, Quận Tân Phú, TP HCM";
         string sdtQuan = "SĐT: 0776848611";
 
         g.DrawString(tenQuan, headerFont, Brushes.Black, leftMargin, yPos);

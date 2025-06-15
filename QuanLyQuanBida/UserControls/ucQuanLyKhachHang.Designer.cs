@@ -128,8 +128,9 @@ namespace QuanLyQuanBida.UserControls
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.Size = new System.Drawing.Size(100, 45);
             this.btnLuu.TabIndex = 6;
-            this.btnLuu.Text = "Lưu";
+            this.btnLuu.Text = "Sửa";
             this.btnLuu.UseVisualStyleBackColor = false;
+            this.btnLuu.Click += new System.EventHandler(this.btnSuaKH_Click);
             // 
             // btnThem
             // 

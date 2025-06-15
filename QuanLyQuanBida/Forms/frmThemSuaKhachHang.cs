@@ -27,12 +27,12 @@ namespace QuanLyQuanBida.Forms
             this.Text = "Thêm Khách Hàng Mới";
             txtMaKhachHangForm.Text = "(Tự động)";
             txtMaKhachHangForm.ReadOnly = true;
-            txtHangThanhVienForm.ReadOnly = true; // Hạng được tính tự động
+            txtHangThanhVienForm.ReadOnly = true; 
             numDiemTichLuyForm.ValueChanged += NumDiemTichLuyForm_ValueChanged; // Để cập nhật hạng
             UpdateHangThanhVienDisplay();
         }
 
-        public frmThemSuaKhachHang(KhachHangDTO khachHangToEdit) // Chế độ Sửa
+        public frmThemSuaKhachHang(KhachHangDTO khachHangToEdit)
         {
             InitializeComponent();
             isEditMode = true;
