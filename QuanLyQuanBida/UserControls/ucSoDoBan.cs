@@ -325,6 +325,17 @@ namespace QuanLyQuanBida.UserControls
                 if (thanhCong)
                 {
                     MessageBox.Show("Thanh toán thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    List<HoaDonReportDTO> reportData = hoaDonBLL.GetReportData(this.hoaDonContext.MaHoaDon);
+
+                    if (reportData != null && reportData.Any())
+                    {
+                        HoaDonPrinter printer = new HoaDonPrinter(reportData);
+                        printer.Preview();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể lấy được dữ liệu báo cáo cho hóa đơn này.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                     LoadBanBida();
                 }
                 else
@@ -410,7 +421,7 @@ namespace QuanLyQuanBida.UserControls
             int rowIndex = dgvChiTietHoaDon.Rows.Add();
             DataGridViewRow newRow = dgvChiTietHoaDon.Rows[rowIndex];
 
-            newRow.Tag = maCTHD; // Lưu MaCTHD (nếu có) vào Tag
+            newRow.Tag = maCTHD;
             newRow.Cells["colMaDichVu"].Value = maDichVu;
             newRow.Cells["colTenSanPham"].Value = tenDichVu;
             newRow.Cells["colSoLuong"].Value = soLuong;
@@ -419,24 +430,30 @@ namespace QuanLyQuanBida.UserControls
         }
         private void btnInHoaDon_Click(object sender, EventArgs e)
         {
-            if (this.hoaDonContext.ChiTietDichVu == null || !this.hoaDonContext.ChiTietDichVu.Any() || this.hoaDonContext.ChiTietDichVu.Any(ct => string.IsNullOrEmpty(ct.TenDichVu)))
+            if (this.hoaDonContext == null || this.hoaDonContext.MaHoaDon <= 0)
             {
-                var hoaDonDayDu = hoaDonBLL.LayHoaDonHienTaiCuaBan(banContext.MaBan);
-                LoadChiTietDichVuVaoDGV();
+                MessageBox.Show("Vui lòng chọn một bàn đang có hóa đơn để in.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                if (hoaDonDayDu != null)
+            try
+            {
+                List<HoaDonReportDTO> reportData = hoaDonBLL.GetReportData(this.hoaDonContext.MaHoaDon);
+
+                if (reportData != null && reportData.Any())
                 {
-                    this.hoaDonContext = hoaDonDayDu;
+                    HoaDonPrinter printer = new HoaDonPrinter(reportData);
+                    printer.Preview();
                 }
                 else
                 {
-                    MessageBox.Show("Không thể lấy đầy đủ thông tin chi tiết hóa đơn để in.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    MessageBox.Show("Không thể lấy được dữ liệu báo cáo cho hóa đơn này.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
-            HoaDonPrinter printer = new HoaDonPrinter(this.hoaDonContext);
-            printer.Preview();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Đã có lỗi xảy ra trong quá trình tạo hóa đơn: " + ex.Message, "Lỗi nghiêm trọng", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #endregion
