@@ -13,6 +13,7 @@ namespace QuanLyQuanBida.BLL
         HoaDonDAL HoaDonDAL = new HoaDonDAL();
         private BanBidaDAL banBidaDAL = new BanBidaDAL();
         private ChiTietHoaDonDAL ChiTietHoaDonDAL = new ChiTietHoaDonDAL();
+        private HoaDonReportDAL dal = new HoaDonReportDAL();
         public Tuple<int, decimal> TinhTienGio(DateTime thoiGianBatDau, DateTime thoiGianKetThuc, decimal donGiaTheoGio)
         {
             if (thoiGianKetThuc <= thoiGianBatDau || donGiaTheoGio <= 0)
@@ -164,6 +165,10 @@ namespace QuanLyQuanBida.BLL
             return HoaDonDAL.GetDailyRevenue(days);
         }
         #endregion
+        public List<HoaDonReportDTO> GetReportData(int maHoaDon)
+        {
+            return dal.GetReportDataByMaHoaDon(maHoaDon);
+        }
         public List<HoaDonReportDTO> LayDuLieuChoHoaDonReport(int maHoaDon)
         {
             var hoaDonEntity = new HoaDonDAL().LayHoaDonDayDuTheoMa(maHoaDon); // Giả sử DAL có phương thức này

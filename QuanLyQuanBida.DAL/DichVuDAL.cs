@@ -141,13 +141,12 @@ namespace QuanLyQuanBida.DAL
             using (var db = new DB_QuanLyQuanBidaEntities())
             {
                 // Mapping từ DTO sang Entity
-                var dichVuEntity = new DichVu // Tên class Entity của bạn
+                var dichVuEntity = new DichVu
                 {
                     TenDichVu = dichVuMoiDTO.TenDichVu,
-                    MaLoaiDV = dichVuMoiDTO.MaLoaiDV, // DTO phải có MaLoaiDV (int?)
+                    MaLoaiDV = dichVuMoiDTO.MaLoaiDV,
                     DonViTinh = dichVuMoiDTO.DonViTinh,
                     Gia = dichVuMoiDTO.Gia
-                    // MaDichVu sẽ tự tăng nếu là Identity column trong DB
                 };
 
                 db.DichVu.Add(dichVuEntity);
